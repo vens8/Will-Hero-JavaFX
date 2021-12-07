@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
+   <children>
+      <ImageView fx:id="chest" fitHeight="150.0" fitWidth="200.0" layoutX="208.0" layoutY="95.0" onMouseClicked="#initialise" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/cchest.gif" />
+         </image>
+      </ImageView>
+      <Button fx:id="button1" layoutX="259.0" layoutY="256.0" mnemonicParsing="false" onAction="#initialise" text="Click me" />
+   </children>
+</AnchorPane>
