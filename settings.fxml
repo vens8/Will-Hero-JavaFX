@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="670.0" prefWidth="1284.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="686.0" fitWidth="1285.0" nodeOrientation="INHERIT" opacity="0.35" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="file:/C:/Users/vyshn/Desktop/Images/homepage1.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect></ImageView>
+      <AnchorPane layoutX="424.0" layoutY="86.0" AnchorPane.bottomAnchor="85.0" AnchorPane.leftAnchor="424.0" AnchorPane.rightAnchor="424.0" AnchorPane.topAnchor="86.0">
+         <children>
+            <Rectangle arcHeight="100.0" arcWidth="100.0" height="499.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="5.0" width="436.0">
+               <fill>
+                  <RadialGradient centerX="0.5" centerY="0.5" focusDistance="-0.031007722366687807" radius="0.5387596751368323">
+                     <stops>
+                        <Stop>
+                           <color>
+                              <Color red="1.0" green="1.0" blue="1.0" />
+                           </color>
+                        </Stop>
+                        <Stop offset="1.0">
+                           <color>
+                              <Color red="0.8096708059310913" green="0.7716049551963806" blue="1.0" />
+                           </color>
+                        </Stop>
+                     </stops>
+                  </RadialGradient>
+               </fill>
+            </Rectangle>
+            <Label alignment="CENTER" contentDisplay="CENTER" layoutX="65.0" layoutY="30.0" prefHeight="63.0" prefWidth="305.0" text="Settings" textAlignment="CENTER" AnchorPane.bottomAnchor="406.0" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="66.0" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font name="Arial Rounded MT Bold" size="40.0" />
+               </font>
+            </Label>
+            <ButtonBar layoutX="52.0" layoutY="138.0" prefHeight="70.0" prefWidth="345.0">
+               <buttons>
+                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:/C:/Users/vyshn/Desktop/Images/load.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Load Game" textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Rounded MT Bold" size="30.0" />
+                     </font>
+                  </Label>
+               </buttons>
+            </ButtonBar>
+            <ButtonBar layoutX="52.0" layoutY="243.0" prefHeight="70.0" prefWidth="345.0">
+               <buttons>
+                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:/C:/Users/vyshn/Desktop/Images/musicon.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Music On" textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Rounded MT Bold" size="30.0" />
+                     </font>
+                  </Label>
+               </buttons>
+            </ButtonBar>
+            <ButtonBar layoutX="52.0" layoutY="343.0" prefHeight="70.0" prefWidth="345.0">
+               <buttons>
+                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="file:/C:/Users/vyshn/Desktop/Images/soundon.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Sound On" textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Rounded MT Bold" size="30.0" />
+                     </font>
+                  </Label>
+               </buttons>
+            </ButtonBar>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
