@@ -58,14 +58,14 @@
             </ButtonBar>
             <StackPane layoutX="52.0" layoutY="243.0">
                <children>
-                  <ButtonBar disable="true" opacity="0.0" prefHeight="70.0" prefWidth="345.0">
+                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
                      <buttons>
-                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView disable="true" fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="file:/C:/Users/vyshn/Desktop/Images/musicoff.png" />
                            </image>
                         </ImageView>
-                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Music Off" textAlignment="CENTER">
+                        <Label alignment="CENTER" contentDisplay="CENTER" disable="true" prefHeight="45.0" prefWidth="305.0" text="Music Off" textAlignment="CENTER">
                            <font>
                               <Font name="Arial Rounded MT Bold" size="30.0" />
                            </font>
@@ -104,9 +104,9 @@
                         </Label>
                      </buttons>
                   </ButtonBar>
-                  <ButtonBar disable="true" opacity="0.0" prefHeight="70.0" prefWidth="345.0">
+                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
                      <buttons>
-                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView disable="true" fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="file:/C:/Users/vyshn/Desktop/Images/soundoff.png" />
                            </image>
