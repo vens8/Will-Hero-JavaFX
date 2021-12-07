@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -58,20 +59,14 @@
             </ButtonBar>
             <StackPane layoutX="52.0" layoutY="243.0">
                <children>
-                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
-                     <buttons>
-                        <ImageView disable="true" fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="file:/C:/Users/vyshn/Desktop/Images/musicoff.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" contentDisplay="CENTER" disable="true" prefHeight="45.0" prefWidth="305.0" text="Music Off" textAlignment="CENTER">
-                           <font>
-                              <Font name="Arial Rounded MT Bold" size="30.0" />
-                           </font>
-                        </Label>
-                     </buttons>
-                  </ButtonBar>
+                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" visible="false" StackPane.alignment="CENTER_LEFT">
+                     <image>
+                        <Image url="file:/C:/Users/vyshn/Desktop/Images/musicoff.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets left="20.0" />
+                     </StackPane.margin>
+                  </ImageView>
                   <ButtonBar prefHeight="70.0" prefWidth="345.0">
                      <buttons>
                         <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
@@ -104,20 +99,14 @@
                         </Label>
                      </buttons>
                   </ButtonBar>
-                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
-                     <buttons>
-                        <ImageView disable="true" fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="file:/C:/Users/vyshn/Desktop/Images/soundoff.png" />
-                           </image>
-                        </ImageView>
-                        <Label alignment="CENTER" contentDisplay="CENTER" disable="true" prefHeight="45.0" prefWidth="305.0" text="Sound Off" textAlignment="CENTER">
-                           <font>
-                              <Font name="Arial Rounded MT Bold" size="30.0" />
-                           </font>
-                        </Label>
-                     </buttons>
-                  </ButtonBar>
+                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" visible="false" StackPane.alignment="CENTER_LEFT">
+                     <image>
+                        <Image url="file:/C:/Users/vyshn/Desktop/Images/soundoff.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets left="20.0" />
+                     </StackPane.margin>
+                  </ImageView>
                </children>
             </StackPane>
          </children>
