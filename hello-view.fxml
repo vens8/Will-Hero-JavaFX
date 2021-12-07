@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -22,88 +23,120 @@
                   <Image url="file:/C:/Users/vyshn/Desktop/Images/homepage1.png" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="85.0" layoutX="600.0" layoutY="295.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="85.0">
-               <fill>
-                  <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="0.8703703880310059" green="1.0" blue="0.9373456835746765" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </fill></Rectangle>
-            <ImageView fitHeight="68.0" fitWidth="55.0" layoutX="615.0" layoutY="310.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="file:/C:/Users/vyshn/Desktop/Images/playbutton.png" />
-               </image>
-            </ImageView>
-            <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="80.0" layoutX="895.0" layoutY="26.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="177.0">
-               <fill>
-                  <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="0.8703703880310059" green="1.0" blue="0.9373456835746765" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </fill>
-            </Rectangle>
-            <ImageView fitHeight="150.0" fitWidth="50.0" layoutX="910.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="file:/C:/Users/vyshn/Desktop/Images/highscore.png" />
-               </image></ImageView>
+            <ButtonBar layoutX="595.0" layoutY="292.0">
+               <buttons>
+                  <StackPane>
+                     <children>
+                        <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="85.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="85.0">
+                           <fill>
+                              <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
+                                 <stops>
+                                    <Stop>
+                                       <color>
+                                          <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
+                                       </color>
+                                    </Stop>
+                                    <Stop offset="1.0">
+                                       <color>
+                                          <Color red="0.9450980424880981" green="0.6235294342041016" blue="0.9960784316062927" />
+                                       </color>
+                                    </Stop>
+                                 </stops>
+                              </RadialGradient>
+                           </fill>
+                        </Rectangle>
+                        <ImageView fitHeight="68.0" fitWidth="55.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/playbutton.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+               </buttons>
+            </ButtonBar>
+            <StackPane layoutX="895.0" layoutY="26.0">
+               <children>
+                  <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="80.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="177.0">
+                     <fill>
+                        <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="0.8703703880310059" green="1.0" blue="0.9373456835746765" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </RadialGradient>
+                     </fill>
+                  </Rectangle>
+                  <HBox>
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/highscore.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" prefHeight="58.0" prefWidth="95.0" text="122">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <StackPane.margin>
+                        <Insets left="15.0" top="12.0" />
+                     </StackPane.margin>
+                  </HBox>
+               </children>
+            </StackPane>
             <ImageView fitHeight="150.0" fitWidth="50.0" layoutX="14.0" layoutY="611.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="file:/C:/Users/vyshn/Desktop/Images/settings.png" />
                </image>
             </ImageView>
-            <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="80.0" layoutX="1084.0" layoutY="26.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="177.0">
-               <fill>
-                  <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
-                     <stops>
-                        <Stop>
-                           <color>
-                              <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
-                           </color>
-                        </Stop>
-                        <Stop offset="1.0">
-                           <color>
-                              <Color red="0.8703703880310059" green="1.0" blue="0.9373456835746765" />
-                           </color>
-                        </Stop>
-                     </stops>
-                  </RadialGradient>
-               </fill>
-            </Rectangle>
-            <Label alignment="CENTER" layoutX="960.0" layoutY="37.0" prefHeight="58.0" prefWidth="95.0" text="122">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="30.0" />
-               </font>
-            </Label>
-            <ImageView fitHeight="150.0" fitWidth="50.0" layoutX="1100.0" layoutY="41.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="file:/C:/Users/vyshn/Desktop/Images/coin.png" />
-               </image>
-            </ImageView>
-            <Label alignment="CENTER" layoutX="1152.0" layoutY="37.0" prefHeight="58.0" prefWidth="95.0" text="99999">
-               <font>
-                  <Font name="Arial Rounded MT Bold" size="30.0" />
-               </font>
-            </Label>
+            <StackPane layoutX="1084.0" layoutY="26.0">
+               <children>
+                  <Rectangle arcHeight="10.0" arcWidth="10.0" disable="true" height="80.0" stroke="BLACK" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="INSIDE" strokeWidth="5.0" width="177.0">
+                     <fill>
+                        <RadialGradient centerX="0.5223047901706624" centerY="0.5" radius="1.0">
+                           <stops>
+                              <Stop>
+                                 <color>
+                                    <Color red="0.9460381865501404" green="0.623795211315155" blue="0.9956140518188477" />
+                                 </color>
+                              </Stop>
+                              <Stop offset="1.0">
+                                 <color>
+                                    <Color red="0.8703703880310059" green="1.0" blue="0.9373456835746765" />
+                                 </color>
+                              </Stop>
+                           </stops>
+                        </RadialGradient>
+                     </fill>
+                  </Rectangle>
+                  <HBox>
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/coin.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" prefHeight="58.0" prefWidth="95.0" text="99999">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="15.0" top="12.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </StackPane>
          </children>
       </AnchorPane>
    </children>
