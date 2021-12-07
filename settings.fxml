@@ -56,34 +56,70 @@
                   </Label>
                </buttons>
             </ButtonBar>
-            <ButtonBar layoutX="52.0" layoutY="243.0" prefHeight="70.0" prefWidth="345.0">
-               <buttons>
-                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:/C:/Users/vyshn/Desktop/Images/musicon.png" />
-                     </image>
-                  </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Music On" textAlignment="CENTER">
-                     <font>
-                        <Font name="Arial Rounded MT Bold" size="30.0" />
-                     </font>
-                  </Label>
-               </buttons>
-            </ButtonBar>
-            <ButtonBar layoutX="52.0" layoutY="343.0" prefHeight="70.0" prefWidth="345.0">
-               <buttons>
-                  <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="file:/C:/Users/vyshn/Desktop/Images/soundon.png" />
-                     </image>
-                  </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Sound On" textAlignment="CENTER">
-                     <font>
-                        <Font name="Arial Rounded MT Bold" size="30.0" />
-                     </font>
-                  </Label>
-               </buttons>
-            </ButtonBar>
+            <StackPane layoutX="52.0" layoutY="243.0">
+               <children>
+                  <ButtonBar disable="true" opacity="0.0" prefHeight="70.0" prefWidth="345.0">
+                     <buttons>
+                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/musicoff.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Music Off" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </buttons>
+                  </ButtonBar>
+                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
+                     <buttons>
+                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/musicon.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Music On" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </buttons>
+                  </ButtonBar>
+               </children>
+            </StackPane>
+            <StackPane layoutX="52.0" layoutY="343.0">
+               <children>
+                  <ButtonBar prefHeight="70.0" prefWidth="345.0">
+                     <buttons>
+                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/soundon.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Sound On" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </buttons>
+                  </ButtonBar>
+                  <ButtonBar disable="true" opacity="0.0" prefHeight="70.0" prefWidth="345.0">
+                     <buttons>
+                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="file:/C:/Users/vyshn/Desktop/Images/soundoff.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" disable="true" prefHeight="45.0" prefWidth="305.0" text="Sound Off" textAlignment="CENTER">
+                           <font>
+                              <Font name="Arial Rounded MT Bold" size="30.0" />
+                           </font>
+                        </Label>
+                     </buttons>
+                  </ButtonBar>
+               </children>
+            </StackPane>
          </children>
       </AnchorPane>
    </children>
