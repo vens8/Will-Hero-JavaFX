@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane prefHeight="1080.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
+   <children>
+      <ImageView fitHeight="1080.0" fitWidth="1602.0" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/background2.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
