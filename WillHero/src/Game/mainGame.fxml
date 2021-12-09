@@ -6,103 +6,126 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
-<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.gameController">
    <children>
-      <ImageView fitHeight="1080.0" fitWidth="1600.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="725.0" fitWidth="1001.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/background2.png" />
          </image>
       </ImageView>
-      <StackPane layoutX="116.0" layoutY="1004.0">
+      <StackPane layoutX="69.0" layoutY="580.0" prefHeight="68.0" prefWidth="42.0">
          <children>
-            <Circle fill="#5af1ff" radius="25.0" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="3.0" />
-            <Label text="0">
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
                <font>
-                  <Font name="Arial Rounded MT Bold" size="40.0" />
+                  <Font name="Dubai Medium" size="23.0" />
                </font>
             </Label>
          </children>
       </StackPane>
-      <ImageView fitHeight="75.0" fitWidth="200.0" layoutX="25.0" layoutY="993.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/shuriken.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="450.0" fitWidth="581.0" layoutX="-59.0" layoutY="513.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="mediumPlatform1" fitHeight="302.0" fitWidth="265.0" layoutX="-18.0" layoutY="208.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/mediumPlatform.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="450.0" fitWidth="581.0" layoutX="454.0" layoutY="470.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="smallPlatform1" fitHeight="339.0" fitWidth="222.0" layoutX="287.0" layoutY="252.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/smallPlatform.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="200.0" layoutX="32.0" layoutY="617.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="player" fitHeight="100.0" fitWidth="200.0" layoutX="-2.0" layoutY="250.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/player.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="80.0" fitWidth="200.0" layoutX="228.0" layoutY="629.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="redOrc1" fitHeight="56.0" fitWidth="56.0" layoutX="130.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/redOrc.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="449.0" fitWidth="775.0" layoutX="926.0" layoutY="557.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="bigPlatform1" fitHeight="265.0" fitWidth="521.0" layoutX="559.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/bigPlatform.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="80.0" fitWidth="200.0" layoutX="915.0" layoutY="628.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="tnt1" fitHeight="68.0" fitWidth="67.0" layoutX="559.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/tnt.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="175.0" fitWidth="200.0" layoutX="621.0" layoutY="533.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="chest1" fitHeight="175.0" fitWidth="200.0" layoutX="347.0" layoutY="241.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/chestp1.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="100.0" fitWidth="200.0" layoutX="1509.0" layoutY="608.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="princess" fitHeight="63.0" fitWidth="65.0" layoutX="918.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/princess.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="200.0" fitWidth="200.0" layoutX="1237.0" layoutY="510.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="bossOrc1" fitHeight="155.0" fitWidth="157.0" layoutX="664.0" layoutY="173.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/bossOrc.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="90.0" fitWidth="200.0" layoutX="504.0" layoutY="569.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="greenOrc1" fitHeight="75.0" fitWidth="82.0" layoutX="311.0" layoutY="301.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/greenOrc.png" />
          </image>
       </ImageView>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="630.0" layoutY="46.0" prefHeight="113.0" prefWidth="275.0" text="0" textAlignment="CENTER" AnchorPane.leftAnchor="630.0" AnchorPane.rightAnchor="631.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="890.0" layoutY="10.0" prefHeight="60.0" prefWidth="89.0" text="9999" textAlignment="CENTER" textFill="#635d5d" wrapText="true">
          <font>
-            <Font name="Arial Rounded MT Bold" size="96.0" />
+            <Font name="Dubai Medium" size="33.0" />
          </font>
       </Label>
-      <StackPane layoutX="89.0" layoutY="46.0">
+      <ImageView fitHeight="65.0" fitWidth="42.0" layoutX="833.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+         <image>
+            <Image url="@../Resources/coin.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="56.0" fitWidth="70.0" layoutX="23.0" layoutY="595.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/shuriken.png" />
+         </image>
+      </ImageView>
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="452.0" layoutY="13.0" prefHeight="56.0" prefWidth="114.0" text="0" textAlignment="CENTER" textFill="#615a5a" AnchorPane.leftAnchor="452.0" AnchorPane.rightAnchor="433.0">
+         <font>
+            <Font name="Dubai Medium" size="28.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="11.0" layoutY="12.0" onMouseClicked="#settingsButtonClicked" onMouseEntered="#settingsMouseEntered" onMouseExited="#settingsMouseExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/settings.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="45.0" fitWidth="98.0" layoutX="126.0" layoutY="607.0" opacity="0.42" pickOnBounds="true" preserveRatio="true" rotate="44.0">
+         <image>
+            <Image url="@../Resources/sword.png" />
+         </image>
+      </ImageView>
+      <StackPane layoutX="170.0" layoutY="579.0" prefHeight="68.0" prefWidth="42.0">
          <children>
-            <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#5af1ff" height="113.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="5.0" width="113.0" />
-            <ImageView fitHeight="113.0" fitWidth="90.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Resources/pause.png" />
-               </image>
-            </ImageView>
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
+               <font>
+                  <Font name="Dubai Medium" size="23.0" />
+               </font>
+            </Label>
          </children>
       </StackPane>
-      <Rectangle arcHeight="100.0" arcWidth="100.0" fill="#5af1ff" height="113.0" layoutX="1242.0" layoutY="46.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="5.0" width="296.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1343.0" layoutY="46.0" prefHeight="112.0" prefWidth="186.0" text="0" textAlignment="CENTER">
-         <font>
-            <Font name="Arial Rounded MT Bold" size="64.0" />
-         </font>
-      </Label>
-      <ImageView fitHeight="150.0" fitWidth="90.0" layoutX="1254.0" layoutY="57.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="293.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/coin.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="266.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/coin.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/coin.png" />
          </image>
