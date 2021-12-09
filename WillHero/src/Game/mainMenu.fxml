@@ -33,7 +33,7 @@
                <effect>
                   <Lighting bumpInput="$null" diffuseConstant="0.6" specularConstant="1.6" specularExponent="40.0">
                      <light>
-                        <Light.Distant />
+                        <javafx.scene.effect.Light.Distant />
                      </light>
                   </Lighting>
                </effect>
@@ -77,7 +77,7 @@
                       </Label>
                </children>
             </AnchorPane>
-                <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="14.0" layoutY="597.0" onMouseClicked="#settingsButtonClicked" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="14.0" layoutY="597.0" onMouseClicked="#settingsButtonClicked" onMouseEntered="#settingsMouseEntered" onMouseExited="#settingsMouseExited" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Resources/settings.png" />
                     </image>
@@ -112,6 +112,7 @@
                   <InnerShadow height="11.64" radius="3.5650000000000004" width="4.62" />
                </effect>
             </ImageView>
+            <Label fx:id="dummyLabel" layoutX="19.0" layoutY="17.0" />
             </children>
         </AnchorPane>
     </children>
