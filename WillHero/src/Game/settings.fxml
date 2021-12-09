@@ -16,7 +16,7 @@
     <children>
         <AnchorPane layoutX="58.0" layoutY="49.0" prefHeight="465.0" prefWidth="396.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="4.0">
             <children>
-                <Rectangle arcHeight="100.0" arcWidth="100.0" height="499.0" stroke="#966868" strokeType="INSIDE" strokeWidth="3.0" width="436.0">
+                <Rectangle arcHeight="100.0" height="519.0" layoutX="-9.0" layoutY="-6.0" stroke="#966868" strokeType="OUTSIDE" strokeWidth="3.0" width="452.0">
                     <fill>
                         <RadialGradient centerX="0.5" centerY="0.5" focusDistance="-0.031007722366687807" radius="0.5387596751368323">
                             <stops>
@@ -39,14 +39,14 @@
                         <Font name="Dubai Medium" size="48.0" />
                     </font>
                 </Label>
-                <ButtonBar fx:id="settingButtonBar" layoutX="53.0" layoutY="338.0" onMouseClicked="#settingClicked" onMouseEntered="#settingMouseEntered" onMouseExited="#settingMouseExited" prefHeight="70.0" prefWidth="345.0">
+                <ButtonBar fx:id="saveGameButtonBar" layoutX="63.0" layoutY="338.0" onMouseClicked="#saveGameClicked" onMouseEntered="#saveGameMouseEntered" onMouseExited="#saveGameMouseExited" prefHeight="70.0" prefWidth="345.0">
                     <buttons>
-                        <ImageView fitHeight="150.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="63.0" fitWidth="62.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../Resources/load.png" />
+                                <Image url="@../Resources/save.png" />
                             </image>
                         </ImageView>
-                        <Label fx:id="settingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Extra Setting" textAlignment="CENTER">
+                        <Label fx:id="settingLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="305.0" text="Save Game" textAlignment="CENTER">
                             <font>
                                 <Font name="Dubai Medium" size="40.0" />
                             </font>
