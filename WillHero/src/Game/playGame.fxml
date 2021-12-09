@@ -45,8 +45,9 @@
                                 </Stop>
                             </stops>
                         </RadialGradient>
-                    </fill></Rectangle>
-                <ImageView fx:id="playButton" fitHeight="110.0" fitWidth="133.0" layoutX="454.0" layoutY="327.0" pickOnBounds="true" preserveRatio="true">
+                    </fill>
+            </Rectangle>
+                <ImageView fx:id="playGameButton" fitHeight="110.0" fitWidth="133.0" layoutX="454.0" layoutY="327.0" onMouseClicked="#playGameClicked" onMouseEntered="#playGameMouseEntered" onMouseExited="#playGameMouseExited" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Resources/playbutton.png" />
                     </image>
@@ -68,7 +69,7 @@
                       </Label>
                </children>
             </AnchorPane>
-                <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="14.0" layoutY="597.0" onMouseClicked="#settingsButtonClicked" pickOnBounds="true" preserveRatio="true">
+                <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="14.0" layoutY="597.0" onMouseClicked="#settingsButtonClicked" onMouseEntered="#settingsMouseEntered" onMouseExited="#settingsMouseExited" pickOnBounds="true" preserveRatio="true">
                     <image>
                         <Image url="@../Resources/settings.png" />
                     </image>
@@ -87,7 +88,7 @@
                       </Label>
                </children>
             </AnchorPane>
-            <ImageView fx:id="homeButton" fitHeight="71.0" fitWidth="79.0" layoutX="921.0" layoutY="590.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="homeButton" fitHeight="71.0" fitWidth="79.0" layoutX="921.0" layoutY="590.0" onMouseClicked="#homeButtonClicked" onMouseEntered="#homeMouseEntered" onMouseExited="#homeMouseExited" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Resources/homeButton.png" />
                </image>
