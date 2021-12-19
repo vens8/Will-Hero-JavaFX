@@ -1,28 +1,31 @@
 package Game;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Application;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.PopupWindow;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-
 import java.io.IOException;
+import java.io.Serializable;
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class Main extends Application {
+public class Main extends Application implements Initializable, Serializable {
+    public static Stage myStage;
+
 
     @Override
     public void start(Stage primaryStage) {
             try {
+                myStage = primaryStage;
                 playMusic();
+                myStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
                 Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
                 GlobalVariables.mainMenuStage = primaryStage;
                 primaryStage.setTitle("Will Hero");
@@ -61,5 +64,10 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+
     }
 }

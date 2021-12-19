@@ -3,6 +3,10 @@ package Game;
 public class Position {
     private Double x, y;
 
+    Position(double x, double y) {
+        this.x = x;
+        this.y = y;
+    }
     public void setX(Double x) {
         this.x = x;
     }

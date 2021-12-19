@@ -1,11 +1,10 @@
 package Game;
 
 public class GameObject implements Collidable {
-    private Integer ID;
     private Position P;
 
-    public Integer getID() {
-        return ID;
+    public GameObject(Position P) {
+        setP(P);
     }
 
     public void setP(Position p) {
@@ -16,8 +15,8 @@ public class GameObject implements Collidable {
         return P;
     }
 
+    @Override
     public boolean collision_detected(GameObject gameObject) {
-
         return false; // Dummy
     }
 }

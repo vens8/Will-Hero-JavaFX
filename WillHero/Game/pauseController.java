@@ -164,6 +164,8 @@ public class pauseController implements Initializable {
     void resumeMouseEntered() {
         glow.setLevel(0.5f);
         resumeGameButtonBar.setEffect(glow);
+
+
     }
 
     @FXML

@@ -6,15 +6,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.InnerShadow;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -22,8 +22,6 @@ public class gameController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
-    @FXML
-    private ImageView player;
     @FXML
     private ImageView redOrc1;
     @FXML
@@ -43,57 +41,19 @@ public class gameController implements Initializable {
     @FXML
     private ImageView settingsButton;
 
+    private ArrayList<GameObject> gameObjects;
+
     javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        TranslateTransition translatePlayer = new TranslateTransition();
-        translatePlayer.setNode(player);
-        translatePlayer.setDuration(Duration.millis(400));
-        translatePlayer.setCycleCount(TranslateTransition.INDEFINITE);
-        translatePlayer.setByY(-130);
-        translatePlayer.setAutoReverse(true);
-        translatePlayer.play();
-
-        TranslateTransition translateRedOrc1 = new TranslateTransition();
-        translateRedOrc1.setNode(redOrc1);
-        translateRedOrc1.setDuration(Duration.millis(500));
-        translateRedOrc1.setCycleCount(TranslateTransition.INDEFINITE);
-        translateRedOrc1.setByY(-160);
-        translateRedOrc1.setAutoReverse(true);
-        translateRedOrc1.play();
-
-        TranslateTransition translateGreenOrc1 = new TranslateTransition();
-        translateGreenOrc1.setNode(greenOrc1);
-        translateGreenOrc1.setDuration(Duration.millis(500));
-        translateGreenOrc1.setCycleCount(TranslateTransition.INDEFINITE);
-        translateGreenOrc1.setByY(-160);
-        translateGreenOrc1.setAutoReverse(true);
-        translateGreenOrc1.play();
-
-        TranslateTransition translateChest1 = new TranslateTransition();
-        translateChest1.setNode(chest1);
-        translateChest1.setDuration(Duration.millis(250));
-        translateChest1.setCycleCount(TranslateTransition.INDEFINITE);
-        translateChest1.setByY(-5);
-        translateChest1.setAutoReverse(true);
-        translateChest1.play();
-
-        TranslateTransition translatePrincess = new TranslateTransition();
-        translatePrincess.setNode(princess);
-        translatePrincess.setDuration(Duration.millis(500));
-        translatePrincess.setCycleCount(TranslateTransition.INDEFINITE);
-        translatePrincess.setByY(-100);
-        translatePrincess.setAutoReverse(true);
-        translatePrincess.play();
-
-        TranslateTransition translateBossOrc = new TranslateTransition();
-        translateBossOrc.setNode(bossOrc1);
-        translateBossOrc.setDuration(Duration.millis(1000));
-        translateBossOrc.setCycleCount(TranslateTransition.INDEFINITE);
-        translateBossOrc.setByY(-30);
-        translateBossOrc.setAutoReverse(true);
-        translateBossOrc.play();
+        // Make another transition method by polymorphism that takes in other arguments
+        //Animations.translateTransition(player, 0, -130, 400, TranslateTransition.INDEFINITE, true).play();
+        Animations.translateTransition(redOrc1, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
+        Animations.translateTransition(greenOrc1, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
+        Animations.translateTransition(chest1, 0, -5, 250, TranslateTransition.INDEFINITE, true).play();
+        Animations.translateTransition(princess, 0, -100, 500, TranslateTransition.INDEFINITE, true).play();
+        Animations.translateTransition(bossOrc1, 0, -30, 1000, TranslateTransition.INDEFINITE, true).play();
     }
 
     public void settingsButtonClicked() throws IOException {

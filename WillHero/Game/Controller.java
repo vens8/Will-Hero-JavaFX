@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -54,8 +55,8 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException{
         try {
-            Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d).play();
-            Animations.fadeTransition(playGameAnchorPane, 0.5, 1d, 500d).play();
+            Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
+            Animations.fadeTransition(playGameAnchorPane, 0.5, 1d, 500d, 1, false).play();
             loadGameListView.getItems().addAll(GlobalVariables.gameStates);
         }
         catch (NullPointerException e) {
@@ -69,6 +70,7 @@ public class Controller implements Initializable {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         stage.initOwner(settingsButton.getScene().getWindow());
         stage.showAndWait();
     }
@@ -76,6 +78,7 @@ public class Controller implements Initializable {
     public void newGameClicked() throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("playGame.fxml")));
         stage = (Stage)(newGameButton.getScene().getWindow());
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -85,6 +88,7 @@ public class Controller implements Initializable {
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loadGameMenu.fxml")));
         stage.setScene(new Scene(root));
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(loadGameButton.getScene().getWindow());
         stage.showAndWait();
@@ -151,6 +155,7 @@ public class Controller implements Initializable {
     public void homeButtonClicked() throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
         stage = (Stage)(homeButton.getScene().getWindow());
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
@@ -159,6 +164,7 @@ public class Controller implements Initializable {
     public void playGameClicked() throws IOException {
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainGame.fxml")));
         stage = (Stage) (playGameButton.getScene().getWindow());
+        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
