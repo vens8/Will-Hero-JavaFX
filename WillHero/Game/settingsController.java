@@ -11,8 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
@@ -71,6 +74,11 @@ public class settingsController implements Initializable {
 
     public void musicClicked() {
         if(GlobalVariables.music) {
+            if (GlobalVariables.sound) {
+                GlobalVariables.buttonClickSound.stop();
+                GlobalVariables.buttonClickSound.play();
+            }
+
             GlobalVariables.mediaPlayer.pause();
             musicIcon.setImage(musicOff);
             musicLabel.setText("Music Off");
@@ -86,6 +94,9 @@ public class settingsController implements Initializable {
 
     public void soundClicked() {
         if(GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+
             soundIcon.setImage(soundOff);
             soundLabel.setText("Sound Off");
             GlobalVariables.sound = false;
@@ -99,6 +110,10 @@ public class settingsController implements Initializable {
 
     public void saveGameClicked() throws IOException {
         // Save game
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("loadGameMenu.fxml"));
         root = loader.load();
         gameState g = new gameState();
@@ -115,6 +130,10 @@ public class settingsController implements Initializable {
     public void musicMouseEntered() {
         glow.setLevel(0.5f);
         musicButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     public void musicMouseExited() {
@@ -124,6 +143,10 @@ public class settingsController implements Initializable {
     public void soundMouseEntered() {
         glow.setLevel(0.5f);
         soundButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     public void soundMouseExited() {
@@ -133,6 +156,10 @@ public class settingsController implements Initializable {
     public void saveGameMouseEntered() {
         glow.setLevel(0.5f);
         saveGameButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     public void saveGameMouseExited() {

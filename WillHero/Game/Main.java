@@ -23,13 +23,13 @@ public class Main extends Application implements Initializable, Serializable {
     @Override
     public void start(Stage primaryStage) {
             try {
-                myStage = primaryStage;
                 playMusic();
-                myStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-                Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
+                primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
+                GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
                 GlobalVariables.mainMenuStage = primaryStage;
                 primaryStage.setTitle("Will Hero");
-                primaryStage.setScene(new Scene(root));
+                GlobalVariables.scene = new Scene(GlobalVariables.root);
+                primaryStage.setScene(GlobalVariables.scene);
                 primaryStage.show();
                 primaryStage.setOnCloseRequest(event -> {
                     try {
@@ -58,7 +58,7 @@ public class Main extends Application implements Initializable, Serializable {
     }
     public void playMusic() {
         GlobalVariables.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        GlobalVariables.mediaPlayer.play();
+        GlobalVariables.mediaPlayer.play();  //  REMOVE AT THE END, THIS IS ONLY TO PREVENT EAR DAMAGE :(
         GlobalVariables.music = true;
     }
 

@@ -11,9 +11,12 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -50,14 +53,13 @@ public class Controller implements Initializable {
 
     javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
     InnerShadow innerShadow = new InnerShadow();
-    //Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/cchest.gif")));
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException{
         try {
             Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
             Animations.fadeTransition(playGameAnchorPane, 0.5, 1d, 500d, 1, false).play();
-            loadGameListView.getItems().addAll(GlobalVariables.gameStates);
+            loadGameListView.getItems().addAll(GlobalVariables.gameStates);  // Display all the game states in the listView
         }
         catch (NullPointerException e) {
             System.out.println("Game States is empty!");
@@ -66,6 +68,10 @@ public class Controller implements Initializable {
     }
 
     public void settingsButtonClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
         stage.setScene(new Scene(root));
@@ -76,15 +82,24 @@ public class Controller implements Initializable {
     }
 
     public void newGameClicked() throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("playGame.fxml")));
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
+        GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("playGame.fxml")));
         stage = (Stage)(newGameButton.getScene().getWindow());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        GlobalVariables.scene = new Scene(GlobalVariables.root);
+        stage.setScene(GlobalVariables.scene);
+
         stage.show();
     }
 
     public void loadGameClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loadGameMenu.fxml")));
         stage.setScene(new Scene(root));
@@ -102,6 +117,10 @@ public class Controller implements Initializable {
     }
 
     public void exitGameClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Exit Game");
         alert.setHeaderText("You're about to exit!");
@@ -117,6 +136,10 @@ public class Controller implements Initializable {
     }
 
     public void newGameMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         newGameButton.setEffect(glow);
     }
@@ -129,6 +152,10 @@ public class Controller implements Initializable {
     }
 
     public void loadGameMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         loadGameButton.setEffect(glow);
     }
@@ -141,6 +168,10 @@ public class Controller implements Initializable {
     }
 
     public void exitGameMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         exitGameButton.setEffect(glow);
     }
@@ -153,6 +184,10 @@ public class Controller implements Initializable {
     }
 
     public void homeButtonClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
         stage = (Stage)(homeButton.getScene().getWindow());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
@@ -162,15 +197,26 @@ public class Controller implements Initializable {
     }
 
     public void playGameClicked() throws IOException {
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainGame.fxml")));
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));
+        GlobalVariables.root = loader.load();
         stage = (Stage) (playGameButton.getScene().getWindow());
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+        GlobalVariables.scene = new Scene(GlobalVariables.root);
+        gameController gameController = loader.getController();
+        gameController.activateKeyListener();
+        stage.setScene(GlobalVariables.scene);
         stage.show();
     }
 
     public void playGameMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         playGameButton.setEffect(glow);
     }
@@ -180,6 +226,10 @@ public class Controller implements Initializable {
     }
 
     public void settingsMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         settingsButton.setEffect(glow);
     }
@@ -189,6 +239,10 @@ public class Controller implements Initializable {
     }
 
     public void homeMouseEntered() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
         glow.setLevel(0.5f);
         homeButton.setEffect(glow);
     }
