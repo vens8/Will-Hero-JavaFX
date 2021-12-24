@@ -1,0 +1,11 @@
+Get Sound effects for:
+
+- Player Jump
+- Player move
+- Player death
+- Enemy death
+- Coin collect
+- Chest collect
+- TNT explosion
+- Sword kill
+- Shuriken kill
