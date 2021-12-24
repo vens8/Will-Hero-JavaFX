@@ -1,6 +1,5 @@
 package Game;
 
-import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -9,30 +8,19 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Time;
-import java.time.Clock;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.ResourceBundle;
-import java.util.concurrent.TimeUnit;
 
 public class gameController implements Initializable {
     private Stage stage;
@@ -69,42 +57,48 @@ public class gameController implements Initializable {
     @FXML
     private AnchorPane staticAnchorPane;
     @FXML
+    private AnchorPane gameOverAnchorPane;
+    @FXML
     private Label fpsLabel;
-    private mainHero hero;
+    @FXML
+    private Label scoreLabel;
+
     private Camera camera;
+    private Player player;
     private boolean gameStarted, leaped;
     private double jumpHeight;  // cumulative jump height of the player with every call of run
     private double leapLength;  // cumulative leap length of the player with every call of run
     private static final double jumpSlice = 4, leapSlice = 4, accelerationX = 0.5, accelerationY = 0.5;
     private double setX, setY;
-    private Timeline timeline;
     private ArrayList<GameObject> gameObjects;
+    private GameObjectList<Platform> platforms;
+    private GameObjectList<Chest> chests;
+    private GameObjectList<Orc> orcs;
+    private GameObjectList<TNT> TNTs;
+    private GameObjectList<Coin> coins;
 
     // FPS computation
     private final long[] frameTimes = new long[100];
     private int frameTimeIndex = 0 ;
     private boolean arrayFilled = false;
-    long now;
+    long now;  // Current time
 
-    javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
+    Glow glow = new Glow();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         // Make another transition method by polymorphism that takes in other arguments if needed
-//        hero = new mainHero(27, 290);
-        hero = new mainHero(27, 290);
-        hero.addToScreen(gameAnchorPane);
         camera = new Camera(0, 0);
-        //hero.playVerticalAnimation(true);
+        player = new Player(new mainHero(27, 290));  // Instead of creating an instance of a hero, pass the hero from gameObjects list.
+        player.getHero().addToScreen(gameAnchorPane);
+
         jumpHeight = 0;
         leapLength = 0;
         gameStarted = true;
         leaped = false;
-        System.out.println("Hero: " + hero.getHeroPolygon().getLayoutBounds());
-        System.out.println("Red Orc: " + redPolygon.getLayoutBounds());
 
-        timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> run()));  // Run a frame every 10 milliseconds (100 fps)
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        GlobalVariables.timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> run()));  // Run a frame every 10 milliseconds (100 fps)
+        GlobalVariables.timeline.setCycleCount(Timeline.INDEFINITE);
 
         Animations.translateTransition(redOrc1, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
         Animations.translateTransition(redPolygon, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
@@ -113,29 +107,32 @@ public class gameController implements Initializable {
         Animations.translateTransition(chest1, 0, -5, 250, TranslateTransition.INDEFINITE, true).play();
         Animations.translateTransition(princess, 0, -100, 500, TranslateTransition.INDEFINITE, true).play();
         Animations.translateTransition(bossOrc1, 0, -30, 1000, TranslateTransition.INDEFINITE, true).play();
-        timeline.play();
-
-//        AnimationTimer frameRateMeter = new AnimationTimer() {
-//            @Override
-//            public void handle(long now) {
-//                displayFPS();
-//            }
-//        };
-//        frameRateMeter.start();
+        GlobalVariables.timeline.play();
     }
 
     public void settingsButtonClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
+        GlobalVariables.timeline.pause();  // Pause the game on clicking the settings button
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("pauseMenu.fxml")));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initOwner(settingsButton.getScene().getWindow());
+        pauseController.setStage(stage);  // Sending stage so it can be closed from pauseController after resuming
+        stage.setOnCloseRequest(event -> GlobalVariables.timeline.play());  // Resume game when settings is closed
         stage.showAndWait();
     }
 
     public void settingsMouseEntered() {
         glow.setLevel(0.5f);
         settingsButton.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     public void settingsMouseExited() {
@@ -146,9 +143,11 @@ public class gameController implements Initializable {
         GlobalVariables.scene.setOnMousePressed(mouseEvent -> {
             if (!mouseEvent.isControlDown()) {
                 if(mouseEvent.getPickResult().getIntersectedNode().getId() == null || !mouseEvent.getPickResult().getIntersectedNode().getId().equals("settingsButton")) {
-                    GlobalVariables.playerLeapSound.stop();
-                    GlobalVariables.playerLeapSound.play();
-                    hero.setSpeedX(leapSlice);
+                    if (GlobalVariables.sound) {
+                        GlobalVariables.playerLeapSound.stop();
+                        GlobalVariables.playerLeapSound.play();
+                    }
+                    player.getHero().setSpeedX(leapSlice);
                     leaped = true;
                 }
             }
@@ -171,83 +170,122 @@ public class gameController implements Initializable {
         }
     }
 
+    public void displayScore() {
+        scoreLabel.setText(String.format("%d", player.getScore()));
+    }
+
+    // Add objects to the screen as the player moves
+    public void generateObjects() {
+
+    }
+
     public void run() {
         displayFPS();
-        camera.update(hero, gameAnchorPane, bgAnchorPane);
-        System.out.println("hero X: " + hero.getHeroPolygon().getLayoutX());
-        System.out.println("hero Y: " + hero.getHeroPolygon().getLayoutY());
-        System.out.println("Camera X: " + gameAnchorPane.getLayoutX());
-        System.out.println("Camera Y: " + gameAnchorPane.getLayoutY());
-        if (hero.getHeroPolygon().getLayoutX() + gameAnchorPane.getLayoutX() != 73) {
-            //System.exit(10);
-        }
+        displayScore();
+        camera.update(player.getHero(), gameAnchorPane, bgAnchorPane);  // Follow the player
+//        System.out.println("player.getHero() X: " + player.getHero().getHeroPolygon().getLayoutX());
+//        System.out.println("player.getHero() Y: " + player.getHero().getHeroPolygon().getLayoutY());
+//        System.out.println("Camera X: " + gameAnchorPane.getLayoutX());
+//        System.out.println("Camera Y: " + gameAnchorPane.getLayoutY());
         if (gameStarted) {
             if (!leaped) {  // Stop Y axis motion when player leaps
-                if (jumpHeight > hero.getJumpHeight()) {
-                    if (hero.getHeroPolygon().getBoundsInParent().intersects(redPolygon.getBoundsInParent())) {
+                if (jumpHeight > player.getHero().getJumpHeight()) {
+                    if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(redPolygon.getBoundsInParent())) {
                     } else {
-                        //System.out.println("non collide");
-                        setY = hero.getSpeedY() - accelerationY;
-                        hero.setSpeedY(setY);
-                        hero.jump();
+                        setY = player.getHero().getSpeedY() - accelerationY;
+                        player.getHero().setSpeedY(setY);
+                        player.getHero().jump();
                         jumpHeight += setY;
                     }
                 } else {
                     //System.out.println("Main Else");
-                    setY = hero.getSpeedY() + accelerationY;
-                    hero.setSpeedY(setY);
-                    hero.jump();
+                    setY = player.getHero().getSpeedY() + accelerationY;
+                    player.getHero().setSpeedY(setY);
+                    player.getHero().jump();
                     //jumpHeight += setY;
                 }
             }
             if (leaped) {
-                hero.setSpeedY(0);
-                if (leapLength < hero.getLeapLength()) {
-                    if (hero.getHeroPolygon().getBoundsInParent().intersects(redPolygon.getBoundsInParent()) || hero.getHeroPolygon().getBoundsInParent().intersects(greenPolygon.getBoundsInParent())) {
-                        System.out.println("Collided with orc!");
-//                    double velocity = hero.getWeight() * (hero.getSpeedX()) / 30;
-//                    System.out.println(velocity);
-//                    redPolygon.setLayoutX(redPolygon.getLayoutX() + velocity);
-                        //hero.setSpeedX(0);
+                player.getHero().setSpeedY(0);
+                if (leapLength < player.getHero().getLeapLength()) {
+                    if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(redPolygon.getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(greenPolygon.getBoundsInParent())) {
+                        //System.out.println("Collided with orc!");
+//                        double velocity = player.getHero().getWeight() * (player.getHero().getSpeedX()) / 10;  Code for collision impact with orc. 10 is the weight of orc
+//                        System.out.println(velocity);
+//                        redPolygon.setLayoutX(redPolygon.getLayoutX() + velocity);
+//                        redOrc1.setLayoutX(redOrc1.getLayoutX() + velocity);
                         leaped = false;
                         leapLength = 0;
+                        if (player.getHero().getHeroPolygon().getLayoutY() < 300)
+                            player.increaseScore();
                     } else {
-                        System.out.println();
-                        System.out.println("| | | | |\tLEAPED\t| | | | |");
-                        System.out.println();
-                        setX = hero.getSpeedX() + accelerationX;
-                        hero.setSpeedX(setX);
-                        hero.leap();
+                        setX = player.getHero().getSpeedX() + accelerationX;
+                        player.getHero().setSpeedX(setX);
+                        player.getHero().leap();
                         leapLength += setX;
                     }
                 } else {
-                    hero.setSpeedY(setY);  // At the end of the leap, set Y speed back to before and X to 0.
-                    hero.setSpeedX(0);
+                    player.getHero().setSpeedY(setY);  // At the end of the leap, set Y speed back to before and X to 0.
+                    player.getHero().setSpeedX(0);
                     leapLength = 0;
                     leaped = false;
+                    if (player.getHero().getHeroPolygon().getLayoutY() < 300)  // To prevent user from gaining score from leaping mid fall
+                        player.increaseScore();
                 }
             }
-            if (hero.getHeroPolygon().getBoundsInParent().intersects(mediumPolygon.getBoundsInParent()) || hero.getHeroPolygon().getBoundsInParent().intersects(smallPolygon.getBoundsInParent()) || hero.getHeroPolygon().getBoundsInParent().intersects(bigPolygon.getBoundsInParent())) {
-                System.out.println("collided");
+            if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(mediumPolygon.getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(smallPolygon.getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(bigPolygon.getBoundsInParent())) {
+                //System.out.println("collided");
                 GlobalVariables.playerJumpSound.stop();
                 GlobalVariables.playerJumpSound.play();
                 jumpHeight = 0;
-                hero.setSpeedY(-jumpSlice);
+                player.getHero().setSpeedY(-jumpSlice);
+            }
+            for (int i = 0; i < gameObjects.size(); i++) {
+                if (gameObjects.get(i) instanceof mainHero) {
+                    if (player.getHero().getHeroPolygon().getLayoutY() > 780) {  // Death fall detection
+                        GlobalVariables.playerFallSound.stop();
+                        GlobalVariables.playerFallSound.play();
+                        System.out.println("Game over!");  // Make game over scene and fade transition (bring down opacity of the game scene)
+                        //GlobalVariables.timeline.pause();
+    //                try {
+    //                    TimeUnit.SECONDS.sleep(2);
+    //                } catch (InterruptedException e) {
+    //                    e.printStackTrace();
+    //                }
+                        // Play player falling translate transition animation and then GlobalVariables.timeline.stop()
+                        GlobalVariables.timeline.setRate(0.1);  // Slow down time on death
+                        //GlobalVariables.timeline.stop();
+                        gameStarted = false;
+                    }
+                }
+                if (gameObjects.get(i) instanceof redOrc){
+                    if (((redOrc) gameObjects.get(i)).getRedOrcPolygon().getLayoutY() > 780){
+                        // Adding coins to player and remove from arraylist
+                        player.increaseCoins(3);
+                        //gameObjects.remove(i);
+                    }
+                }
+                if (gameObjects.get(i) instanceof greenOrc){
+                    if (((greenOrc) gameObjects.get(i)).getGreenOrcPolygon().getLayoutY() > 780){
+                        // Adding coins to player and remove from arraylist
+                        player.increaseCoins(1);
+                        //gameObjects.remove(i);
+                    }
+                }
+                if (gameObjects.get(i) instanceof coinChest) {
+                    if (((coinChest) gameObjects.get(i)).getCoinChestPolygon().getLayoutY() > 780){
+                        // remove from arraylist
+                        //gameObjects.remove(i);
+                    }
+                }
+                if (gameObjects.get(i) instanceof weaponChest) {
+                    if (((weaponChest) gameObjects.get(i)).getWeaponChestPolygon().getLayoutY() > 780){
+                        // remove from arraylist
+                        //gameObjects.remove(i);
+                    }
+                }
             }
 
-            if (hero.getHeroPolygon().getLayoutY() > 800) {  // Death fall detection
-                GlobalVariables.playerFallSound.play();
-                System.out.println("Game over!");  // Make game over scene
-                //timeline.pause();
-//                try {
-//                    TimeUnit.SECONDS.sleep(2);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-                // Play player falling translate transition animation and then timeline.stop()
-                timeline.stop();
-                gameStarted = false;
-            }
         }
     }
 }

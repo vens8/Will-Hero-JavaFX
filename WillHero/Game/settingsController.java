@@ -73,12 +73,11 @@ public class settingsController implements Initializable {
     }
 
     public void musicClicked() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         if(GlobalVariables.music) {
-            if (GlobalVariables.sound) {
-                GlobalVariables.buttonClickSound.stop();
-                GlobalVariables.buttonClickSound.play();
-            }
-
             GlobalVariables.mediaPlayer.pause();
             musicIcon.setImage(musicOff);
             musicLabel.setText("Music Off");

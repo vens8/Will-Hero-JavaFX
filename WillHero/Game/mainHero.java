@@ -12,13 +12,13 @@ public class mainHero extends GameObject implements Collidable {
     private double speedX, speedY, jumpHeight, leapLength, health;
     public static final double HEIGHT = 74.925048828125, WIDTH = 76.4000015258789, WEIGHT = 20;  // Final values, can be accessed from anywhere
     private int weapon;
-    private GameObjectTemplate<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
+    private GameObjectList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
 
     public mainHero(double x, double y) {
         super(new Position(x, y));
         speedX = 0;
         speedY = -4;  // Negative Y value means player moves up on the canvas
-        jumpHeight = -40;
+        jumpHeight = -50;
         leapLength = 200;
         hero = new ImageView();
         heroPolygon = new Polygon();
@@ -28,8 +28,8 @@ public class mainHero extends GameObject implements Collidable {
         hero.setFitHeight(42);
         hero.setPreserveRatio(true);
         hero.setImage(new Image("/Resources/player.png", true));
-        heroPolygon.setLayoutX(73);
-        heroPolygon.setLayoutY(290);
+        heroPolygon.setLayoutX(x + 46);
+        heroPolygon.setLayoutY(y);
         heroPolygon.setFill(Color.TRANSPARENT);
         heroPolygon.setStroke(Color.RED);  // remove
         heroPolygon.setStrokeWidth(2);  // remove
@@ -71,7 +71,7 @@ public class mainHero extends GameObject implements Collidable {
         anchorPane.getChildren().add(heroPolygon);
     }
 
-    public void manualMove(double x, double y) {
+    public void manualMove(double x, double y) {  // Can remove if not used
         hero.setLayoutY(hero.getLayoutY() + y);
         heroPolygon.setLayoutY(heroPolygon.getLayoutY() + y);
         hero.setLayoutX(hero.getLayoutX() + x);
@@ -118,6 +118,36 @@ public class mainHero extends GameObject implements Collidable {
 
     @Override
     public boolean collision_detected(GameObject gameObject) {
-        return false; // Dummy
+        if (gameObject instanceof smallPlatform) {
+            return ((smallPlatform) gameObject).getsPlatformPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof mediumPlatform) {
+            return ((mediumPlatform) gameObject).getmPlatformPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bigPlatform) {
+            return ((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof redOrc) {
+            return ((redOrc) gameObject).getRedOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof greenOrc) {
+            return ((greenOrc) gameObject).getGreenOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bossOrc) {
+            return ((bossOrc) gameObject).getBossOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof coinChest) {
+            return ((coinChest) gameObject).getCoinChestPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof weaponChest) {
+            return ((weaponChest) gameObject).getWeaponChestPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof Coin) {
+            return ((Coin) gameObject).getCoinPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof TNT) {
+            return ((TNT) gameObject).getTntPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+        }
+        return false;
     }
 }

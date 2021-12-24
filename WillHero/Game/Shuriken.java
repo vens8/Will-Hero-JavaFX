@@ -2,10 +2,11 @@ package Game;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class Shuriken extends Weapon {
+public class Shuriken extends Weapon implements Collidable{
     private transient ImageView shuriken;
     private Polygon shurikenPolygon;
     private double speedX;
@@ -21,8 +22,8 @@ public class Shuriken extends Weapon {
         shuriken.setFitHeight(56.0);
         shuriken.setPreserveRatio(true);
         shuriken.setImage(new Image("/Resources/shuriken.png", true));
-        shurikenPolygon.setLayoutX(59.0);
-        shurikenPolygon.setLayoutY(646.0);
+        shurikenPolygon.setLayoutX(x + 36);
+        shurikenPolygon.setLayoutY(y + 51);
         shurikenPolygon.setFill(Color.TRANSPARENT);
         shurikenPolygon.getPoints().setAll(
                 -19.583328247070312, -49.166-17.583328247070312,
@@ -48,5 +49,34 @@ public class Shuriken extends Weapon {
                 -1.0833282470703125, -40.8416748046875,
                 -3.75, -34.67498779296875,
                 -6.75, -40.84165);
+    }
+
+    public void addToScreen(AnchorPane anchorPane) {
+        anchorPane.getChildren().add(shuriken);
+        anchorPane.getChildren().add(shurikenPolygon);
+    }
+
+    public ImageView getShuriken() {
+        return shuriken;
+    }
+    public void setShuriken(ImageView shuriken) {
+        this.shuriken = shuriken;
+    }
+    public Polygon getShurikenPolygon() {
+        return shurikenPolygon;
+    }
+    public void setShurikenPolygon(Polygon shurikenPolygon) {
+        this.shurikenPolygon = shurikenPolygon;
+    }
+    public double getSpeedX() {
+        return speedX;
+    }
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    @Override
+    public boolean collision_detected(GameObject gameObject) {
+        return false; // Dummy
     }
 }

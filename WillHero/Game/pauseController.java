@@ -16,8 +16,8 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class pauseController implements Initializable {
-    private Stage stage;
     private Scene scene;
+    private static Stage stage;
     private Parent root;
 
     @FXML
@@ -83,6 +83,10 @@ public class pauseController implements Initializable {
 
     @FXML
     void exitClicked() throws IOException {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Main Menu");
         alert.setHeaderText("You're about to go to the main menu!");
@@ -107,6 +111,10 @@ public class pauseController implements Initializable {
     void exitMouseEntered() {
         glow.setLevel(0.5f);
         exitButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
@@ -116,6 +124,10 @@ public class pauseController implements Initializable {
 
     @FXML
     void musicClicked() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
         if(GlobalVariables.music) {
             GlobalVariables.mediaPlayer.pause();
             musicIcon.setImage(musicOff);
@@ -134,6 +146,10 @@ public class pauseController implements Initializable {
     void musicMouseEntered() {
         glow.setLevel(0.5f);
         musicButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
@@ -149,6 +165,10 @@ public class pauseController implements Initializable {
     void restartMouseEntered() {
         glow.setLevel(0.5f);
         restartGameButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
@@ -158,14 +178,23 @@ public class pauseController implements Initializable {
 
     @FXML
     void resumeClicked() {
+        GlobalVariables.timeline.play();
+        try {
+            stage.close();
+        }
+        catch (NullPointerException e) {
+            System.out.println(e);
+        }
     }
 
     @FXML
     void resumeMouseEntered() {
         glow.setLevel(0.5f);
         resumeGameButtonBar.setEffect(glow);
-
-
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
@@ -182,6 +211,10 @@ public class pauseController implements Initializable {
     void saveGameMouseEntered() {
         glow.setLevel(0.5f);
         saveGameButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
@@ -207,10 +240,22 @@ public class pauseController implements Initializable {
     void soundMouseEntered() {
         glow.setLevel(0.5f);
         soundButtonBar.setEffect(glow);
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonHoverSound.stop();
+            GlobalVariables.buttonHoverSound.play();
+        }
     }
 
     @FXML
     void soundMouseExited() {
         soundButtonBar.setEffect(null);
+    }
+
+    public static void setStage(Stage stage1) {
+        stage = stage1;
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
 }

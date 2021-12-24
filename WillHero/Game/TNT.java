@@ -2,10 +2,13 @@ package Game;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class TNT extends GameObject {
+// Getters and setters for all except explosionRadius
+
+public class TNT extends GameObject implements Collidable{
     private float explosionRadius;
     private transient ImageView tntImage;
     private Polygon tntPolygon;
@@ -20,8 +23,8 @@ public class TNT extends GameObject {
         tntImage.setFitHeight(68.0); //?
         tntImage.setPreserveRatio(true);
         tntImage.setImage(new Image("/Resources/tnt.png", true));
-        tntPolygon.setLayoutX(587.0);
-        tntPolygon.setLayoutY(286.0);
+        tntPolygon.setLayoutX(x + 28);
+        tntPolygon.setLayoutY(y + 21);
         tntPolygon.setFill(Color.TRANSPARENT);
         tntPolygon.getPoints().setAll(
                 -22.91668701171875, 40.82501220703125,
@@ -44,11 +47,46 @@ public class TNT extends GameObject {
                 -25.25, 27.158355712890625,
                 -25.25, 35.82501220703125,
                 -22.91668701171875, 35.82501220703125);
-        tntPolygon.setScaleX(0.55); //?
-        tntPolygon.setScaleY(0.55); //?
+//        tntPolygon.setScaleX(0.55);
+//        tntPolygon.setScaleY(0.55);
+    }
+
+    public void addToScreen(AnchorPane anchorPane) {
+        anchorPane.getChildren().add(tntImage);
+        anchorPane.getChildren().add(tntPolygon);
     }
 
     public float getExplosionRadius() { return explosionRadius; }
+    public ImageView getTntImage() {
+        return tntImage;
+    }
+    public void setTntImage(ImageView tntImage) {
+        this.tntImage = tntImage;
+    }
+    public Polygon getTntPolygon() {
+        return tntPolygon;
+    }
+    public void setTntPolygon(Polygon tntPolygon) {
+        this.tntPolygon = tntPolygon;
+    }
+
     @Override
-    public boolean collision_detected(GameObject gameObject) {        return false; /* Dummy*/    }
+    public boolean collision_detected(GameObject gameObject) {
+        if (gameObject instanceof mainHero) {
+            if (((mainHero) gameObject).getHeroPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent())) {
+                return true;
+            }
+        }
+        else if (gameObject instanceof redOrc) {
+            if (((redOrc) gameObject).getRedOrcPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent())) {
+                return true;
+            }
+        }
+        else if (gameObject instanceof greenOrc) {
+            if (((greenOrc) gameObject).getGreenOrcPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

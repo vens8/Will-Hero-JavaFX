@@ -19,6 +19,7 @@ import java.util.ResourceBundle;
 public class Main extends Application implements Initializable, Serializable {
     public static Stage myStage;
 
+    private Player player;
 
     @Override
     public void start(Stage primaryStage) {
@@ -30,6 +31,7 @@ public class Main extends Application implements Initializable, Serializable {
                 primaryStage.setTitle("Will Hero");
                 GlobalVariables.scene = new Scene(GlobalVariables.root);
                 primaryStage.setScene(GlobalVariables.scene);
+                // primaryStage.setResizable(false);  Uncomment at the end!!
                 primaryStage.show();
                 primaryStage.setOnCloseRequest(event -> {
                     try {
@@ -58,7 +60,8 @@ public class Main extends Application implements Initializable, Serializable {
     }
     public void playMusic() {
         GlobalVariables.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        GlobalVariables.mediaPlayer.play();  //  REMOVE AT THE END, THIS IS ONLY TO PREVENT EAR DAMAGE :(
+        GlobalVariables.mediaPlayer.play();
+        GlobalVariables.mediaPlayer.setVolume(0.75);
         GlobalVariables.music = true;
     }
 

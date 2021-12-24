@@ -1,5 +1,6 @@
 package Game;
 
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
@@ -29,6 +30,9 @@ public class GlobalVariables {
     public static Media playerDeath = new Media(new File("src/Resources/playerDeath.mp3").toURI().toString());
     public static MediaPlayer playerDeathSound = new MediaPlayer(playerDeath);
 
+    // Main timeline
+    public static Timeline timeline;
+
     // Sound
     public static boolean sound = true;
 
@@ -37,6 +41,9 @@ public class GlobalVariables {
 
     // Dimensions
     public static float SCREEN_WIDTH = 676, SCREEN_HEIGHT = 1000;
+
+    // Level data
+    public static GameObjectList<GameObject> gameObjects = new GameObjectList<>();
 
     // Containers
     public static Stage mainMenuStage;

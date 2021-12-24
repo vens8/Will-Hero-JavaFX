@@ -1,6 +1,6 @@
 package Game;
 
-public abstract class Weapon extends GameObject {
+public abstract class Weapon extends GameObject implements Collidable {
     private float damage;
     private int level, weaponType;
 

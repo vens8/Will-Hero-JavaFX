@@ -2,10 +2,11 @@ package Game;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class Sword extends Weapon {
+public class Sword extends Weapon implements Collidable{
     private transient ImageView sword;
     private Polygon swordPolygon;
     private double speedX, speedY;
@@ -22,8 +23,8 @@ public class Sword extends Weapon {
         sword.setFitHeight(45.0);
         sword.setPreserveRatio(true);
         sword.setImage(new Image("/Resources/sword.png", true));
-        swordPolygon.setLayoutX(182.0);
-        swordPolygon.setLayoutY(575.0);
+        swordPolygon.setLayoutX(x + 56);
+        swordPolygon.setLayoutY(y + 32);
         swordPolygon.setFill(Color.TRANSPARENT);
         swordPolygon.getPoints().setAll(
                 -32.08332824707031, 42.0,
@@ -42,5 +43,40 @@ public class Sword extends Weapon {
                 -43.75, 18.5,
                 -39.41667175292969, 21.33331298828125,
                 -26.25, 34.33331298828125);
+    }
+
+    public void addToScreen(AnchorPane anchorPane) {
+        anchorPane.getChildren().add(sword);
+        anchorPane.getChildren().add(swordPolygon);
+    }
+
+    public ImageView getSword() {
+        return sword;
+    }
+    public void setSword(ImageView sword) {
+        this.sword = sword;
+    }
+    public Polygon getSwordPolygon() {
+        return swordPolygon;
+    }
+    public void setSwordPolygon(Polygon swordPolygon) {
+        this.swordPolygon = swordPolygon;
+    }
+    public double getSpeedX() {
+        return speedX;
+    }
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+    public double getSpeedY() {
+        return speedY;
+    }
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    @Override
+    public boolean collision_detected(GameObject gameObject) {
+        return false; // Dummy
     }
 }

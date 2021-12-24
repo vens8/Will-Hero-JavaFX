@@ -20,19 +20,8 @@
       </ImageView>
   </children>
 </AnchorPane>
-      <AnchorPane fx:id="gameAnchorPane" prefHeight="675.0" prefWidth="5000.0">
+      <AnchorPane fx:id="gameAnchorPane" prefHeight="675.0" prefWidth="10010.0">
       	<children>
-      		
-      <StackPane layoutX="69.0" layoutY="580.0" prefHeight="68.0" prefWidth="42.0">
-         <children>
-            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
-            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
-               <font>
-                  <Font name="Dubai Medium" size="23.0" />
-               </font>
-            </Label>
-         </children>
-      </StackPane>
       <ImageView fx:id="mediumPlatform1" fitHeight="302.0" fitWidth="265.0" layoutX="-18.0" layoutY="208.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/mediumPlatform.png" />
@@ -41,11 +30,6 @@
       <ImageView fx:id="smallPlatform1" fitHeight="339.0" fitWidth="222.0" layoutX="287.0" layoutY="252.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/smallPlatform.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="player" fitHeight="75.0" fitWidth="75.0" layoutX="5.0" layoutY="258.0" pickOnBounds="true" preserveRatio="true" visible="false">
-         <image>
-            <Image url="@../Resources/player.png" />
          </image>
       </ImageView>
       <ImageView fx:id="redOrc1" fitHeight="56.0" fitWidth="56.0" layoutX="130.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
@@ -83,16 +67,6 @@
             <Image url="@../Resources/greenOrc.png" />
          </image>
       </ImageView>
-      <StackPane layoutX="170.0" layoutY="579.0" prefHeight="68.0" prefWidth="42.0">
-         <children>
-            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
-            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
-               <font>
-                  <Font name="Dubai Medium" size="23.0" />
-               </font>
-            </Label>
-         </children>
-      </StackPane>
       <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="293.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/coin.png" />
@@ -120,12 +94,18 @@
       <Polygon fx:id="mediumPolygon" fill="#1f93ff00" layoutX="128.0" layoutY="246.0" points="-127.9999771118164, 105.80001831054688, -128.0, 85.33334350585938, 102.91665649414062, 85.33334350585938, 102.91665649414062, 105.80001831054688" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
       <Polygon fx:id="smallPolygon" fill="#1f93ff00" layoutX="378.0" layoutY="421.0" points="102.58328247070312, -38.79998779296875, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19961547851562, -38.79998779296875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
       <Polygon fx:id="bigPolygon" fill="#1f93ff00" layoutX="623.0" layoutY="415.0" points="440.9166259765625, -69.5, 440.9166259765625, -91.5, -52.75, -91.5, -52.75, -69.5" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
+            <ImageView fx:id="smallPlatform11" fitHeight="339.0" fitWidth="222.0" layoutX="1176.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/smallPlatform.png" />
+               </image>
+            </ImageView>
+            <Polygon fx:id="smallPolygon1" fill="#1f93ff00" layoutX="1267.0" layoutY="351.0" points="102.58328247070312, -38.79998779296875, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19961547851562, -38.79998779296875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
       
   </children>
 </AnchorPane>
-      <AnchorPane fx:id="staticAnchorPane" prefHeight="200.0" prefWidth="200.0">
+      <AnchorPane fx:id="staticAnchorPane" prefHeight="669.0" prefWidth="1002.0">
       	<children>
-      		<Label alignment="CENTER" contentDisplay="CENTER" layoutX="890.0" layoutY="10.0" prefHeight="60.0" prefWidth="89.0" text="9999" textAlignment="CENTER" textFill="#635d5d" wrapText="true">
+      		<Label fx:id="coinLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="890.0" layoutY="10.0" prefHeight="60.0" prefWidth="89.0" text="9999" textAlignment="CENTER" textFill="#635d5d" wrapText="true">
          <font>
             <Font name="Dubai Medium" size="33.0" />
          </font>
@@ -140,7 +120,7 @@
             <Font name="Dubai Medium" size="19.0" />
          </font>
       </Label>
-      <Label fx:id="fpsLabel" layoutX="948.0" layoutY="635.0" prefHeight="30.0" prefWidth="41.0" textFill="#d10000">
+      <Label fx:id="fpsLabel" layoutX="948.0" layoutY="636.0" prefHeight="30.0" prefWidth="41.0" text="0" textFill="#d10000">
          <font>
             <Font name="Dubai Medium" size="16.0" />
          </font>
@@ -165,7 +145,41 @@
             <Image url="@../Resources/sword.png" />
          </image>
       </ImageView>
+      <StackPane layoutX="69.0" layoutY="580.0" prefHeight="68.0" prefWidth="42.0">
+         <children>
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
+               <font>
+                  <Font name="Dubai Medium" size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+      <StackPane layoutX="170.0" layoutY="579.0" prefHeight="68.0" prefWidth="42.0">
+         <children>
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label prefHeight="25.0" prefWidth="0.0" text="1" textFill="#fcff00">
+               <font>
+                  <Font name="Dubai Medium" size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
       	</children>
+      </AnchorPane>
+      <AnchorPane fx:id="gameOverAnchorPane" layoutX="311.0" layoutY="776.0" prefHeight="221.0" prefWidth="414.0">
+         <children>
+            <ImageView fitHeight="226.0" fitWidth="416.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/gameOver.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="65.0" fitWidth="42.0" layoutX="71.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+               <image>
+                  <Image url="@../Resources/coin.png" />
+               </image>
+            </ImageView>
+         </children>
       </AnchorPane>
    </children>
 </AnchorPane>
