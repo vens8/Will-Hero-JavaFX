@@ -9,7 +9,7 @@ import javafx.scene.shape.Polygon;
 public class mainHero extends GameObject implements Collidable {
     private transient ImageView hero;
     private Polygon heroPolygon;
-    private double speedX, speedY, jumpHeight, leapLength, health;
+    private double speedX, speedY, jumpHeight, leapLength, health, currentJumpHeight, currentLeapLength, weight;
     public static final double HEIGHT = 74.925048828125, WIDTH = 76.4000015258789, WEIGHT = 20;  // Final values, can be accessed from anywhere
     private int weapon;
     private GameObjectList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
@@ -18,8 +18,11 @@ public class mainHero extends GameObject implements Collidable {
         super(new Position(x, y));
         speedX = 0;
         speedY = -4;  // Negative Y value means player moves up on the canvas
+        currentJumpHeight = 0;
+        currentLeapLength = 0;
         jumpHeight = -50;
-        leapLength = 200;
+        leapLength = 150;  // prev 200
+        weight = 30;
         hero = new ImageView();
         heroPolygon = new Polygon();
         hero.setLayoutX(x);
@@ -148,6 +151,23 @@ public class mainHero extends GameObject implements Collidable {
         else if (gameObject instanceof TNT) {
             return ((TNT) gameObject).getTntPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
         }
+
         return false;
+    }
+
+    public double getCurrentLeapLength() {
+        return currentLeapLength;
+    }
+
+    public void setCurrentLeapLength(double currentLeapLength) {
+        this.currentLeapLength = currentLeapLength;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
     }
 }

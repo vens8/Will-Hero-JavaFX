@@ -1,6 +1,7 @@
 package Game;
 
 import javafx.animation.*;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.util.Duration;
 
@@ -27,7 +28,7 @@ public class Animations {
     }
     public static Timeline delayTransition(double duration)
     {
-        return new Timeline(new KeyFrame(Duration.millis(duration), e -> { }));
+        return new Timeline(new KeyFrame(Duration.millis(duration), event -> { }));
     }
 }
 

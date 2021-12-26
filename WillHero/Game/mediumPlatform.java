@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class mediumPlatform extends Platform implements Collidable{
-    private transient ImageView mPlatform;
-    private Polygon mPlatformPolygon;
+    private final transient ImageView mPlatform;
+    private final Polygon mPlatformPolygon;
 
     mediumPlatform(double x, double y){
         super(x, y);
@@ -24,8 +24,8 @@ public class mediumPlatform extends Platform implements Collidable{
         mPlatformPolygon.setLayoutY(y + 38);
         mPlatformPolygon.setFill(Color.TRANSPARENT);
         mPlatformPolygon.getPoints().setAll(
-                -127.9999771118164, 105.80001831054688,
-                -128.0, 85.33334350585938,
+                -134.6003875732422, 105.80001831054688,
+                -134.6003875732422, 85.33334350585938,
                 102.91665649414062, 85.33334350585938,
                 102.91665649414062, 105.80001831054688);
     }

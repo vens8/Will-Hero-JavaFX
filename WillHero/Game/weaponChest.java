@@ -1,8 +1,6 @@
 package Game;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -10,7 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 
-public class weaponChest extends Chest implements Collidable{
+public class weaponChest extends Chest {
     private Sword sword;
     private Shuriken shuriken;
     private int weaponType;
@@ -22,7 +20,7 @@ public class weaponChest extends Chest implements Collidable{
     private Image image5 = new Image("/Resources/wchest5.png", true);
     private Image image6 = new Image("/Resources/wchest6.png", true);
     private Polygon weaponChestPolygon;
-    private double resize = 0;
+    private boolean activated;
 
     public weaponChest(double x, double y, int weaponType) {
         super(x, y);
@@ -43,18 +41,25 @@ public class weaponChest extends Chest implements Collidable{
                 79.25, -12.274993896484375,
                 -18.54998779296875, -12.274993896484375,
                 -27.95001220703125, -2.875);
+
+        weaponChestImageView.setScaleX(0.75);
+        weaponChestImageView.setScaleY(0.75);
+        weaponChestPolygon.setScaleX(0.75);
+        weaponChestPolygon.setScaleY(0.75);
         this.weaponType = weaponType;
         if (this.weaponType == 1) {
-            sword = new Sword(x, y);
+            sword = new Sword(x + 70, y + 50);
             shuriken = null;
+            sword.addToScreen(GlobalVariables.gameAnchorPane);
             sword.getSwordPolygon().setDisable(true);  // Initially should be invisible and non-interactive
             sword.getSwordPolygon().setVisible(false);
             sword.getSword().setDisable(true); // Initially should be invisible and non-interactive
             sword.getSword().setVisible(false);
         }
         else {
-            shuriken = new Shuriken(x, y);
+            shuriken = new Shuriken(x + 70, y + 50);
             sword = null;
+            shuriken.addToScreen(GlobalVariables.gameAnchorPane);
             shuriken.getShuriken().setDisable(true);  // Initially should be invisible and non-interactive
             shuriken.getShuriken().setVisible(false);
             shuriken.getShurikenPolygon().setDisable(true); // Initially should be invisible and non-interactive
@@ -67,73 +72,67 @@ public class weaponChest extends Chest implements Collidable{
         anchorPane.getChildren().add(weaponChestPolygon);
     }
 
-    public void playChestAnimation() {
-        Timeline timeline = new Timeline(
+    public void playChestAnimation(Player player) {
+        GlobalVariables.weaponChestOpenSound.stop();
+        GlobalVariables.weaponChestOpenSound.play();
+        Timeline timeline1 = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(weaponChestImageView.imageProperty(), image1)),
                 new KeyFrame(Duration.millis(100), new KeyValue(weaponChestImageView.imageProperty(), image2)),
                 new KeyFrame(Duration.millis(200), new KeyValue(weaponChestImageView.imageProperty(), image3)),
                 new KeyFrame(Duration.millis(300), new KeyValue(weaponChestImageView.imageProperty(), image4)),
                 new KeyFrame(Duration.millis(400), new KeyValue(weaponChestImageView.imageProperty(), image5)),
-                new KeyFrame(Duration.millis(500), new KeyValue(weaponChestImageView.imageProperty(), image6))
+                new KeyFrame(Duration.millis(500), new KeyValue(weaponChestImageView.imageProperty(), image6)),
+                new KeyFrame(Duration.millis(600), event -> {
+                    if (this.weaponType == 1) {
+                        sword.getSwordPolygon().setDisable(false);  // Initially should be invisible and non-interactive
+                        sword.getSwordPolygon().setVisible(true);
+                        sword.getSword().setDisable(false); // Initially should be invisible and non-interactive
+                        sword.getSword().setVisible(true);
+                    }
+                    else {
+                        shuriken.getShuriken().setDisable(false);  // Initially should be invisible and non-interactive
+                        shuriken.getShuriken().setVisible(true);
+                        shuriken.getShurikenPolygon().setDisable(false); // Initially should be invisible and non-interactive
+                        shuriken.getShurikenPolygon().setVisible(true);
+                    }
+                })
         );
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(event -> playWeaponAnimation());  // On collecting the sword chest, the sword is displayed
-        timeline.play();
-    }
-
-    public void playResize() {
+        timeline1.setCycleCount(1);
+        Animation animation1;
+        Timeline timeline2, timeline3;
         if (weaponType == 1) {
-            sword.getSwordPolygon().setScaleX(1 + resize);
-            sword.getSwordPolygon().setScaleY(1 + resize);
-            sword.getSword().setScaleX(1 + resize);
-            sword.getSword().setScaleY(1 + resize);
+            animation1 = Animations.translateTransition(sword.getSword(), 0, -75, 500, 1, false);
+            timeline2 = new Timeline(new KeyFrame(Duration.millis(250), new KeyValue(sword.getSword().scaleXProperty(), 1)),
+                    new KeyFrame(Duration.millis(250), new KeyValue(sword.getSword().scaleYProperty(), 1)));
+            timeline2.setCycleCount(1);
+            timeline3 = new Timeline(new KeyFrame(Duration.millis(10), event -> {
+                sword.getSword().setDisable(true);
+                sword.getSword().setVisible(false);
+                sword.getSwordPolygon().setDisable(true);
+                sword.getSwordPolygon().setVisible(false);
+                GlobalVariables.gameAnchorPane.getChildren().removeAll(sword.getSword(), sword.getSwordPolygon());
+                // Remove from gameObjects as well
+            }));
         }
         else {
-            shuriken.getShurikenPolygon().setScaleX(1 + resize);
-            shuriken.getShurikenPolygon().setScaleY(1 + resize);
-            shuriken.getShuriken().setScaleX(1 + resize);
-            shuriken.getShuriken().setScaleY(1 + resize);
+            animation1 = Animations.translateTransition(shuriken.getShuriken(), 0, -75, 500, 1, false);
+            timeline2 = new Timeline(new KeyFrame(Duration.millis(250), new KeyValue(shuriken.getShuriken().scaleXProperty(), 1)),
+                    new KeyFrame(Duration.millis(250), new KeyValue(shuriken.getShuriken().scaleYProperty(), 1)));
+            timeline2.setCycleCount(1);
+            timeline3 = new Timeline(new KeyFrame(Duration.millis(10), event -> {
+                shuriken.getShuriken().setDisable(true);
+                shuriken.getShuriken().setVisible(false);
+                shuriken.getShurikenPolygon().setDisable(true);
+                shuriken.getShurikenPolygon().setVisible(false);
+                GlobalVariables.gameAnchorPane.getChildren().removeAll(shuriken.getShuriken(), shuriken.getShurikenPolygon());
+                // Remove from gameObjects as well
+            }));
         }
-        resize += 0.05;
-    }
-
-    public void playWeaponAnimation() {
-        if (weaponType == 1) {
-            sword.getSword().setDisable(false);
-            sword.getSword().setVisible(true);
-            sword.getSwordPolygon().setDisable(false);
-            sword.getSwordPolygon().setVisible(true);
-            Animations.translateTransition(sword.getSword(), 0, -20, 500, 1, false).play();  // Lift weapon in the air
-            Animations.translateTransition(sword.getSwordPolygon(), 0, -20, 500, 1, false).play();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250), event -> playResize()));
-            timeline.setCycleCount(1);
-            timeline.play();
-            Animations.translateTransition(sword.getSword(), 500, -100, 500, 1, false).play();  // Make sword go to the screen corner
-            Animations.translateTransition(sword.getSwordPolygon(), 500, -100, 500, 1, false).play();
-            sword.getSwordPolygon().setDisable(true);
-            sword.getSwordPolygon().setVisible(false);
-            sword.getSword().setDisable(true);
-            sword.getSwordPolygon().setVisible(false);
-        }
-        else {
-            shuriken.getShuriken().setDisable(false);
-            shuriken.getShuriken().setVisible(true);
-            shuriken.getShurikenPolygon().setDisable(false);
-            shuriken.getShurikenPolygon().setVisible(true);
-            Animations.translateTransition(shuriken.getShuriken(), 0, -20, 500, 1, false).play();  // Lift weapon in the air
-            Animations.translateTransition(sword.getSwordPolygon(), 0, -20, 500, 1, false).play();
-            Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250), event -> playResize()));
-            timeline.setCycleCount(1);
-            timeline.setOnFinished(event -> resize = 0);
-            timeline.play();
-            Animations.translateTransition(shuriken.getShuriken(), 500, -100, 500, 1, false).play();  // Make sword go to the screen corner
-            Animations.translateTransition(sword.getSwordPolygon(), 500, -100, 500, 1, false).play();
-            shuriken.getShuriken().setDisable(true);
-            shuriken.getShuriken().setVisible(false);
-            shuriken.getShurikenPolygon().setDisable(true);
-            shuriken.getShurikenPolygon().setVisible(false);
-        }
-
+        timeline3.setCycleCount(1);
+        SequentialTransition sequentialTransition = new SequentialTransition (timeline1, timeline2, animation1, timeline3);
+        sequentialTransition.setCycleCount(1);
+        sequentialTransition.play();
+        // sequentialTransition.setOnFinished(event -> player.increaseCoins(coin.getCoinValue())); Add weapon to player!
     }
 
     public Sword getSword() {
@@ -160,6 +159,15 @@ public class weaponChest extends Chest implements Collidable{
     public void setWeaponChestImageView(ImageView weaponChestImageView) {
         this.weaponChestImageView = weaponChestImageView;
     }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
     public Polygon getWeaponChestPolygon() {
         return weaponChestPolygon;
     }

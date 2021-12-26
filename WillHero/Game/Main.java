@@ -18,12 +18,13 @@ import java.util.ResourceBundle;
 
 public class Main extends Application implements Initializable, Serializable {
     public static Stage myStage;
-
     private Player player;
+    private Main game;
 
     @Override
     public void start(Stage primaryStage) {
             try {
+                // Create game and player here and pass to Controller.java
                 playMusic();
                 primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
                 GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
@@ -63,6 +64,14 @@ public class Main extends Application implements Initializable, Serializable {
         GlobalVariables.mediaPlayer.play();
         GlobalVariables.mediaPlayer.setVolume(0.75);
         GlobalVariables.music = true;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
     public static void main(String[] args) {

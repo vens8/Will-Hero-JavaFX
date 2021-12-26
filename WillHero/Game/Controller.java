@@ -7,16 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.InnerShadow;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
@@ -51,11 +46,18 @@ public class Controller implements Initializable {
     @FXML
     private AnchorPane playGameAnchorPane;
 
+    private Main game;
+    private Player player;
+
     javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
     InnerShadow innerShadow = new InnerShadow();
 
     @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException{
+    public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException {
+        game = new Main();
+        player = new Player(new mainHero(50, 290));
+        game.setPlayer(player);
+
         try {
             Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
             Animations.fadeTransition(playGameAnchorPane, 0.5, 1d, 500d, 1, false).play();
@@ -207,7 +209,7 @@ public class Controller implements Initializable {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         GlobalVariables.scene = new Scene(GlobalVariables.root);
         gameController gameController = loader.getController();
-        gameController.activateKeyListener();
+        gameController.setupScene(game);
         stage.setScene(GlobalVariables.scene);
         stage.show();
     }

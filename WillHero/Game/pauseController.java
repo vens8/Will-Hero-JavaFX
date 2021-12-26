@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
 
 public class pauseController implements Initializable {
     private Scene scene;
-    private static Stage stage;
+    private Stage stage, mainGameStage;
     private Parent root;
 
     @FXML
@@ -49,6 +49,9 @@ public class pauseController implements Initializable {
 
     @FXML
     private Label soundLabel;
+
+    private Main game;
+    private Player player;
 
     javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
     Image musicOn = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/musicon.png")));
@@ -158,7 +161,24 @@ public class pauseController implements Initializable {
     }
 
     @FXML
-    void restartClicked() {
+    void restartClicked() throws IOException {
+        stage.close();
+
+        // Reopen game stage
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));
+        GlobalVariables.root = loader.load();
+        //stage = (Stage) (restartGameButtonBar.getScene().getWindow());
+        mainGameStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
+        GlobalVariables.scene = new Scene(GlobalVariables.root);
+        gameController gameController = loader.getController();
+
+        // Reset player properties
+        player.setScore(0);
+        player.setHero(new mainHero(27, 290));
+        player.setRevived(false);
+        gameController.setupScene(game);
+        mainGameStage.setScene(GlobalVariables.scene);
+        mainGameStage.show();
     }
 
     @FXML
@@ -251,11 +271,14 @@ public class pauseController implements Initializable {
         soundButtonBar.setEffect(null);
     }
 
-    public static void setStage(Stage stage1) {
-        stage = stage1;
+    public void setup(Stage stage, Stage mainGameStage, Main game) {
+        this.game = game;
+        this.player = this.game.getPlayer();
+        this.stage = stage;
+        this.mainGameStage = mainGameStage;
     }
 
-    public static Stage getStage() {
+    public Stage getStage() {
         return stage;
     }
 }

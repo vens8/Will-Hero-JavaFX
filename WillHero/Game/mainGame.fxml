@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.Glow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -32,24 +34,9 @@
             <Image url="@../Resources/smallPlatform.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="redOrc1" fitHeight="56.0" fitWidth="56.0" layoutX="130.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/redOrc.png" />
-         </image>
-      </ImageView>
       <ImageView fx:id="bigPlatform1" fitHeight="265.0" fitWidth="521.0" layoutX="559.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/bigPlatform.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="tnt1" fitHeight="68.0" fitWidth="67.0" layoutX="559.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/tnt.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="chest1" fitHeight="175.0" fitWidth="200.0" layoutX="347.0" layoutY="241.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/chestp1.png" />
          </image>
       </ImageView>
       <ImageView fx:id="princess" fitHeight="63.0" fitWidth="65.0" layoutX="918.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
@@ -62,36 +49,10 @@
             <Image url="@../Resources/bossOrc.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="greenOrc1" fitHeight="60.0" fitWidth="56.0" layoutX="319.0" layoutY="308.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/greenOrc.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="293.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/coin.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="266.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/coin.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="24.0" fitWidth="25.0" layoutX="637.0" layoutY="236.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/coin.png" />
-         </image>
-      </ImageView>
-      <Polygon fx:id="playerPolygon" fill="TRANSPARENT" layoutX="67.0" layoutY="273.0" points="-62.550010681152344, 58.925018310546875, 13.849990844726562, 58.925018310546875, 13.849990844726562, 50.125030517578125, 9.25, 42.925018310546875, 11.449996948242188, 31.125, 9.25, 31.125, 9.25, -10.074981689453125, 11.449996948242188, -16.0, 3.25, -16.0, 7.4499969482421875, -10.074981689453125, -11.150005340576172, 5.5250244140625, -18.35000228881836, 5.5250244140625, -30.549999237060547, -10.074981689453125, -27.549999237060547, -16.0, -35.35000228881836, -16.0, -32.35000228881836, -10.074981689453125, -45.749996185302734, 11.125, -45.749996185302734, 48.524993896484375, -62.550010681152344, 48.524993896484375" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" visible="false" />
-      <Polygon fx:id="redPolygon" fill="#1f93ff00" layoutX="159.0" layoutY="281.0" points="-29.0, 51.32501220703125, 25.04998779296875, 51.32501220703125, 25.04998779296875, -0.4749755859375, -26.150009155273438, -0.4749755859375, -26.150009155273438, 31.32501220703125, -26.150009155273438, 45.125" stroke="#f6ff00" strokeType="INSIDE" strokeWidth="2.0" />
-      <Polygon fx:id="greenPolygon" fill="#1f93ff00" layoutX="348.0" layoutY="308.0" points="-27.95001220703125, 51.219512939453125, 27.0, 51.219512939453125, 27.0, 31.32501220703125, 23.25, 31.32501220703125, 23.25, 1.5250244140625, -26.1500244140625, 1.5250244140625, -26.150009155273438, 31.32501220703125, -26.1500244140625, 45.925018310546875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
-      <Polygon fx:id="chestPolygon" fill="#1f93ff00" layoutX="411.0" layoutY="309.0" points="-27.95001220703125, 51.219512939453125, 79.25, 51.219512939453125, 79.25, -12.274993896484375, -18.54998779296875, -12.274993896484375, -27.95001220703125, -2.875" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
-      <Polygon fx:id="tntPolygon" fill="#1f93ff00" layoutX="587.0" layoutY="286.0" points="-22.91668701171875, 40.82501220703125, 31.58331298828125, 40.82501220703125, 31.58331298828125, 34.32501220703125, 33.91668701171875, 34.32501220703125, 33.91668701171875, 25.32501220703125, 31.58331298828125, 25.32501220703125, 31.58331298828125, -1.841644287109375, 33.91668701171875, -1.841644287109375, 33.91668701171875, -10.17498779296875, 31.58331298828125, -10.17498779296875, 31.58331298828125, -16.508331298828125, -22.91668701171875, -16.508331298828125, -22.91668701171875, -10.17498779296875, -25.25, -10.17498779296875, -25.25, -2.341644287109375, -22.91668701171875, -2.341644287109375, -22.91668701171875, 27.158355712890625, -25.25, 27.158355712890625, -25.25, 35.82501220703125, -22.91668701171875, 35.82501220703125" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
-      <Polygon fx:id="coinPolygon" fill="#1f93ff00" layoutX="650.0" layoutY="335.0" points="-12.91668701171875, -30.0, -9.58331298828125, -21.67498779296875, -1.0, -18.508331298828125, 7.75, -21.67498779296875, 11.0, -30.0, 7.75, -38.508331298828125, -1.0, -42.0, -9.58331298828125, -38.508331298828125" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
       <Polygon fx:id="bossPolygon" fill="#1f93ff00" layoutX="716.0" layoutY="283.0" points="-49.08331298828125, 39.32501220703125, 88.58331298828125, 39.32501220703125, 88.58331298828125, -104.00831604003906, -46.75, -104.00831604003906, -46.75, -4.841644287109375, -44.91668701171875, -4.841644287109375, -44.91668701171875, 11.991668701171875, -49.08331298828125, 11.991668701171875" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
       <Polygon fill="#1f93ff00" layoutX="59.0" layoutY="646.0" points="-19.583328247070312, -49.16668701171875, -17.583328247070312, -34.67498779296875, -12.583328247070312, -28.00830078125, -21.25, -28.00830078125, -36.0, -23.0, -21.25, -16.50830078125, -12.583328247070312, -18.00830078125, -17.583328247070312, -11.5, -19.583328247070312, 5.0, -6.75, -4.50830078125, -3.75, -11.5, -1.0833282470703125, -4.50830078125, 12.25, 5.0, 10.583328247070312, -11.5, 6.25, -18.00830078125, 13.75, -16.50830078125, 27.878326416015625, -23.0, 13.75, -29.67498779296875, 6.25, -29.67498779296875, 10.583328247070312, -34.67498779296875, 12.25, -49.16668701171875, -1.0833282470703125, -40.8416748046875, -3.75, -34.67498779296875, -6.75, -40.8416748046875" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
       <Polygon fill="#1f93ff00" layoutX="182.0" layoutY="575.0" points="-32.08332824707031, 42.0, -30.083328247070312, 43.5, -24.583328247070312, 38.16668701171875, 15.083328247070312, 75.66668701171875, 26.25, 79.16668701171875, 23.416671752929688, 70.5, -18.916671752929688, 32.5, -14.416671752929688, 27.33331298828125, -16.416671752929688, 25.5, -22.583328247070312, 30.33331298828125, -37.41667175292969, 18.5, -39.41667175292969, 14.66668701171875, -41.416656494140625, 16.33331298828125, -43.75, 18.5, -39.41667175292969, 21.33331298828125, -26.25, 34.33331298828125" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
-      <Polygon fx:id="mediumPolygon" fill="#1f93ff00" layoutX="128.0" layoutY="246.0" points="-127.9999771118164, 105.80001831054688, -128.0, 85.33334350585938, 102.91665649414062, 85.33334350585938, 102.91665649414062, 105.80001831054688" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
+      <Polygon fx:id="mediumPolygon" fill="#1f93ff00" layoutX="128.0" layoutY="246.0" points="-134.6003875732422, 105.80001831054688, -134.6003875732422, 85.33334350585938, 102.91665649414062, 85.33334350585938, 102.91665649414062, 105.80001831054688" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
       <Polygon fx:id="smallPolygon" fill="#1f93ff00" layoutX="378.0" layoutY="421.0" points="102.58328247070312, -38.79998779296875, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19961547851562, -38.79998779296875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
       <Polygon fx:id="bigPolygon" fill="#1f93ff00" layoutX="623.0" layoutY="415.0" points="440.9166259765625, -69.5, 440.9166259765625, -91.5, -52.75, -91.5, -52.75, -69.5" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
             <ImageView fx:id="smallPlatform11" fitHeight="339.0" fitWidth="222.0" layoutX="1176.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
@@ -103,7 +64,7 @@
       
   </children>
 </AnchorPane>
-      <AnchorPane fx:id="staticAnchorPane" prefHeight="669.0" prefWidth="1002.0">
+      <AnchorPane fx:id="staticAnchorPane" layoutX="1.0" prefHeight="669.0" prefWidth="1002.0">
       	<children>
       		<Label fx:id="coinLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="890.0" layoutY="10.0" prefHeight="60.0" prefWidth="89.0" text="9999" textAlignment="CENTER" textFill="#635d5d" wrapText="true">
          <font>
@@ -165,6 +126,18 @@
             </Label>
          </children>
       </StackPane>
+            <ImageView fitHeight="47.0" fitWidth="47.0" layoutX="144.0" layoutY="288.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/redOrc.png" />
+               </image>
+            </ImageView>
+            <Polygon fx:id="addhere" fill="TRANSPARENT" layoutX="169.0" layoutY="287.0" points="-29.0, 51.32501220703125,                 25.04998779296875, 51.32501220703125,                 25.04998779296875, -0.4749755859375,                 -26.150009155273438, -0.4749755859375,                 -26.150009155273438, 31.32501220703125,                 -26.150009155273438, 45.125" scaleX="0.85" scaleY="0.85" stroke="BLACK" strokeType="INSIDE" visible="false" />
+      <ImageView fx:id="greenOrc1" fitHeight="49.0" fitWidth="49.0" layoutX="364.0" layoutY="315.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/greenOrc.png" />
+         </image>
+      </ImageView>
+      <Polygon fx:id="takehere" fill="#1f93ff00" layoutX="389.0" layoutY="310.0" points="-27.95001220703125, 51.219512939453125, 27.0, 51.219512939453125, 27.0, 31.32501220703125, 23.25, 31.32501220703125, 23.250003814697266, 2.567394495010376, -26.150020599365234, 2.6253042221069336, -26.150009155273438, 31.32501220703125, -26.1500244140625, 45.925018310546875" scaleX="0.9" scaleY="0.9" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" visible="false" />
       	</children>
       </AnchorPane>
       <AnchorPane fx:id="gameOverAnchorPane" layoutX="311.0" layoutY="776.0" prefHeight="221.0" prefWidth="414.0">
@@ -174,10 +147,55 @@
                   <Image url="@../Resources/gameOver.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="65.0" fitWidth="42.0" layoutX="71.0" layoutY="55.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+            <Group fx:id="reviveButton" layoutX="115.0" layoutY="68.0" onMouseClicked="#reviveButtonClicked" onMouseEntered="#reviveMouseEntered" onMouseExited="#reviveMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="186.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/reviveButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/coin.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="restartButton" layoutX="115.0" layoutY="115.0" onMouseClicked="#restartButtonClicked" onMouseEntered="#restartMouseEntered" onMouseExited="#restartMouseExited">
+               <children>
+                  <ImageView fitHeight="43.0" fitWidth="184.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/restartGameButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="145.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/restart.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="exitButton" layoutX="115.0" layoutY="166.0" onMouseClicked="#exitButtonClicked" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="182.0" layoutX="1.0" layoutY="-2.0" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/exitGameButton2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/exitGame.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <ImageView fitHeight="30.0" fitWidth="126.0" layoutX="148.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../Resources/coin.png" />
+                  <Image url="@../Resources/youDied.png" />
                </image>
+               <effect>
+                  <Glow level="0.77" />
+               </effect>
             </ImageView>
          </children>
       </AnchorPane>

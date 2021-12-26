@@ -49,6 +49,8 @@ public class Shuriken extends Weapon implements Collidable{
                 -1.0833282470703125, -40.8416748046875,
                 -3.75, -34.67498779296875,
                 -6.75, -40.84165);
+        shuriken.setScaleX(0.5);
+        shuriken.setScaleY(0.5);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

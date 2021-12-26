@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -28,7 +29,21 @@ public class GlobalVariables {
     public static Media playerFall = new Media(new File("src/Resources/playerFall.m4a").toURI().toString());
     public static MediaPlayer playerFallSound = new MediaPlayer(playerFall);
     public static Media playerDeath = new Media(new File("src/Resources/playerDeath.mp3").toURI().toString());
-    public static MediaPlayer playerDeathSound = new MediaPlayer(playerDeath);
+    public static MediaPlayer playerDeathSound = new MediaPlayer(playerDeath);  // Use when orc kills player
+    public static Media weaponChestOpen = new Media(new File("src/Resources/weaponChestOpen.m4a").toURI().toString());
+    public static MediaPlayer weaponChestOpenSound = new MediaPlayer(weaponChestOpen);
+    public static Media coinChestOpen = new Media(new File("src/Resources/coinChestOpen.m4a").toURI().toString());
+    public static MediaPlayer coinChestOpenSound = new MediaPlayer(coinChestOpen);
+    public static Media swordKill = new Media(new File("src/Resources/swordDeath.mp3").toURI().toString());
+    public static MediaPlayer swordKillSound = new MediaPlayer(swordKill);
+    public static Media shurikenThrow = new Media(new File("src/Resources/shurikenThrow.m4a").toURI().toString());
+    public static MediaPlayer shurikenThrowSound = new MediaPlayer(shurikenThrow);
+    public static Media tntExplosion = new Media(new File("src/Resources/tntExplosion.m4a").toURI().toString());
+    public static MediaPlayer tntExplosionSound = new MediaPlayer(tntExplosion);
+    public static Media playerRevive = new Media(new File("src/Resources/playerRevive.m4a").toURI().toString());
+    public static MediaPlayer playerReviveSound = new MediaPlayer(playerRevive);
+    public static Media coinCollect = new Media(new File("src/Resources/coinCollect.m4a").toURI().toString());
+    public static MediaPlayer coinCollectSound = new MediaPlayer(coinCollect);
 
     // Main timeline
     public static Timeline timeline;
@@ -44,6 +59,10 @@ public class GlobalVariables {
 
     // Level data
     public static GameObjectList<GameObject> gameObjects = new GameObjectList<>();
+
+    // Anchor Panes
+    public static AnchorPane gameAnchorPane;
+    public static AnchorPane staticAnchorPane;
 
     // Containers
     public static Stage mainMenuStage;

@@ -20,20 +20,27 @@ public class greenOrc extends Orc implements Collidable{
         greenOrcPolygon = new Polygon();
         greenOrc.setLayoutX(x);
         greenOrc.setLayoutY(y);
+        greenOrc.setFitHeight(49);
+        greenOrc.setFitWidth(49);
         greenOrc.setPreserveRatio(true);
         greenOrc.setImage(new Image("/Resources/greenOrc.png", true));
-        greenOrcPolygon.setLayoutX(x + 29);
-        greenOrcPolygon.setLayoutY(y);
+        greenOrcPolygon.setLayoutX(x + 25);
+        greenOrcPolygon.setLayoutY(y - 5);
+        greenOrcPolygon.setStroke(Color.RED);
+        greenOrcPolygon.setStrokeWidth(2);
         greenOrcPolygon.setFill(Color.TRANSPARENT);
         greenOrcPolygon.getPoints().setAll(
                 -27.95001220703125, 51.219512939453125,
                 27.0, 51.219512939453125,
                 27.0, 31.32501220703125,
                 23.25, 31.32501220703125,
-                23.25, 1.5250244140625,
-                -26.1500244140625, 1.5250244140625,
+                23.250003814697266, 2.567394495010376,
+                -26.150020599365234, 2.6253042221069336,
                 -26.150009155273438, 31.32501220703125,
                 -26.1500244140625, 45.925018310546875);
+
+        greenOrcPolygon.setScaleX(0.9);
+        greenOrcPolygon.setScaleY(0.9);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

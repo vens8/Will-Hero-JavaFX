@@ -1,14 +1,14 @@
 package Game;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
+
+import java.sql.Time;
 
 public class coinChest extends Chest implements Collidable{
     private Coin coin;
@@ -20,9 +20,11 @@ public class coinChest extends Chest implements Collidable{
     private final Image image5 = new Image("/Resources/cchest5.png", true);
     private final Image image6 = new Image("/Resources/cchest6.png", true);
     private Polygon coinChestPolygon;
+    private boolean activated;
 
     public coinChest(double x, double y, int coins) {
         super(x, y);
+        activated = false;
         coinChestImageView = new ImageView();
         coinChestImageView.setImage(image1);
         coinChestPolygon = new Polygon();
@@ -40,7 +42,8 @@ public class coinChest extends Chest implements Collidable{
                 79.25, -12.274993896484375,
                 -18.54998779296875, -12.274993896484375,
                 -27.95001220703125, -2.875);
-        coin = new Coin(x, y);
+        coin = new Coin(x + 70, y + 50);  // Place coin at the center of the chest
+        coin.addToScreen(GlobalVariables.gameAnchorPane);
         coin.getCoinImage().setDisable(true);  // Initially should be invisible and non-interactive
         coin.getCoinImage().setVisible(false);
         coin.getCoinPolygon().setDisable(true); // Initially should be invisible and non-interactive
@@ -48,39 +51,43 @@ public class coinChest extends Chest implements Collidable{
         coin.setCoinValue(coins);  // Set the number of coins the player gets
     }
 
-    public void playChestAnimation() {
-        Timeline timeline = new Timeline(
+    public void playChestAnimation(Player player) {
+        GlobalVariables.coinChestOpenSound.stop();
+        GlobalVariables.coinChestOpenSound.play();
+        Timeline timeline1 = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(coinChestImageView.imageProperty(), image1)),
                 new KeyFrame(Duration.millis(100), new KeyValue(coinChestImageView.imageProperty(), image2)),
                 new KeyFrame(Duration.millis(200), new KeyValue(coinChestImageView.imageProperty(), image3)),
                 new KeyFrame(Duration.millis(300), new KeyValue(coinChestImageView.imageProperty(), image4)),
                 new KeyFrame(Duration.millis(400), new KeyValue(coinChestImageView.imageProperty(), image5)),
-                new KeyFrame(Duration.millis(500), new KeyValue(coinChestImageView.imageProperty(), image6))
+                new KeyFrame(Duration.millis(500), new KeyValue(coinChestImageView.imageProperty(), image6)),
+                new KeyFrame(Duration.millis(600), event -> {
+                    coin.getCoinImage().setDisable(false);
+                    coin.getCoinImage().setVisible(true);
+                    coin.getCoinPolygon().setDisable(false);
+                    coin.getCoinPolygon().setVisible(true);
+                })
         );
-        timeline.setCycleCount(1);
-        timeline.setOnFinished(event -> playCoinAnimation());  // On collecting the coin chest, the coin is displayed
-        timeline.play();
-    }
-
-    public void playCoinAnimation() {
-        coin.getCoinImage().setDisable(false);
-        coin.getCoinImage().setVisible(true);
-        coin.getCoinPolygon().setDisable(false);
-        coin.getCoinPolygon().setVisible(true);
-        Animations.translateTransition(coin.getCoinImage(), 0, -20, 500, 1, false).play();
-        Animations.translateTransition(coin.getCoinPolygon(), 0, -20, 500, 1, false).play();
-        double resize = 0;
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250), event -> {
-            coin.getCoinImage().setScaleX(1);
+        timeline1.setCycleCount(1);
+        Animation animation1 = Animations.translateTransition(coin.getCoinImage(), 0, -50, 500, 1, false);
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(coin.getCoinImage().scaleXProperty(), 0f)),
+                new KeyFrame(Duration.millis(250), new KeyValue(coin.getCoinImage().fitHeightProperty(), 65)),
+                new KeyFrame(Duration.millis(250), new KeyValue(coin.getCoinImage().fitWidthProperty(), 42)));
+        timeline2.setCycleCount(1);
+        Animation animation2 = Animations.translateTransition(coin.getCoinImage(), 0, -75, 500, 1, false);  // Make coin go up in the air
+        Timeline timeline3 = new Timeline(new KeyFrame(Duration.millis(10), event -> {
+            coin.getCoinImage().setDisable(true);
+            coin.getCoinImage().setVisible(false);
+            coin.getCoinPolygon().setDisable(true);
+            coin.getCoinPolygon().setVisible(false);
+            GlobalVariables.gameAnchorPane.getChildren().removeAll(coin.getCoinImage(), coin.getCoinPolygon());
+            // Also remove from gameObjects list
         }));
-        timeline.setCycleCount(1);
-        timeline.play();
-        Animations.translateTransition(coin.getCoinImage(), 500, -100, 500, 1, false).play();  // Make coin go to the screen corner
-        Animations.translateTransition(coin.getCoinPolygon(), 500, -100, 500, 1, false).play();
-        coin.getCoinImage().setDisable(true);
-        coin.getCoinImage().setVisible(false);
-        coin.getCoinPolygon().setDisable(true);
-        coin.getCoinPolygon().setVisible(false);
+        timeline3.setCycleCount(1);
+        SequentialTransition sequentialTransition = new SequentialTransition (timeline1, animation1, timeline2, animation2, timeline3);
+        sequentialTransition.setCycleCount(1);
+        sequentialTransition.play();
+        sequentialTransition.setOnFinished(event -> player.increaseCoins(coin.getCoinValue()));
     }
 
     public void addToScreen(AnchorPane anchorPane) {
@@ -111,4 +118,13 @@ public class coinChest extends Chest implements Collidable{
     public boolean collision_detected(GameObject gameObject) {
         return false; // Dummy
     }
+
+    public boolean isActivated() {
+        return activated;
+    }
+
+    public void setActivated(boolean activated) {
+        this.activated = activated;
+    }
+
 }

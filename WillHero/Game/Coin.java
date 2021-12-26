@@ -10,11 +10,14 @@ public class Coin extends GameObject implements Collidable{
     private int coinValue;
     private transient ImageView coinImage;
     private Polygon coinPolygon;
+    private boolean collected;
 
     Coin(double x, double y) {
         super(new Position(x, y));
         coinImage = new ImageView();
         coinPolygon = new Polygon();
+        coinValue = 1;
+        collected = false;
         coinImage.setLayoutX(x);
         coinImage.setLayoutY(y);
         coinImage.setFitWidth(25.0);
@@ -22,7 +25,7 @@ public class Coin extends GameObject implements Collidable{
         coinImage.setPreserveRatio(true);
         coinImage.setImage(new Image("/Resources/coin.png", true));
         coinPolygon.setLayoutX(x + 13);
-        coinPolygon.setLayoutY(y + 42); //not sure cuz there were 3 coins
+        coinPolygon.setLayoutY(y + 42);
         coinPolygon.setFill(Color.TRANSPARENT);
         coinPolygon.getPoints().setAll(
                 -12.91668701171875, -30.0,
@@ -38,6 +41,13 @@ public class Coin extends GameObject implements Collidable{
     public void addToScreen(AnchorPane anchorPane) {
         anchorPane.getChildren().add(coinImage);
         anchorPane.getChildren().add(coinPolygon);
+    }
+
+    public void playCoinAnimation() {
+        collected = true;
+        GlobalVariables.coinCollectSound.stop();
+        GlobalVariables.coinCollectSound.play();
+        GlobalVariables.gameAnchorPane.getChildren().removeAll(coinImage, coinPolygon);
     }
 
     public ImageView getCoinImage() {
@@ -58,10 +68,14 @@ public class Coin extends GameObject implements Collidable{
 
     @Override
     public boolean collision_detected(GameObject gameObject) {  // Coin can only collide with hero
-        if (((mainHero) gameObject).getHeroPolygon().getBoundsInParent().intersects(coinPolygon.getBoundsInParent())) {
-            return true;
-        }
-        return false;
+        return ((mainHero) gameObject).getHeroPolygon().getBoundsInParent().intersects(coinPolygon.getBoundsInParent());
     }
 
+    public boolean isCollected() {
+        return collected;
+    }
+
+    public void setCollected(boolean collected) {
+        this.collected = collected;
+    }
 }

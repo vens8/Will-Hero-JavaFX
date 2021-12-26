@@ -9,21 +9,26 @@ import javafx.scene.shape.Polygon;
 public class redOrc extends Orc implements Collidable{
     private transient ImageView redOrc;
     private Polygon redOrcPolygon;
-    private double speedY, speedX, jumpHeight, health, damage;
+    private double speedY, speedX, jumpHeight, health, damage, weight;
     private int weapon, orcType; //why
 
     public redOrc(double x, double y) {
         super(x, y);
         speedY = -4;
-        jumpHeight = -80;
+        jumpHeight = -50;
+        weight = 10;
         redOrc = new ImageView();
         redOrcPolygon = new Polygon();
         redOrc.setLayoutX(x);
         redOrc.setLayoutY(y);
+        redOrc.setFitWidth(47);
+        redOrc.setFitHeight(47);
         redOrc.setPreserveRatio(true);
         redOrc.setImage(new Image("/Resources/redOrc.png", true));
-        redOrcPolygon.setLayoutX(x + 29);
-        redOrcPolygon.setLayoutY(y + 3);
+        redOrcPolygon.setLayoutX(x + 25);
+        redOrcPolygon.setLayoutY(y - 1);
+        redOrcPolygon.setStrokeWidth(2);
+        redOrcPolygon.setStroke(Color.YELLOW);
         redOrcPolygon.setFill(Color.TRANSPARENT);
         redOrcPolygon.getPoints().setAll(
                 -29.0, 51.32501220703125,
@@ -32,6 +37,10 @@ public class redOrc extends Orc implements Collidable{
                 -26.150009155273438, -0.4749755859375,
                 -26.150009155273438, 31.32501220703125,
                 -26.150009155273438, 45.125);
+        //redOrc.setScaleX(0.55);
+        //redOrc.setScaleY(0.55);
+        redOrcPolygon.setScaleX(0.85);
+        redOrcPolygon.setScaleY(0.85);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

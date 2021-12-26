@@ -26,6 +26,8 @@ public class Sword extends Weapon implements Collidable{
         swordPolygon.setLayoutX(x + 56);
         swordPolygon.setLayoutY(y + 32);
         swordPolygon.setFill(Color.TRANSPARENT);
+        swordPolygon.setStroke(Color.RED);  // remove
+        swordPolygon.setStrokeWidth(2);  // remove
         swordPolygon.getPoints().setAll(
                 -32.08332824707031, 42.0,
                 -30.083328247070312, 43.5,
@@ -43,6 +45,10 @@ public class Sword extends Weapon implements Collidable{
                 -43.75, 18.5,
                 -39.41667175292969, 21.33331298828125,
                 -26.25, 34.33331298828125);
+        sword.setScaleX(0.5);
+        sword.setScaleY(0.5);
+        swordPolygon.setScaleX(0.5);
+        swordPolygon.setScaleY(0.5);
     }
 
     public void addToScreen(AnchorPane anchorPane) {
