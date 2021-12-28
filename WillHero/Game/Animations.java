@@ -26,6 +26,15 @@ public class Animations {
         translateTransition.setAutoReverse(autoReverse);
         return translateTransition;
     }
+    public static RotateTransition rotateTransition(Node node, double angle, double duration, int cycleCount, boolean autoReverse) {
+        RotateTransition rotateTransition = new RotateTransition();
+        rotateTransition.setNode(node);
+        rotateTransition.setByAngle(angle);
+        rotateTransition.setDuration(Duration.millis(duration));
+        rotateTransition.setCycleCount(cycleCount);
+        rotateTransition.setAutoReverse(autoReverse);
+        return rotateTransition;
+    }
     public static Timeline delayTransition(double duration)
     {
         return new Timeline(new KeyFrame(Duration.millis(duration), event -> { }));

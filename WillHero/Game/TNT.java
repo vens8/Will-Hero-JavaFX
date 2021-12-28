@@ -1,7 +1,6 @@
 package Game;
 
 import javafx.animation.*;
-import javafx.scene.effect.Glow;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -15,6 +14,7 @@ public class TNT extends GameObject implements Collidable{
     private Polygon tntPolygon;
     private Polygon explosionPolygon;
     private boolean activated, explosionActivated;
+    private AnchorPane anchorPane;
 
 
     TNT(double x, double y) {
@@ -105,19 +105,19 @@ public class TNT extends GameObject implements Collidable{
     }
 
     public void addToScreen(AnchorPane anchorPane) {
+        this.anchorPane = anchorPane;
         anchorPane.getChildren().add(tntImage);
         anchorPane.getChildren().add(tntPolygon);
     }
 
     public void playTNTAnimation() {
         GlobalVariables.gameAnchorPane.getChildren().removeAll(tntPolygon);  // Remove tnt polygon on contact
-        Glow glow = new Glow();
-        glow.setLevel(0.5f);
         Timeline timeline1 = new Timeline(new KeyFrame(Duration.ZERO, event -> {
             Animations.translateTransition(tntImage, 2, 15, 150, 10, true).play();
             Animations.translateTransition(tntPolygon, 2, 15, 150, 10, true).play();
+            Animations.fadeTransition(tntImage, 1, 0.5, 150, 10, true).play();
         }),
-                new KeyFrame(Duration.millis(1500), new KeyValue(tntImage.effectProperty(), glow))
+                new KeyFrame(Duration.millis(1500), event -> {})
         );
         Timeline timeline2 = new Timeline(new KeyFrame(Duration.ZERO, event -> {
             explosionPolygon.setDisable(false);
@@ -142,7 +142,8 @@ public class TNT extends GameObject implements Collidable{
                 new KeyFrame(Duration.millis(1000), new KeyValue(explosionPolygon.scaleXProperty(), 0)),
                 new KeyFrame(Duration.millis(1000), new KeyValue(explosionPolygon.scaleYProperty(), 0)),
                 new KeyFrame(Duration.millis(1000), event -> {
-                    GlobalVariables.gameAnchorPane.getChildren().removeAll(explosionImage, explosionPolygon);
+                    GlobalVariables.gameAnchorPane.getChildren().removeAll(explosionImage, explosionPolygon, tntImage, tntPolygon);
+                    explosionActivated = false;
                 })
         );
         SequentialTransition sequentialTransition = new SequentialTransition(timeline1, timeline2, timeline3, timeline4);
@@ -192,26 +193,44 @@ public class TNT extends GameObject implements Collidable{
         }
         else if (gameObject instanceof redOrc) {
             if (activated) {
-                return ((redOrc) gameObject).getRedOrcPolygon().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
+                return ((redOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
             }
             else {
-                return ((redOrc) gameObject).getRedOrcPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+                return ((redOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
             }
         }
         else if (gameObject instanceof greenOrc) {
             if (activated) {
-                return ((greenOrc) gameObject).getGreenOrcPolygon().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
+                return ((greenOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
             }
             else {
-                return ((greenOrc) gameObject).getGreenOrcPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+                return ((greenOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((greenOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
             }
         }
         else if (gameObject instanceof bossOrc) {
             if (activated) {
-                return ((bossOrc) gameObject).getBossOrcPolygon().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
+                return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(explosionPolygon.getBoundsInParent());
             }
             else {
-                return ((bossOrc) gameObject).getBossOrcPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+                return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent()) ||
+                        ((bossOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
             }
         }
         else if (gameObject instanceof Sword) {

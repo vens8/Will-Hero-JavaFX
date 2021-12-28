@@ -1,7 +1,5 @@
 package Game;
 
-import javafx.scene.layout.AnchorPane;
-
 public abstract class GameObject implements Collidable {
     private Position P;
 

@@ -3,7 +3,6 @@ package Game;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -25,7 +24,7 @@ public class Main extends Application implements Initializable, Serializable {
     public void start(Stage primaryStage) {
             try {
                 // Create game and player here and pass to Controller.java
-                playMusic();
+                // playMusic();  // Uncomment
                 primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
                 GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
                 GlobalVariables.mainMenuStage = primaryStage;

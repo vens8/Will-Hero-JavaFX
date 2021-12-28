@@ -20,8 +20,6 @@ import javafx.scene.shape.Polygon;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import org.w3c.dom.html.HTMLImageElement;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,13 +32,9 @@ public class gameController implements Initializable {
     private Parent root;
 
     @FXML
-    private ImageView greenOrc1;
-    @FXML
     private ImageView bossOrc1;
     @FXML
     private ImageView princess;
-    @FXML
-    private Polygon greenPolygon;
     @FXML
     private Polygon mediumPolygon;
     @FXML
@@ -80,11 +74,8 @@ public class gameController implements Initializable {
     private TNT tnt;
     private Coin coin1, coin2, coin3;
     private redOrc redOrc;
-    private boolean gameStarted, leaped;
-//    private double jumpHeight;  // cumulative jump height of the player with every call of run
-//    private double leapLength;  // cumulative leap length of the player with every call of run
-    private static final double jumpSlice = 4, leapSlice = 4, accelerationX = 0.5, accelerationY = 0.5;
-    private double setX, setY;
+    private greenOrc greenOrc;
+    private boolean gameStarted;
     private ArrayList<GameObject> gameObjects;
     private GameObjectList<Platform> platforms;
     private GameObjectList<Chest> chests;
@@ -108,10 +99,10 @@ public class gameController implements Initializable {
         // Use reference of Main game here.
         camera = new Camera(0, 0);
         //player = new Player(new mainHero(27, 290));  // Instead of creating an instance of a hero, pass the hero from gameObjects list.
-        chest = new coinChest(347, 241, 10);  // test
+        chest = new coinChest(347, 249, 10);  // test
         chest.addToScreen(gameAnchorPane);
 
-        chest2 = new weaponChest(800, 210, 1);  // test
+        chest2 = new weaponChest(800, 211, 1);  // test
         chest2.addToScreen(gameAnchorPane);
         tnt = new TNT(559, 265);
         tnt.addToScreen(gameAnchorPane);
@@ -121,22 +112,18 @@ public class gameController implements Initializable {
         coin1.addToScreen(gameAnchorPane);
         coin2.addToScreen(gameAnchorPane);
         coin3.addToScreen(gameAnchorPane);
-        redOrc = new redOrc(144, 288);
+        redOrc = new redOrc(125, 288);  // 288
         redOrc.addToScreen(gameAnchorPane);
+        greenOrc = new greenOrc(850, 288);  // 288
+        greenOrc.addToScreen(gameAnchorPane);
 
-//        jumpHeight = 0;
-//        leapLength = 0;
-        gameStarted = true;
-        leaped = false;
+        gameStarted = true;  // local to the game
 
         GlobalVariables.timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> run()));  // Run a frame every 10 milliseconds (100 fps)
         GlobalVariables.timeline.setCycleCount(Timeline.INDEFINITE);
 
-        // Gotta remove
-        Animations.translateTransition(greenOrc1, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
-        Animations.translateTransition(greenPolygon, 0, -160, 500, TranslateTransition.INDEFINITE, true).play();
-        Animations.translateTransition(princess, 0, -100, 500, TranslateTransition.INDEFINITE, true).play();
-        Animations.translateTransition(bossOrc1, 0, -30, 1000, TranslateTransition.INDEFINITE, true).play();
+        // Add this for the final stage after beating boss
+        // Animations.translateTransition(princess, 0, -100, 500, TranslateTransition.INDEFINITE, true).play();
         GlobalVariables.timeline.play();
     }
 
@@ -232,7 +219,7 @@ public class gameController implements Initializable {
         Animations.translateTransition(gameOverAnchorPane, 0, 550, 500, 1, false).play();
         Animations.translateTransition(scoreLabel, 0, -125, 500, 1, false).play();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250), new KeyValue(gameAnchorPane.effectProperty(), gaussianBlur)),
-                new KeyFrame(Duration.millis(250), new KeyValue(bgAnchorPane.effectProperty(), gaussianBlur)),
+                new KeyFrame(Duration.millis(250)   , new KeyValue(bgAnchorPane.effectProperty(), gaussianBlur)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.scaleXProperty(), 1)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.scaleYProperty(), 1)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.textFillProperty(), Color.rgb(97, 90, 90))));
@@ -316,6 +303,7 @@ public class gameController implements Initializable {
         this.game = game;
         this.player = game.getPlayer();
         player.getHero().addToScreen(gameAnchorPane);
+        //System.out.println("Hero max X: " + player.getHero().getHeroPolygon().getLayoutBounds().getMaxX());
         GlobalVariables.scene.setOnMousePressed(mouseEvent -> {
             if (!mouseEvent.isControlDown()) {
                 if(mouseEvent.getPickResult().getIntersectedNode().getId() == null || !mouseEvent.getPickResult().getIntersectedNode().getId().equals("settingsButton")) {
@@ -324,9 +312,10 @@ public class gameController implements Initializable {
                         GlobalVariables.playerLeapSound.play();
                     }
                     System.out.println("Hero in activate: " + player.getHero());
-                    player.getHero().setSpeedX(leapSlice);
-                    leaped = true;
-
+                    player.getHero().setSpeedX(Game.mainHero.getJumpSlice());
+                    player.getHero().setLeaped(true);
+                    //System.out.println("Hero max X: " + player.getHero().getHeroPolygon().getLayoutBounds().getMaxX() + player.getHero().getHeroPolygon().getLayoutX());
+                    //System.out.println("Red min X: " + redOrc.getRedOrcPolygon().getLayoutBounds().getMinX() + redOrc.getRedOrcPolygon().getLayoutX());
                     // Reset all flags here
                 }
             }
@@ -362,13 +351,13 @@ public class gameController implements Initializable {
 
     }
 
-    public void playerDeath(int deathType) {
+    public void playerDeath(int deathType) {  // 0 for fall death, 1 for normal death
         GlobalVariables.timeline.setRate(0.1);  // Slow down time on death
-        if (deathType == 0) {  // 0 for fall death
+        if (deathType == 0) {
             GlobalVariables.playerFallSound.stop();
             GlobalVariables.playerFallSound.play();
         }
-        else if (deathType == 1) {  // 1 for normal death
+        else if (deathType == 1) {
             GlobalVariables.playerDeathSound.stop();
             GlobalVariables.playerDeathSound.play();
         }
@@ -410,63 +399,93 @@ public class gameController implements Initializable {
         camera.update(player.getHero(), gameAnchorPane, bgAnchorPane);  // Follow the player
         if (gameStarted) {
             // Orc movements
-//            if (jumpHeight > player.getHero().getJumpHeight()) {
-//                if (player.getHero().collision_detected(redOrc)) {
-//                } else {
-//                    setY = player.getHero().getSpeedY() - accelerationY;
-//                    player.getHero().setSpeedY(setY);
-//                    player.getHero().jump();
-//                    jumpHeight += setY;
-//                }
-//            } else {
-//                //System.out.println("Main Else");
-//                setY = player.getHero().getSpeedY() + accelerationY;
-//                player.getHero().setSpeedY(setY);
-//                player.getHero().jump();
-//                //jumpHeight += setY;
-//            }
+            if (redOrc.getCurrentJumpHeight() > redOrc.getJumpHeight()) {
+                    redOrc.setSetY(redOrc.getSpeedY() - Game.redOrc.getAccelerationY());
+                    redOrc.setSpeedY(redOrc.getSetY());
+                    redOrc.jump();
+                    redOrc.setCurrentJumpHeight(redOrc.getCurrentJumpHeight() + redOrc.getSetY());
 
-            if (!leaped) {  // Stop Y axis motion when player leaps
+            } else {
+                //System.out.println("Main Else");
+                redOrc.setSetY(redOrc.getSpeedY() + Game.redOrc.getAccelerationY());
+                redOrc.setSpeedY(redOrc.getSetY());
+                redOrc.jump();
+                //jumpHeight += setY;
+            }
+            if (redOrc.isPushed()) {
+                System.out.println("Orc speed: " + redOrc.getSpeedX());
+                redOrc.setSpeedX(redOrc.getSpeedX() + Game.redOrc.getAccelerationX());
+                redOrc.push();
+                //player.getHero().setCurrentLeapLength(player.getHero().getCurrentLeapLength() + player.getHero().getSetX());
+                if (redOrc.getSpeedX() <= 0) {
+                    //redOrc.setSpeedX(0);
+                    redOrc.setPushed(false);
+                }
+            }
+            if (redOrc.getBottomRectangle().getBoundsInParent().intersects(mediumPolygon.getBoundsInParent()) || redOrc.getBottomRectangle().getBoundsInParent().intersects(smallPolygon.getBoundsInParent()) || redOrc.getBottomRectangle().getBoundsInParent().intersects(bigPolygon.getBoundsInParent())) {
+                if (!redOrc.isKilled()) {
+                    System.out.println("collided");
+                    redOrc.setCurrentJumpHeight(0);
+                    redOrc.setSpeedY(-Game.redOrc.getJumpSlice());
+                }
+            }
+            // Orc movements
+            if (greenOrc.getCurrentJumpHeight() > greenOrc.getJumpHeight()) {
+                greenOrc.setSetY(greenOrc.getSpeedY() - Game.greenOrc.getAccelerationY());
+                greenOrc.setSpeedY(greenOrc.getSetY());
+                greenOrc.jump();
+                greenOrc.setCurrentJumpHeight(greenOrc.getCurrentJumpHeight() + greenOrc.getSetY());
+
+            } else {
+                //System.out.println("Main Else");
+                greenOrc.setSetY(greenOrc.getSpeedY() + Game.greenOrc.getAccelerationY());
+                greenOrc.setSpeedY(greenOrc.getSetY());
+                greenOrc.jump();
+                //jumpHeight += setY;
+            }
+            if (greenOrc.isPushed()) {
+                System.out.println("Orc speed: " + greenOrc.getSpeedX());
+                greenOrc.setSpeedX(greenOrc.getSpeedX() + Game.greenOrc.getAccelerationX());
+                greenOrc.push();
+                //player.getHero().setCurrentLeapLength(player.getHero().getCurrentLeapLength() + player.getHero().getSetX());
+                if (greenOrc.getSpeedX() <= 0) {
+                    //redOrc.setSpeedX(0);
+                    greenOrc.setPushed(false);
+                }
+            }
+            if (greenOrc.getGreenOrcPolygon().getBoundsInParent().intersects(mediumPolygon.getBoundsInParent()) || greenOrc.getGreenOrcPolygon().getBoundsInParent().intersects(smallPolygon.getBoundsInParent()) || greenOrc.getGreenOrcPolygon().getBoundsInParent().intersects(bigPolygon.getBoundsInParent())) {
+                //System.out.println("collided");
+                greenOrc.setCurrentJumpHeight(0);
+                greenOrc.setSpeedY(-Game.greenOrc.getJumpSlice());
+            }
+            if (!player.getHero().isLeaped()) {  // Stop Y axis motion when player leaps
                 if (player.getHero().getCurrentJumpHeight() > player.getHero().getJumpHeight()) {
-                    if (player.getHero().collision_detected(redOrc)) {
-                    } else {
-                        setY = player.getHero().getSpeedY() - accelerationY;
-                        player.getHero().setSpeedY(setY);
-                        player.getHero().jump();
-                        player.getHero().setCurrentJumpHeight(player.getHero().getCurrentJumpHeight() + setY);
-                    }
+                    //System.out.println("Lol this");
+                    player.getHero().setSetY(player.getHero().getSpeedY() - Game.mainHero.getAccelerationY());
+                    player.getHero().setSpeedY(player.getHero().getSetY());
+                    player.getHero().jump();
+                    player.getHero().setCurrentJumpHeight(player.getHero().getCurrentJumpHeight() + player.getHero().getSetY());
                 } else {
                     //System.out.println("Main Else");
-                    setY = player.getHero().getSpeedY() + accelerationY;
-                    player.getHero().setSpeedY(setY);
+                    player.getHero().setSetY(player.getHero().getSpeedY() + Game.mainHero.getAccelerationY());
+                    player.getHero().setSpeedY(player.getHero().getSetY());
                     player.getHero().jump();
                     //jumpHeight += setY;
                 }
             }
-            if (leaped) {
+            if (player.getHero().isLeaped()) {
                 player.getHero().setSpeedY(0);
                 if (player.getHero().getCurrentLeapLength() < player.getHero().getLeapLength()) {
-                    if (player.getHero().collision_detected(redOrc)) {
-//                        System.out.println("Collided with orc!");
-//                        double velocity = player.getHero().getWeight() * (player.getHero().getSpeedX()) / 10;  // Code for collision impact with orc. 10 is the weight of orc
-//                        System.out.println(velocity);
-//                        redOrc.getRedOrcPolygon().setLayoutX(redPolygon.getLayoutX() + velocity);
-//                        redOrc1.setLayoutX(redOrc1.getLayoutX() + velocity);
-//                        leaped = false;
-//                        player.getHero().setCurrentLeapLength(0);
-//                        if (player.getHero().getHeroPolygon().getLayoutY() < 300)
-//                            player.increaseScore();
-                    } else {
-                        setX = player.getHero().getSpeedX() + accelerationX;
-                        player.getHero().setSpeedX(setX);
-                        player.getHero().leap();
-                        player.getHero().setCurrentLeapLength(player.getHero().getCurrentLeapLength() + setX);
-                    }
+                    player.getHero().setSetX(player.getHero().getSpeedX() + Game.mainHero.getAccelerationX());
+                    player.getHero().setSpeedX(player.getHero().getSetX());
+                    player.getHero().leap();
+                    player.getHero().setCurrentLeapLength(player.getHero().getCurrentLeapLength() + player.getHero().getSetX());
                 } else {
-                    player.getHero().setSpeedY(setY);  // At the end of the leap, set Y speed back to before and X to 0.
+                    // Called at the end of every leap
+                    player.getHero().setSpeedY(player.getHero().getSetY());  // At the end of the leap, set Y speed back to before and X to 0.
                     player.getHero().setSpeedX(0);
                     player.getHero().setCurrentLeapLength(0);
-                    leaped = false;
+                    player.getHero().setLeaped(false);
                     if (player.getHero().getHeroPolygon().getLayoutY() < 300)  // To prevent user from gaining score from leaping mid fall
                         player.increaseScore();
                 }
@@ -476,7 +495,53 @@ public class gameController implements Initializable {
                 GlobalVariables.playerJumpSound.stop();
                 GlobalVariables.playerJumpSound.play();
                 player.getHero().setCurrentJumpHeight(0);
-                player.getHero().setSpeedY(-jumpSlice);
+                player.getHero().setSpeedY(-Game.mainHero.getJumpSlice());
+            }
+            if (player.getHero().collision_detected(redOrc)) {
+                if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getLeftRectangle().getBoundsInParent())) {  // hero left of rOrc
+                    if (!redOrc.isPushed()) {
+                        System.out.println("Player speed: " + player.getHero().getSpeedX());
+                        redOrc.setSpeedX(2 * Game.mainHero.getWeight() * player.getHero().getSpeedX() / (Game.mainHero.getWeight() + Game.redOrc.getWeight()));
+                        System.out.println("First Orc speed: " + redOrc.getSpeedX());
+                        redOrc.setPushed(true);
+                        player.getHero().setSpeedX((Game.mainHero.getWeight() - Game.redOrc.getWeight()) * player.getHero().getSpeedX() / (Game.mainHero.getWeight() + Game.redOrc.getWeight()));
+                        player.getHero().leap();
+                        //player.getHero().setCurrentLeapLength(0);
+                    }
+                }
+                if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getTopRectangle().getBoundsInParent()) && !(player.getHero().getSpeedX() > 0) && !(player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getLeftRectangle().getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getTopRectangle().getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getRightRectangle().getBoundsInParent()))) {
+                    System.out.println("stopped");
+                    GlobalVariables.playerJumpSound.stop();
+                    GlobalVariables.playerJumpSound.play();
+                    player.getHero().setCurrentJumpHeight(0);
+                    player.getHero().setSpeedY(-Game.mainHero.getJumpSlice());
+                }
+
+                if (player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getBottomRectangle().getBoundsInParent()) && !(player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getLeftRectangle().getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getTopRectangle().getBoundsInParent()) || player.getHero().getHeroPolygon().getBoundsInParent().intersects(redOrc.getRightRectangle().getBoundsInParent()))) {
+                    playerDeath(1);
+                }
+            }
+            if (player.getHero().collision_detected(greenOrc)) {
+                if (player.getHero().getHeroPolygon().getLayoutY() > greenOrc.getGreenOrcPolygon().getLayoutY() && (player.getHero().getHeroPolygon().getLayoutBounds().getMaxX() + player.getHero().getHeroPolygon().getLayoutX()) > (greenOrc.getGreenOrcPolygon().getLayoutBounds().getMinX() + greenOrc.getGreenOrcPolygon().getLayoutX())) {
+                    playerDeath(1);
+                }
+                if (player.getHero().getHeroPolygon().getBoundsInParent().getMaxY() <= greenOrc.getGreenOrcPolygon().getBoundsInParent().getMinY() && (player.getHero().getHeroPolygon().getLayoutBounds().getMaxX() + player.getHero().getHeroPolygon().getLayoutX()) > (greenOrc.getGreenOrcPolygon().getLayoutBounds().getMinX() + greenOrc.getGreenOrcPolygon().getLayoutX())) {
+                    GlobalVariables.playerJumpSound.stop();
+                    GlobalVariables.playerJumpSound.play();
+                    player.getHero().setCurrentJumpHeight(0);
+                    player.getHero().setSpeedY(-Game.mainHero.getJumpSlice());
+                }
+                if (player.getHero().getHeroPolygon().getLayoutX() < greenOrc.getGreenOrcPolygon().getLayoutX()) {  // hero left of rOrc
+                    if (!greenOrc.isPushed()) {
+                        System.out.println("Player speed: " + player.getHero().getSpeedX());
+                        greenOrc.setSpeedX(2 * Game.mainHero.getWeight() * player.getHero().getSpeedX() / (Game.mainHero.getWeight() + Game.greenOrc.getWeight()));
+                        System.out.println("First Orc speed: " + greenOrc.getSpeedX());
+                        greenOrc.setPushed(true);
+                        player.getHero().setSpeedX((Game.mainHero.getWeight() - Game.greenOrc.getWeight()) * player.getHero().getSpeedX() / (Game.mainHero.getWeight() + Game.greenOrc.getWeight()));
+                        player.getHero().leap();
+                        //player.getHero().setCurrentLeapLength(0);
+                    }
+                }
             }
             if (player.getHero().collision_detected(chest)) {
                 if (!chest.isActivated()) {
@@ -493,7 +558,7 @@ public class gameController implements Initializable {
             if (tnt.collision_detected(player.getHero())) {
                 if (!tnt.isActivated()) {
                     tnt.setActivated(true);
-                    tnt.playTNTAnimation();
+                    tnt.playTNTAnimation();  // Resets explosion flags inside
                 }
                 else if (tnt.isExplosionActivated()) {
                     playerDeath(1);
@@ -518,8 +583,28 @@ public class gameController implements Initializable {
                 }
             }
 
+            if (redOrc.collision_detected(tnt)) {
+                if (!tnt.isActivated()) {
+                    tnt.setActivated(true);
+                    tnt.playTNTAnimation();
+                }
+                else if (tnt.isExplosionActivated()) {
+                    if (!redOrc.isKilled()) {
+                        redOrc.setKilled(true);
+                        redOrc.playDeathAnimation(1, player);
+                    }
+                }
+            }
+
             if (player.getHero().getHeroPolygon().getLayoutY() > 780) {  // Death fall detection
                 playerDeath(0);
+            }
+            if (redOrc.getTopRectangle().getLayoutY() > 780) {  // Death fall detection
+                redOrc.setSpeedY(0);
+                if (!redOrc.isKilled()) {
+                    redOrc.setKilled(true);
+                    redOrc.playDeathAnimation(0, player);
+                }
             }
 //            for (int i = 0; i < gameObjects.size(); i++) {
 //                if (gameObjects.get(i) instanceof mainHero) {

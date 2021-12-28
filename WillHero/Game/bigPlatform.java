@@ -24,10 +24,10 @@ public class bigPlatform extends Platform implements Collidable{
         bPlatformPolygon.setLayoutY(y + 189);
         bPlatformPolygon.setFill(Color.TRANSPARENT);
         bPlatformPolygon.getPoints().setAll(
-                440.9166259765625, -69.5,
+                440.9166259765625, -84.80001831054688,
                 440.9166259765625, -91.5,
                 -52.75, -91.5,
-                -52.75, -69.5);
+                -52.75, -84.80001831054688);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

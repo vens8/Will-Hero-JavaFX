@@ -7,22 +7,37 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class mainHero extends GameObject implements Collidable {
-    private transient ImageView hero;
-    private Polygon heroPolygon;
-    private double speedX, speedY, jumpHeight, leapLength, health, currentJumpHeight, currentLeapLength, weight;
-    public static final double HEIGHT = 74.925048828125, WIDTH = 76.4000015258789, WEIGHT = 20;  // Final values, can be accessed from anywhere
-    private int weapon;
+    private final transient ImageView hero;
+    private final Polygon heroPolygon;
+    private double speedX;
+    private double speedY;
+    private final double jumpHeight;
+    private final double leapLength;
+    private double health;
+    private double currentJumpHeight;
+    private double currentLeapLength;
+    private double setX;
+    private double setY;
+    private static final double HEIGHT = 74.925048828125;
+    private static final double WIDTH = 76.4000015258789;
+    private static final double WEIGHT = 30;
+    private static final double jumpSlice = 1.5;
+    private static final double leapSlice = 4;
+    private static final double accelerationX = 0.5;
+    private static final double accelerationY = 0.2;  // Final values & can be accessed from anywhere
+    private int currentWeapon;
+    private boolean leaped;
     private GameObjectList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
 
     public mainHero(double x, double y) {
         super(new Position(x, y));
         speedX = 0;
-        speedY = -4;  // Negative Y value means player moves up on the canvas
+        speedY = -1.5;  // Negative Y value means player moves up on the canvas
         currentJumpHeight = 0;
         currentLeapLength = 0;
         jumpHeight = -50;
         leapLength = 150;  // prev 200
-        weight = 30;
+        leaped = false;
         hero = new ImageView();
         heroPolygon = new Polygon();
         hero.setLayoutX(x);
@@ -57,6 +72,12 @@ public class mainHero extends GameObject implements Collidable {
                 -45.749996185302734, 48.524993896484375,
                 -62.550010681152344, 48.524993896484375
         );
+//        heroPolygon.getPoints().setAll(
+//                -50.62356948852539, 53.83142852783203,
+//                9.250031471252441, 53.83142852783203,
+//                9.250020980834961, -5.068746089935303,
+//                -50.623573303222656, -5.068749904632568
+//        );
         heroPolygon.setScaleX(0.55);
         heroPolygon.setScaleY(0.55);
     }
@@ -97,7 +118,7 @@ public class mainHero extends GameObject implements Collidable {
         return speedY;
     }
 
-    public double getWeight() {
+    public static double getWeight() {
         return WEIGHT;
     }
 
@@ -131,13 +152,22 @@ public class mainHero extends GameObject implements Collidable {
             return ((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
         }
         else if (gameObject instanceof redOrc) {
-            return ((redOrc) gameObject).getRedOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+            return ((redOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
         }
         else if (gameObject instanceof greenOrc) {
-            return ((greenOrc) gameObject).getGreenOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+            return ((greenOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
         }
         else if (gameObject instanceof bossOrc) {
-            return ((bossOrc) gameObject).getBossOrcPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
+            return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
         }
         else if (gameObject instanceof coinChest) {
             return ((coinChest) gameObject).getCoinChestPolygon().getBoundsInParent().intersects(heroPolygon.getBoundsInParent());
@@ -169,5 +199,53 @@ public class mainHero extends GameObject implements Collidable {
 
     public void setCurrentJumpHeight(double currentJumpHeight) {
         this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetX() {
+        return setX;
+    }
+
+    public void setSetX(double setX) {
+        this.setX = setX;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
+    public static double getLeapSlice() {
+        return leapSlice;
+    }
+
+    public static double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
+    }
+
+    public boolean isLeaped() {
+        return leaped;
+    }
+
+    public void setLeaped(boolean leaped) {
+        this.leaped = leaped;
+    }
+
+    public int getCurrentWeapon() {
+        return currentWeapon;
+    }
+
+    public void setCurrentWeapon(int currentWeapon) {
+        this.currentWeapon = currentWeapon;
     }
 }

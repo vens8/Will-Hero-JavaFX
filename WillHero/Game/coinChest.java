@@ -42,6 +42,10 @@ public class coinChest extends Chest implements Collidable{
                 79.25, -12.274993896484375,
                 -18.54998779296875, -12.274993896484375,
                 -27.95001220703125, -2.875);
+        coinChestImageView.setScaleX(0.75);
+        coinChestImageView.setScaleY(0.75);
+        coinChestPolygon.setScaleX(0.75);
+        coinChestPolygon.setScaleY(0.75);
         coin = new Coin(x + 70, y + 50);  // Place coin at the center of the chest
         coin.addToScreen(GlobalVariables.gameAnchorPane);
         coin.getCoinImage().setDisable(true);  // Initially should be invisible and non-interactive

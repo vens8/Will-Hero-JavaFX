@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" style="-fx-background-color: #33bef9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.gameController">
+   <children>
+      <AnchorPane fx:id="bgAnchorPane" prefHeight="200.0" prefWidth="200.0">
+      	<children>
+      		<ImageView fitHeight="675.0" fitWidth="10009.0" pickOnBounds="true" AnchorPane.leftAnchor="0.0">
+         <image>
+            <Image url="@../Resources/background2.png" />
+         </image>
+      </ImageView>
+  </children>
+</AnchorPane>
+      <AnchorPane fx:id="gameAnchorPane" prefHeight="675.0" prefWidth="10010.0">
+      	<children>
+      <ImageView fx:id="mediumPlatform1" fitHeight="302.0" fitWidth="265.0" layoutX="1855.0" layoutY="305.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/mediumPlatform.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="smallPlatform1" fitHeight="339.0" fitWidth="222.0" layoutX="552.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/smallPlatform.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="princess" fitHeight="63.0" fitWidth="65.0" layoutX="9000.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/princess.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="bossOrc1" fitHeight="155.0" fitWidth="157.0" layoutX="9319.0" layoutY="276.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/bossOrc.png" />
+         </image>
+      </ImageView>
+            <ImageView fx:id="smallPlatform11" fitHeight="339.0" fitWidth="222.0" layoutX="1676.0" layoutY="95.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/smallPlatform.png" />
+               </image>
+            </ImageView>
+      <ImageView fx:id="bigPlatform1" fitHeight="265.0" fitWidth="521.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/bigPlatform.png" />
+         </image>
+      </ImageView>
+            <ImageView fitHeight="175.0" fitWidth="200.0" layoutX="285.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
+               <image>
+                  <Image url="@../Resources/cchest1.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="49.0" fitWidth="49.0" layoutX="406.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true" scaleX="0.9" scaleY="0.9">
+               <image>
+                  <Image url="@../Resources/greenOrc.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="47.0" fitWidth="47.0" layoutX="339.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true" scaleX="0.85" scaleY="0.85">
+               <image>
+                  <Image url="@../Resources/redOrc.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="68.0" fitWidth="67.0" layoutX="6.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
+               <image>
+                  <Image url="@../Resources/tnt.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="68.0" fitWidth="67.0" layoutX="431.0" layoutY="357.0" pickOnBounds="true" preserveRatio="true" scaleX="0.75" scaleY="0.75">
+               <image>
+                  <Image url="@../Resources/tnt.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="smallPlatform12" fitHeight="339.0" fitWidth="222.0" layoutX="782.0" layoutY="263.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/smallPlatform.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="smallPlatform121" fitHeight="339.0" fitWidth="222.0" layoutX="1028.0" layoutY="230.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/smallPlatform.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="smallPlatform1211" fitHeight="339.0" fitWidth="222.0" layoutX="1312.0" layoutY="237.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/smallPlatform.png" />
+               </image>
+            </ImageView>
+      
+  </children>
+</AnchorPane>
+      <AnchorPane fx:id="gameOverAnchorPane" layoutX="311.0" layoutY="776.0" prefHeight="221.0" prefWidth="414.0">
+         <children>
+            <ImageView fitHeight="226.0" fitWidth="416.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/gameOver.png" />
+               </image>
+            </ImageView>
+            <Group fx:id="reviveButton" layoutX="115.0" layoutY="68.0" onMouseClicked="#reviveButtonClicked" onMouseEntered="#reviveMouseEntered" onMouseExited="#reviveMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="186.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/reviveButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/coin.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="restartButton" layoutX="115.0" layoutY="115.0" onMouseClicked="#restartButtonClicked" onMouseEntered="#restartMouseEntered" onMouseExited="#restartMouseExited">
+               <children>
+                  <ImageView fitHeight="43.0" fitWidth="184.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/restartGameButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="145.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/restart.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="exitButton" layoutX="115.0" layoutY="166.0" onMouseClicked="#exitButtonClicked" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="182.0" layoutX="1.0" layoutY="-2.0" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/exitGameButton2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/exitGame.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <ImageView fitHeight="30.0" fitWidth="126.0" layoutX="148.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/youDied.png" />
+               </image>
+               <effect>
+                  <Glow level="0.77" />
+               </effect>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

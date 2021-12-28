@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" style="-fx-background-color: #33bef9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.gameController">
@@ -39,7 +40,7 @@
             <Image url="@../Resources/bigPlatform.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="princess" fitHeight="63.0" fitWidth="65.0" layoutX="918.0" layoutY="264.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="princess" fitHeight="48.0" fitWidth="48.0" layoutX="918.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Resources/princess.png" />
          </image>
@@ -52,15 +53,38 @@
       <Polygon fx:id="bossPolygon" fill="#1f93ff00" layoutX="716.0" layoutY="283.0" points="-49.08331298828125, 39.32501220703125, 88.58331298828125, 39.32501220703125, 88.58331298828125, -104.00831604003906, -46.75, -104.00831604003906, -46.75, -4.841644287109375, -44.91668701171875, -4.841644287109375, -44.91668701171875, 11.991668701171875, -49.08331298828125, 11.991668701171875" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
       <Polygon fill="#1f93ff00" layoutX="59.0" layoutY="646.0" points="-19.583328247070312, -49.16668701171875, -17.583328247070312, -34.67498779296875, -12.583328247070312, -28.00830078125, -21.25, -28.00830078125, -36.0, -23.0, -21.25, -16.50830078125, -12.583328247070312, -18.00830078125, -17.583328247070312, -11.5, -19.583328247070312, 5.0, -6.75, -4.50830078125, -3.75, -11.5, -1.0833282470703125, -4.50830078125, 12.25, 5.0, 10.583328247070312, -11.5, 6.25, -18.00830078125, 13.75, -16.50830078125, 27.878326416015625, -23.0, 13.75, -29.67498779296875, 6.25, -29.67498779296875, 10.583328247070312, -34.67498779296875, 12.25, -49.16668701171875, -1.0833282470703125, -40.8416748046875, -3.75, -34.67498779296875, -6.75, -40.8416748046875" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
       <Polygon fill="#1f93ff00" layoutX="182.0" layoutY="575.0" points="-32.08332824707031, 42.0, -30.083328247070312, 43.5, -24.583328247070312, 38.16668701171875, 15.083328247070312, 75.66668701171875, 26.25, 79.16668701171875, 23.416671752929688, 70.5, -18.916671752929688, 32.5, -14.416671752929688, 27.33331298828125, -16.416671752929688, 25.5, -22.583328247070312, 30.33331298828125, -37.41667175292969, 18.5, -39.41667175292969, 14.66668701171875, -41.416656494140625, 16.33331298828125, -43.75, 18.5, -39.41667175292969, 21.33331298828125, -26.25, 34.33331298828125" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
-      <Polygon fx:id="mediumPolygon" fill="#1f93ff00" layoutX="128.0" layoutY="246.0" points="-134.6003875732422, 105.80001831054688, -134.6003875732422, 85.33334350585938, 102.91665649414062, 85.33334350585938, 102.91665649414062, 105.80001831054688" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
-      <Polygon fx:id="smallPolygon" fill="#1f93ff00" layoutX="378.0" layoutY="421.0" points="102.58328247070312, -38.79998779296875, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19961547851562, -38.79998779296875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
-      <Polygon fx:id="bigPolygon" fill="#1f93ff00" layoutX="623.0" layoutY="415.0" points="440.9166259765625, -69.5, 440.9166259765625, -91.5, -52.75, -91.5, -52.75, -69.5" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
+      <Polygon fx:id="mediumPolygon" fill="#1f93ff00" layoutX="128.0" layoutY="246.0" points="-134.6003875732422, 92.99996948242188, -134.6003875732422, 85.33334350585938, 102.91665649414062, 85.33334350585938, 102.91664123535156, 92.99996948242188" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
+      <Polygon fx:id="smallPolygon" fill="#1f93ff00" layoutX="378.0" layoutY="421.0" points="102.583251953125, -54.000030517578125, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19964599609375, -54.000030517578125" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
+      <Polygon fx:id="bigPolygon" fill="#1f93ff00" layoutX="623.0" layoutY="415.0" points="440.9166259765625, -84.80001831054688, 440.9166259765625, -91.5, -52.75, -91.5, -52.75, -84.80001831054688" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" />
             <ImageView fx:id="smallPlatform11" fitHeight="339.0" fitWidth="222.0" layoutX="1176.0" layoutY="182.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Resources/smallPlatform.png" />
                </image>
             </ImageView>
+            <ImageView fx:id="playerImage" fitHeight="42.0" fitWidth="45.0" layoutX="27.0" layoutY="290.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                <image>
+                    <Image url="@../Resources/player.png" />
+                </image>
+            </ImageView>
+            <ImageView fx:id="redOrcImage" fitHeight="47.0" fitWidth="47.0" layoutX="1975.0" layoutY="253.0" pickOnBounds="true" preserveRatio="true">
+                <image>
+                    <Image url="@../Resources/redOrc.png" />
+                </image>
+            </ImageView>
             <Polygon fx:id="smallPolygon1" fill="#1f93ff00" layoutX="1267.0" layoutY="351.0" points="102.58328247070312, -38.79998779296875, 102.58328247070312, -60.5, -66.19961547851562, -60.5, -66.19961547851562, -38.79998779296875" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" />
+            <Rectangle fx:id="topRectangle" arcHeight="5.0" arcWidth="5.0" fill="#0d0d0d00" height="4.0" layoutX="1977.0" layoutY="253.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="43.0" />
+            <Rectangle fx:id="bottomRectangle" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="4.0" layoutX="1976.0" layoutY="295.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="44.0" />
+            <Rectangle fx:id="leftRectangle" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="39.0" layoutX="1977.0" layoutY="257.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
+            <Rectangle fx:id="rightRectangle" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="39.0" layoutX="2017.0" layoutY="257.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
+            <ImageView fx:id="greenbruh" fitHeight="49.0" fitWidth="49.0" layoutX="2051.0" layoutY="254.0" pickOnBounds="true" preserveRatio="true" scaleX="0.9" scaleY="0.9">
+               <image>
+                  <Image url="@../Resources/greenOrc.png" />
+               </image>
+            </ImageView>
+            <Rectangle fx:id="leftRectangle1" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="38.0" layoutX="2055.0" layoutY="261.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
+            <Rectangle fx:id="topRectangle1" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="4.0" layoutX="2054.0" layoutY="257.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="43.0" />
+            <Rectangle fx:id="bottomRectangle1" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="4.0" layoutX="2053.0" layoutY="297.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="44.0" />
+            <Rectangle fx:id="rightRectangle1" arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="38.0" layoutX="2092.0" layoutY="260.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0" width="4.0" />
       
   </children>
 </AnchorPane>
@@ -126,18 +150,6 @@
             </Label>
          </children>
       </StackPane>
-            <ImageView fitHeight="47.0" fitWidth="47.0" layoutX="144.0" layoutY="288.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../Resources/redOrc.png" />
-               </image>
-            </ImageView>
-            <Polygon fx:id="addhere" fill="TRANSPARENT" layoutX="169.0" layoutY="287.0" points="-29.0, 51.32501220703125,                 25.04998779296875, 51.32501220703125,                 25.04998779296875, -0.4749755859375,                 -26.150009155273438, -0.4749755859375,                 -26.150009155273438, 31.32501220703125,                 -26.150009155273438, 45.125" scaleX="0.85" scaleY="0.85" stroke="BLACK" strokeType="INSIDE" visible="false" />
-      <ImageView fx:id="greenOrc1" fitHeight="49.0" fitWidth="49.0" layoutX="364.0" layoutY="315.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Resources/greenOrc.png" />
-         </image>
-      </ImageView>
-      <Polygon fx:id="takehere" fill="#1f93ff00" layoutX="389.0" layoutY="310.0" points="-27.95001220703125, 51.219512939453125, 27.0, 51.219512939453125, 27.0, 31.32501220703125, 23.25, 31.32501220703125, 23.250003814697266, 2.567394495010376, -26.150020599365234, 2.6253042221069336, -26.150009155273438, 31.32501220703125, -26.1500244140625, 45.925018310546875" scaleX="0.9" scaleY="0.9" stroke="RED" strokeType="INSIDE" strokeWidth="2.0" visible="false" />
       	</children>
       </AnchorPane>
       <AnchorPane fx:id="gameOverAnchorPane" layoutX="311.0" layoutY="776.0" prefHeight="221.0" prefWidth="414.0">

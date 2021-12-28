@@ -24,10 +24,10 @@ public class smallPlatform extends Platform implements Collidable {
         sPlatformPolygon.setLayoutY(y + 161);
         sPlatformPolygon.setFill(Color.TRANSPARENT);
         sPlatformPolygon.getPoints().setAll(
-                102.58328247070312, -38.79998779296875,
+                102.583251953125, -54.000030517578125,
                 102.58328247070312, -60.5,
                 -66.19961547851562, -60.5,
-                -66.19961547851562, -38.79998779296875);
+                -66.19964599609375, -54.000030517578125);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

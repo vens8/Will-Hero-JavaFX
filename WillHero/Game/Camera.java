@@ -17,7 +17,7 @@ public class Camera {
 //        offsetY = ((hero.getHeroPolygon().getLayoutY() + (mainHero.HEIGHT / 2) - offsetY) - GlobalVariables.SCREEN_HEIGHT / 2) * 0.05;
 
 
-        offsetX = ((hero.getHeroPolygon().getLayoutX() - 73) - 40);
+        offsetX = ((hero.getHeroPolygon().getLayoutX() - 73) - 200);
         offsetY = (hero.getHeroPolygon().getLayoutY() - 290) * 0.05;
 
         gameAnchorPane.setTranslateX(-offsetX); // Move the gameAnchorPane by player movement.

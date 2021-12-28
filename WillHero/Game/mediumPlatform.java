@@ -24,10 +24,10 @@ public class mediumPlatform extends Platform implements Collidable{
         mPlatformPolygon.setLayoutY(y + 38);
         mPlatformPolygon.setFill(Color.TRANSPARENT);
         mPlatformPolygon.getPoints().setAll(
-                -134.6003875732422, 105.80001831054688,
+                -134.6003875732422, 92.99996948242188,
                 -134.6003875732422, 85.33334350585938,
                 102.91665649414062, 85.33334350585938,
-                102.91665649414062, 105.80001831054688);
+                102.91664123535156, 92.99996948242188);
     }
 
     public void addToScreen(AnchorPane anchorPane) {

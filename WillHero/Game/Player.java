@@ -35,8 +35,10 @@ public class Player {
     public long getCoins() {
         return coins;
     }
-    public void increaseCoins(long coins){
+    public void increaseCoins(long coins) {
         this.coins += coins;
+        GlobalVariables.coinCollectSound.stop();
+        GlobalVariables.coinCollectSound.play();
     }
 
     public void setCoins(long coins) {

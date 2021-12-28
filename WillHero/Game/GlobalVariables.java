@@ -28,7 +28,7 @@ public class GlobalVariables {
     public static MediaPlayer playerLeapSound = new MediaPlayer(playerLeap);
     public static Media playerFall = new Media(new File("src/Resources/playerFall.m4a").toURI().toString());
     public static MediaPlayer playerFallSound = new MediaPlayer(playerFall);
-    public static Media playerDeath = new Media(new File("src/Resources/playerDeath.mp3").toURI().toString());
+    public static Media playerDeath = new Media(new File("src/Resources/playerDeath.m4a").toURI().toString());
     public static MediaPlayer playerDeathSound = new MediaPlayer(playerDeath);  // Use when orc kills player
     public static Media weaponChestOpen = new Media(new File("src/Resources/weaponChestOpen.m4a").toURI().toString());
     public static MediaPlayer weaponChestOpenSound = new MediaPlayer(weaponChestOpen);
@@ -44,6 +44,8 @@ public class GlobalVariables {
     public static MediaPlayer playerReviveSound = new MediaPlayer(playerRevive);
     public static Media coinCollect = new Media(new File("src/Resources/coinCollect.m4a").toURI().toString());
     public static MediaPlayer coinCollectSound = new MediaPlayer(coinCollect);
+    public static Media orcDeath = new Media(new File("src/Resources/orcDeath.m4a").toURI().toString());
+    public static MediaPlayer orcDeathSound = new MediaPlayer(orcDeath);
 
     // Main timeline
     public static Timeline timeline;

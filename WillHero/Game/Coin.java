@@ -45,8 +45,6 @@ public class Coin extends GameObject implements Collidable{
 
     public void playCoinAnimation() {
         collected = true;
-        GlobalVariables.coinCollectSound.stop();
-        GlobalVariables.coinCollectSound.play();
         GlobalVariables.gameAnchorPane.getChildren().removeAll(coinImage, coinPolygon);
     }
 
