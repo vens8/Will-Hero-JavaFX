@@ -1,11 +1,4 @@
-Get Sound effects for:
+Bonus Idea:
 
-- Player Jump
-- Player move
-- Player death
-- Enemy death
-- Coin collect
-- Chest collect
-- TNT explosion
-- Sword kill
-- Shuriken kill
+Make a shop to buy items helmets.
+Challenge mode
