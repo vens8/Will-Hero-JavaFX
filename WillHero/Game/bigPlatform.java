@@ -24,6 +24,8 @@ public class bigPlatform extends Platform implements Collidable{
         bPlatformPolygon.setLayoutX(x + 64);
         bPlatformPolygon.setLayoutY(y + 189);
         bPlatformPolygon.setFill(Color.TRANSPARENT);
+        bPlatformPolygon.setStroke(Color.BLUE);
+        bPlatformPolygon.setStrokeWidth(2);
         bPlatformPolygon.getPoints().setAll(
                 440.9166259765625, -84.80001831054688,
                 440.9166259765625, -91.5,

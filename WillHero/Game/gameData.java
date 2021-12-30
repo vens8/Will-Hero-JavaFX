@@ -12,11 +12,11 @@ public class gameData {
         //GlobalVariables.gameObjects.add(new mainHero(27, 290));
         GlobalVariables.gameObjects.add(new mediumPlatform(-18, 208));
         GlobalVariables.gameObjects.add(new smallPlatform(287, 252));
-        GlobalVariables.gameObjects.add(new bigPlatform(555, 224));
         GlobalVariables.gameObjects.add(new greenOrc(856, 275));
         GlobalVariables.gameObjects.add(new Coin(930, 236));
         GlobalVariables.gameObjects.add(new Coin(960, 236));
         GlobalVariables.gameObjects.add(new Coin(990, 236));
+        GlobalVariables.gameObjects.add(new bigPlatform(555, 224));
         GlobalVariables.gameObjects.add(new smallPlatform(1176, 182));
         GlobalVariables.gameObjects.add(new greenOrc(1628, 292));
         GlobalVariables.gameObjects.add(new mediumPlatform(1477, 211));

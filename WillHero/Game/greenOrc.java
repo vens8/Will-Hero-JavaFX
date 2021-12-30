@@ -15,16 +15,16 @@ public class greenOrc extends Orc implements Collidable{
     private final transient ImageView greenOrc;
     private final Rectangle leftRectangle, topRectangle, rightRectangle, bottomRectangle;
     private double speedY, speedX, jumpHeight, health, damage, currentJumpHeight, setX, setY;
-    private static final double jumpSlice = 1;
-    private static final double accelerationX = -0.5;  // Acceleration is -0.5 because acceleration of mainHero is 0.5
-    private static final double accelerationY = 0.1;
+    private static final double jumpSlice = 0.0166666666666667;
+    private static final double accelerationX = -0.0083333333333333; // match with that of mainHero
+    private static final double accelerationY = 0.0016666666666667;
     private static final double weight = 3;
     private boolean pushed, killed;
     private AnchorPane gameAnchorPane;
 
     public greenOrc(double x, double y) {
         super(x, y);
-        speedY = -1;
+        speedY = -0.0166666666666667;
         jumpHeight = -40;
         currentJumpHeight = 0;
         pushed = false;
@@ -47,6 +47,8 @@ public class greenOrc extends Orc implements Collidable{
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 4);
         leftRectangle.setLayoutY(y + 8);
+        leftRectangle.setStroke(Color.BLUE);
+        leftRectangle.setStrokeWidth(2);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
@@ -56,6 +58,8 @@ public class greenOrc extends Orc implements Collidable{
         topRectangle.setArcWidth(5);
         topRectangle.setLayoutX(x + 3);
         topRectangle.setLayoutY(y);
+        topRectangle.setStroke(Color.BLUE);
+        topRectangle.setStrokeWidth(2);
         topRectangle.setFill(Color.TRANSPARENT);
 
         rightRectangle = new Rectangle();
@@ -65,6 +69,8 @@ public class greenOrc extends Orc implements Collidable{
         rightRectangle.setArcWidth(5);
         rightRectangle.setLayoutX(x + 41);
         rightRectangle.setLayoutY(y + 8);
+        rightRectangle.setStroke(Color.BLUE);
+        rightRectangle.setStrokeWidth(2);
         rightRectangle.setFill(Color.TRANSPARENT);
 
         bottomRectangle = new Rectangle();
@@ -74,6 +80,8 @@ public class greenOrc extends Orc implements Collidable{
         bottomRectangle.setArcWidth(5);
         bottomRectangle.setLayoutX(x + 5);
         bottomRectangle.setLayoutY(y + 41);
+        bottomRectangle.setStroke(Color.BLUE);
+        bottomRectangle.setStrokeWidth(2);
         bottomRectangle.setFill(Color.TRANSPARENT);
     }
 

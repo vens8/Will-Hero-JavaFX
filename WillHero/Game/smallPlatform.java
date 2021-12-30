@@ -22,7 +22,9 @@ public class smallPlatform extends Platform implements Collidable {
         sPlatform.setPreserveRatio(true);
         sPlatform.setImage(new Image("/Resources/smallPlatform.png", true));
         sPlatformPolygon.setLayoutX(x + 91);
-        sPlatformPolygon.setLayoutY(y + 161);
+        sPlatformPolygon.setLayoutY(y + 166);
+        sPlatformPolygon.setStroke(Color.BLUE);
+        sPlatformPolygon.setStrokeWidth(2);
         sPlatformPolygon.setFill(Color.TRANSPARENT);
         sPlatformPolygon.getPoints().setAll(
                 102.583251953125, -54.000030517578125,

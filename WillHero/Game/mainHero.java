@@ -22,25 +22,43 @@ public class mainHero extends GameObject implements Collidable {
     private double setY;
     private static final double HEIGHT = 74.925048828125;
     private static final double WIDTH = 76.4000015258789;
-    private static final double WEIGHT = 30;  // 30
-    private static final double jumpSlice = 1.5;
-    private static final double leapSlice = 4;
-    private static final double accelerationX = 0.5;
-    private static final double accelerationY = 0.2;  // Final values & can be accessed from anywhere
+    private static final double WEIGHT = 30;  // 30 Note: everything is divided by 60 so far
+    private static final double jumpSlice = 0.025;
+    private static final double leapSlice = 0.06675;
+    private static final double accelerationX = 0.00825;
+    private static final double accelerationY = 0.00325;  // Final values & can be accessed from anywhere
+//    private static final double HEIGHT = 74.925048828125;
+//    private static final double WIDTH = 76.4000015258789;
+//    private static final double WEIGHT = 30;  // 30
+//    private static final double jumpSlice = 1.5;
+//    private static final double leapSlice = 4;
+//    private static final double accelerationX = 0.5;
+//    private static final double accelerationY = 0.2;  // Final values & can be accessed from anywhere
     private Weapon currentWeapon;
     private boolean leaped;
     private AnchorPane gameAnchorPane;
     private ArrayList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
     private ArrayList<Shuriken> shurikens;
+    private double maxSpeed;
+
+    public double getMinSpeed() {
+        return minSpeed;
+    }
+
+    public void setMinSpeed(double minSpeed) {
+        this.minSpeed = minSpeed;
+    }
+
+    private double minSpeed;
 
     public mainHero(double x, double y) {
         super(new Position(x, y));
         speedX = 0;
-        speedY = -1.5;  // Negative Y value means player moves up on the canvas
+        speedY = -0.025;  // Negative Y value means player moves up on the canvas
         currentJumpHeight = 0;
         currentLeapLength = 0;
         jumpHeight = -50;  //-50
-        leapLength = 140;  // prev 200, 150
+        leapLength = 140;  // 140 works best for the locations
         leaped = false;
         hero = new ImageView();
         heroPolygon = new Polygon();
@@ -127,7 +145,7 @@ public class mainHero extends GameObject implements Collidable {
         hero.setLayoutY(hero.getLayoutY() + speedY);
         heroPolygon.setLayoutY(heroPolygon.getLayoutY() + speedY);
         if (currentWeapon != null) {
-            if (currentWeapon.getWeaponType() == 0) {  // Shuriken
+            if (currentWeapon instanceof Shuriken) {  // Shuriken
                 ((Shuriken) currentWeapon).getShuriken().setLayoutY(((Shuriken) currentWeapon).getShuriken().getLayoutY() + speedY);
                 ((Shuriken) currentWeapon).getShurikenPolygon().setLayoutY(((Shuriken) currentWeapon).getShurikenPolygon().getLayoutY() + speedY);
             }
@@ -142,7 +160,7 @@ public class mainHero extends GameObject implements Collidable {
         hero.setLayoutX(hero.getLayoutX() + speedX);
         heroPolygon.setLayoutX(heroPolygon.getLayoutX() + speedX);
         if (currentWeapon != null) {
-            if (currentWeapon.getWeaponType() == 0) {  // Shuriken
+            if (currentWeapon instanceof Shuriken) {  // Shuriken
                 ((Shuriken) currentWeapon).getShuriken().setLayoutX(((Shuriken) currentWeapon).getShuriken().getLayoutX() + speedX);
                 ((Shuriken) currentWeapon).getShurikenPolygon().setLayoutX(((Shuriken) currentWeapon).getShurikenPolygon().getLayoutX() + speedX);
             }
@@ -220,6 +238,14 @@ public class mainHero extends GameObject implements Collidable {
 
     public void setCurrentJumpHeight(double currentJumpHeight) {
         this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getMaxSpeed() {
+        return maxSpeed;
+    }
+
+    public void setMaxSpeed(double maxSpeed) {
+        this.maxSpeed = maxSpeed;
     }
 
     public double getSetX() {
