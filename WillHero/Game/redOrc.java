@@ -24,7 +24,7 @@ public class redOrc extends Orc implements Collidable{
     private static final double accelerationY = 0.2;
     private static final double weight = 8;
     private boolean pushed, killed;
-    private AnchorPane anchorPane;
+    private AnchorPane gameAnchorPane;
 
     public redOrc(double x, double y) {
         super(x, y);
@@ -33,6 +33,7 @@ public class redOrc extends Orc implements Collidable{
         currentJumpHeight = 0;
         pushed = false;
         killed = false;
+        health = 65;  // 3 shots with level 1 weapon, 2 shots with level 2
         redOrc = new ImageView();
         redOrc.setLayoutX(x);
         redOrc.setLayoutY(y);
@@ -42,12 +43,12 @@ public class redOrc extends Orc implements Collidable{
         redOrc.setImage(new Image("/Resources/redOrc.png", true));
 
         leftRectangle = new Rectangle();
-        leftRectangle.setHeight(39);
+        leftRectangle.setHeight(34);
         leftRectangle.setWidth(4);
         leftRectangle.setArcHeight(5);
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 2);
-        leftRectangle.setLayoutY(y + 4);
+        leftRectangle.setLayoutY(y + 9);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
@@ -60,12 +61,12 @@ public class redOrc extends Orc implements Collidable{
         topRectangle.setFill(Color.TRANSPARENT);
 
         rightRectangle = new Rectangle();
-        rightRectangle.setHeight(39);
+        rightRectangle.setHeight(34);
         rightRectangle.setWidth(4);
         rightRectangle.setArcHeight(5);
         rightRectangle.setArcWidth(5);
         rightRectangle.setLayoutX(x + 42);
-        rightRectangle.setLayoutY(y + 4);
+        rightRectangle.setLayoutY(y + 9);
         rightRectangle.setFill(Color.TRANSPARENT);
 
         bottomRectangle = new Rectangle();
@@ -78,19 +79,25 @@ public class redOrc extends Orc implements Collidable{
         bottomRectangle.setFill(Color.TRANSPARENT);
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        this.anchorPane = anchorPane;
-        anchorPane.getChildren().add(redOrc);
-        //anchorPane.getChildren().add(redOrcPolygon);
-        anchorPane.getChildren().add(leftRectangle);
-        anchorPane.getChildren().add(topRectangle);
-        anchorPane.getChildren().add(rightRectangle);
-        anchorPane.getChildren().add(bottomRectangle);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(redOrc);
+        gameAnchorPane.getChildren().add(leftRectangle);
+        gameAnchorPane.getChildren().add(topRectangle);
+        gameAnchorPane.getChildren().add(rightRectangle);
+        gameAnchorPane.getChildren().add(bottomRectangle);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(redOrc);
+        gameAnchorPane.getChildren().remove(leftRectangle);
+        gameAnchorPane.getChildren().remove(topRectangle);
+        gameAnchorPane.getChildren().remove(rightRectangle);
+        gameAnchorPane.getChildren().remove(bottomRectangle);
     }
 
     public void push() {
         redOrc.setLayoutX(redOrc.getLayoutX() + speedX);
-        //redOrcPolygon.setLayoutX(redOrcPolygon.getLayoutX() + speedX);
         leftRectangle.setLayoutX(leftRectangle.getLayoutX() + speedX);
         topRectangle.setLayoutX(topRectangle.getLayoutX() + speedX);
         rightRectangle.setLayoutX(rightRectangle.getLayoutX() + speedX);
@@ -99,7 +106,6 @@ public class redOrc extends Orc implements Collidable{
 
     public void jump() {
         redOrc.setLayoutY(redOrc.getLayoutY() + speedY);
-        //redOrcPolygon.setLayoutY(redOrcPolygon.getLayoutY() + speedY);
         leftRectangle.setLayoutY(leftRectangle.getLayoutY() + speedY);
         topRectangle.setLayoutY(topRectangle.getLayoutY() + speedY);
         rightRectangle.setLayoutY(rightRectangle.getLayoutY() + speedY);
@@ -116,7 +122,7 @@ public class redOrc extends Orc implements Collidable{
                     new KeyFrame(Duration.millis(500), event -> {})
             );
             timeline.setOnFinished(event -> {
-                player.increaseCoins(3);
+                player.increaseCoins(4);
             });
             timeline.play();
         }
@@ -137,7 +143,7 @@ public class redOrc extends Orc implements Collidable{
                     new KeyFrame(Duration.millis(500), event -> {})
             );
             timeline2.setOnFinished(event -> {
-                player.increaseCoins(3);
+                player.increaseCoins(4);
             });
             SequentialTransition sequentialTransition = new SequentialTransition(timeline1, timeline2);
             sequentialTransition.play();

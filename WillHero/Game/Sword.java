@@ -6,15 +6,18 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
-public class Sword extends Weapon implements Collidable{
+public class Sword extends Weapon {
     private transient ImageView sword;
     private Polygon swordPolygon;
     private double speedX, speedY;
+    private boolean used;  // Check if the sword is used
 
     public Sword(double x, double y) {
         super(x, y);
         speedX = 0;
         speedY = -4;
+        setLevel(1);
+        setDamage(30);
         sword = new ImageView();
         swordPolygon = new Polygon();
         sword.setLayoutX(x);
@@ -56,6 +59,18 @@ public class Sword extends Weapon implements Collidable{
         anchorPane.getChildren().add(swordPolygon);
     }
 
+    public void useSword() {
+
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
+
     public ImageView getSword() {
         return sword;
     }
@@ -84,5 +99,10 @@ public class Sword extends Weapon implements Collidable{
     @Override
     public boolean collision_detected(GameObject gameObject) {
         return false; // Dummy
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

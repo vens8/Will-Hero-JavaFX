@@ -12,7 +12,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -55,7 +58,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException {
         game = new Main();
-        player = new Player(new mainHero(50, 290));
+        player = new Player(new mainHero(50, 290)); // 50, 290
         game.setPlayer(player);
 
         try {
@@ -75,7 +78,13 @@ public class Controller implements Initializable {
             GlobalVariables.buttonClickSound.play();
         }
         stage = new Stage();
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));
+        root = loader.load();
+        stage.setScene(new Scene(root));
+        settingsController settingsController = loader.getController();
+        settingsController.getGame(game);
+
+        //root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
@@ -97,11 +106,18 @@ public class Controller implements Initializable {
         stage.show();
     }
 
-    public void loadGameClicked() throws IOException {
+    public void loadGameClicked() throws IOException, ClassNotFoundException {
         if (GlobalVariables.sound) {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
+
+        FileInputStream fileStream = new FileInputStream("/Resources/savedGames.txt");
+        ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+
+        gameState savedState = (gameState) objectStream.readObject();
+        //this is where the magic happens
+
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loadGameMenu.fxml")));
         stage.setScene(new Scene(root));

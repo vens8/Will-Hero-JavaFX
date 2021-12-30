@@ -174,8 +174,9 @@ public class pauseController implements Initializable {
 
         // Reset player properties
         player.setScore(0);
-        player.setHero(new mainHero(27, 290));
+        player.setHero(new mainHero(50, 290));
         player.setRevived(false);
+        gameController.resetFlags();
         gameController.setupScene(game);
         mainGameStage.setScene(GlobalVariables.scene);
         mainGameStage.show();

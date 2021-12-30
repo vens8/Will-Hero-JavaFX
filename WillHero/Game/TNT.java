@@ -14,7 +14,7 @@ public class TNT extends GameObject implements Collidable{
     private Polygon tntPolygon;
     private Polygon explosionPolygon;
     private boolean activated, explosionActivated;
-    private AnchorPane anchorPane;
+    private AnchorPane gameAnchorPane;
 
 
     TNT(double x, double y) {
@@ -104,10 +104,15 @@ public class TNT extends GameObject implements Collidable{
         //tntImage.setVisible(false);
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        this.anchorPane = anchorPane;
-        anchorPane.getChildren().add(tntImage);
-        anchorPane.getChildren().add(tntPolygon);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(tntImage);
+        gameAnchorPane.getChildren().add(tntPolygon);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(tntImage);
+        gameAnchorPane.getChildren().remove(tntPolygon);
     }
 
     public void playTNTAnimation() {

@@ -8,10 +8,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 
-public class weaponChest extends Chest {
+public class weaponChest extends Chest implements Cloneable {  // Clones the current weapon each time the player leaps
     private Sword sword;
     private Shuriken shuriken;
-    private int weaponType;
+    private int weaponType;  // 0 for shuriken and 1 for sword
     private transient ImageView weaponChestImageView;
     private Image image1 = new Image("/Resources/wchest1.png", true);
     private Image image2 = new Image("/Resources/wchest2.png", true);
@@ -21,6 +21,7 @@ public class weaponChest extends Chest {
     private Image image6 = new Image("/Resources/wchest6.png", true);
     private Polygon weaponChestPolygon;
     private boolean activated;
+    private AnchorPane gameAnchorPane;
 
     public weaponChest(double x, double y, int weaponType) {
         super(x, y);
@@ -50,7 +51,6 @@ public class weaponChest extends Chest {
         if (this.weaponType == 1) {
             sword = new Sword(x + 70, y + 50);
             shuriken = null;
-            sword.addToScreen(GlobalVariables.gameAnchorPane);
             sword.getSwordPolygon().setDisable(true);  // Initially should be invisible and non-interactive
             sword.getSwordPolygon().setVisible(false);
             sword.getSword().setDisable(true); // Initially should be invisible and non-interactive
@@ -59,7 +59,6 @@ public class weaponChest extends Chest {
         else {
             shuriken = new Shuriken(x + 70, y + 50);
             sword = null;
-            shuriken.addToScreen(GlobalVariables.gameAnchorPane);
             shuriken.getShuriken().setDisable(true);  // Initially should be invisible and non-interactive
             shuriken.getShuriken().setVisible(false);
             shuriken.getShurikenPolygon().setDisable(true); // Initially should be invisible and non-interactive
@@ -67,9 +66,15 @@ public class weaponChest extends Chest {
         }
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        anchorPane.getChildren().add(weaponChestImageView);
-        anchorPane.getChildren().add(weaponChestPolygon);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(weaponChestImageView);
+        gameAnchorPane.getChildren().add(weaponChestPolygon);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(weaponChestImageView);
+        gameAnchorPane.getChildren().remove(weaponChestPolygon);
     }
 
     public void playChestAnimation(Player player) {
@@ -84,12 +89,14 @@ public class weaponChest extends Chest {
                 new KeyFrame(Duration.millis(500), new KeyValue(weaponChestImageView.imageProperty(), image6)),
                 new KeyFrame(Duration.millis(600), event -> {
                     if (this.weaponType == 1) {
+                        sword.addToScreen(gameAnchorPane);
                         sword.getSwordPolygon().setDisable(false);  // Initially should be invisible and non-interactive
                         sword.getSwordPolygon().setVisible(true);
                         sword.getSword().setDisable(false); // Initially should be invisible and non-interactive
                         sword.getSword().setVisible(true);
                     }
                     else {
+                        shuriken.addToScreen(gameAnchorPane);
                         shuriken.getShuriken().setDisable(false);  // Initially should be invisible and non-interactive
                         shuriken.getShuriken().setVisible(true);
                         shuriken.getShurikenPolygon().setDisable(false); // Initially should be invisible and non-interactive
@@ -101,6 +108,7 @@ public class weaponChest extends Chest {
         Animation animation1;
         Timeline timeline2, timeline3;
         if (weaponType == 1) {
+            // Animation
             animation1 = Animations.translateTransition(sword.getSword(), 0, -75, 500, 1, false);
             timeline2 = new Timeline(new KeyFrame(Duration.millis(250), new KeyValue(sword.getSword().scaleXProperty(), 1)),
                     new KeyFrame(Duration.millis(250), new KeyValue(sword.getSword().scaleYProperty(), 1)));
@@ -110,7 +118,12 @@ public class weaponChest extends Chest {
                 sword.getSword().setVisible(false);
                 sword.getSwordPolygon().setDisable(true);
                 sword.getSwordPolygon().setVisible(false);
-                GlobalVariables.gameAnchorPane.getChildren().removeAll(sword.getSword(), sword.getSwordPolygon());
+                this.gameAnchorPane.getChildren().removeAll(sword.getSword(), sword.getSwordPolygon());
+                try {
+                    player.getHero().addWeapon(sword);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
                 // Remove from gameObjects as well
             }));
         }
@@ -124,7 +137,12 @@ public class weaponChest extends Chest {
                 shuriken.getShuriken().setVisible(false);
                 shuriken.getShurikenPolygon().setDisable(true);
                 shuriken.getShurikenPolygon().setVisible(false);
-                GlobalVariables.gameAnchorPane.getChildren().removeAll(shuriken.getShuriken(), shuriken.getShurikenPolygon());
+                this.gameAnchorPane.getChildren().removeAll(shuriken.getShuriken(), shuriken.getShurikenPolygon());
+                try {
+                    player.getHero().addWeapon(shuriken);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
                 // Remove from gameObjects as well
             }));
         }

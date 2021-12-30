@@ -1,14 +1,14 @@
 package Game;
 
 public abstract class Weapon extends GameObject implements Collidable {
-    private float damage;
+    private double damage;
     private int level, weaponType;
 
     Weapon(double x, double y) {
         super(new Position(x, y));
     }
 
-    public float getDamage () {
+    public double getDamage () {
         return damage;
     }
     public int getLevel () {
@@ -25,6 +25,11 @@ public abstract class Weapon extends GameObject implements Collidable {
     }
     public void setWeaponType ( int weaponType){
         this.weaponType = weaponType;
+    }
+
+    public void upgrade(){
+        ++level;
+        damage *= 2; // Change here;
     }
 
     @Override

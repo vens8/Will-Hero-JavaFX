@@ -9,6 +9,7 @@ import javafx.scene.shape.Polygon;
 public class mediumPlatform extends Platform implements Collidable{
     private final transient ImageView mPlatform;
     private final Polygon mPlatformPolygon;
+    private AnchorPane gameAnchorPane;
 
     mediumPlatform(double x, double y){
         super(x, y);
@@ -30,9 +31,15 @@ public class mediumPlatform extends Platform implements Collidable{
                 102.91664123535156, 92.99996948242188);
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        anchorPane.getChildren().add(mPlatform);
-        anchorPane.getChildren().add(mPlatformPolygon);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(mPlatform);
+        gameAnchorPane.getChildren().add(mPlatformPolygon);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(mPlatform);
+        gameAnchorPane.getChildren().remove(mPlatformPolygon);
     }
 
     public ImageView getmPlatform() {

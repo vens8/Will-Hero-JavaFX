@@ -21,6 +21,7 @@ public class coinChest extends Chest implements Collidable{
     private final Image image6 = new Image("/Resources/cchest6.png", true);
     private Polygon coinChestPolygon;
     private boolean activated;
+    private AnchorPane gameAnchorPane;
 
     public coinChest(double x, double y, int coins) {
         super(x, y);
@@ -47,7 +48,6 @@ public class coinChest extends Chest implements Collidable{
         coinChestPolygon.setScaleX(0.75);
         coinChestPolygon.setScaleY(0.75);
         coin = new Coin(x + 70, y + 50);  // Place coin at the center of the chest
-        coin.addToScreen(GlobalVariables.gameAnchorPane);
         coin.getCoinImage().setDisable(true);  // Initially should be invisible and non-interactive
         coin.getCoinImage().setVisible(false);
         coin.getCoinPolygon().setDisable(true); // Initially should be invisible and non-interactive
@@ -56,6 +56,7 @@ public class coinChest extends Chest implements Collidable{
     }
 
     public void playChestAnimation(Player player) {
+        coin.addToScreen(gameAnchorPane);
         GlobalVariables.coinChestOpenSound.stop();
         GlobalVariables.coinChestOpenSound.play();
         Timeline timeline1 = new Timeline(
@@ -94,9 +95,15 @@ public class coinChest extends Chest implements Collidable{
         sequentialTransition.setOnFinished(event -> player.increaseCoins(coin.getCoinValue()));
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        anchorPane.getChildren().add(coinChestImageView);
-        anchorPane.getChildren().add(coinChestPolygon);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(coinChestImageView);
+        gameAnchorPane.getChildren().add(coinChestPolygon);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(coinChestImageView);
+        gameAnchorPane.getChildren().remove(coinChestPolygon);
     }
 
     public Coin getCoin(){

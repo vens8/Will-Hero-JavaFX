@@ -1,10 +1,14 @@
 package Game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class bossOrc extends Orc implements Collidable {
     private transient ImageView bossOrc;
@@ -13,71 +17,84 @@ public class bossOrc extends Orc implements Collidable {
     private final Rectangle rightRectangle;
     private final Rectangle bottomRectangle;
     private double speedY, speedX, health, damage, currentJumpHeight, setX, setY;
-    private static final double jumpHeight = -30;
-    private static final double jumpSlice = 1;
-    private static final double accelerationX = -0.4; // acceleration is -0.4 for smooth deceleration
-    private static final double accelerationY = 0.2;
-    private static final double weight = 8;
-    private boolean pushed, killed;
-    private AnchorPane anchorPane;
+    private static final double jumpHeight = -15;
+    private static final double jumpSlice = 0.2;
+    private static double accelerationX = -0.2; // acceleration is -0.2 for smooth deceleration
+    private static final double accelerationY = 0.02;
+    private static final double weight = 2000;  // Heavy and bulky and can push the player off
+    private boolean pushed, killed, attacked;
+    private AnchorPane gameAnchorPane;
 
     bossOrc(double x, double y) {
         super(x, y);
-        speedY = -1;
+        speedY = -0.2;
         currentJumpHeight = 0;
         pushed = false;
         killed = false;
+        attacked = false;
+        health = 500;
         bossOrc = new ImageView();
         bossOrc.setLayoutX(x);
         bossOrc.setLayoutY(y);
+        bossOrc.setFitHeight(155);
+        bossOrc.setFitWidth(157);
         bossOrc.setPreserveRatio(true);
         bossOrc.setImage(new Image("/Resources/bossOrc.png", true));
 
         leftRectangle = new Rectangle();
-        leftRectangle.setHeight(39);
-        leftRectangle.setWidth(4);
+        leftRectangle.setHeight(130);
+        leftRectangle.setWidth(40);
         leftRectangle.setArcHeight(5);
         leftRectangle.setArcWidth(5);
-        leftRectangle.setLayoutX(x + 2);
-        leftRectangle.setLayoutY(y + 4);
+        leftRectangle.setLayoutX(x + 10);
+        leftRectangle.setLayoutY(y + 14);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
         topRectangle.setHeight(4);
-        topRectangle.setWidth(43);
+        topRectangle.setWidth(132);
         topRectangle.setArcHeight(5);
         topRectangle.setArcWidth(5);
-        topRectangle.setLayoutX(x + 2);
-        topRectangle.setLayoutY(y);
+        topRectangle.setLayoutX(x + 10);
+        topRectangle.setLayoutY(y + 6);
         topRectangle.setFill(Color.TRANSPARENT);
 
         rightRectangle = new Rectangle();
-        rightRectangle.setHeight(39);
+        rightRectangle.setHeight(129);
         rightRectangle.setWidth(4);
         rightRectangle.setArcHeight(5);
         rightRectangle.setArcWidth(5);
-        rightRectangle.setLayoutX(x + 42);
-        rightRectangle.setLayoutY(y + 4);
+        rightRectangle.setLayoutX(x + 137);
+        rightRectangle.setLayoutY(y + 15);
         rightRectangle.setFill(Color.TRANSPARENT);
 
         bottomRectangle = new Rectangle();
         bottomRectangle.setHeight(4);
-        bottomRectangle.setWidth(42);
+        bottomRectangle.setWidth(132);
         bottomRectangle.setArcHeight(5);
         bottomRectangle.setArcWidth(5);
-        bottomRectangle.setLayoutX(x + 3);
-        bottomRectangle.setLayoutY(y + 42);
+        bottomRectangle.setLayoutX(x + 10);
+        bottomRectangle.setLayoutY(y + 146);
         bottomRectangle.setFill(Color.TRANSPARENT);
     }
 
 
 
-    public void addToScreen(AnchorPane anchorPane) {
-        anchorPane.getChildren().add(bossOrc);
-        anchorPane.getChildren().add(leftRectangle);
-        anchorPane.getChildren().add(topRectangle);
-        anchorPane.getChildren().add(rightRectangle);
-        anchorPane.getChildren().add(bottomRectangle);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(bossOrc);
+        gameAnchorPane.getChildren().add(leftRectangle);
+        gameAnchorPane.getChildren().add(topRectangle);
+        gameAnchorPane.getChildren().add(rightRectangle);
+        gameAnchorPane.getChildren().add(bottomRectangle);
+    }
+
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(bossOrc);
+        gameAnchorPane.getChildren().remove(leftRectangle);
+        gameAnchorPane.getChildren().remove(topRectangle);
+        gameAnchorPane.getChildren().remove(rightRectangle);
+        gameAnchorPane.getChildren().remove(bottomRectangle);
     }
 
     public void push() {
@@ -90,11 +107,41 @@ public class bossOrc extends Orc implements Collidable {
 
     public void jump() {
         bossOrc.setLayoutY(bossOrc.getLayoutY() + speedY);
-        bossOrc.setLayoutY(bossOrc.getLayoutY() + speedY);
         leftRectangle.setLayoutY(leftRectangle.getLayoutY() + speedY);
         topRectangle.setLayoutY(topRectangle.getLayoutY() + speedY);
         rightRectangle.setLayoutY(rightRectangle.getLayoutY() + speedY);
         bottomRectangle.setLayoutY(bottomRectangle.getLayoutY() + speedY);
+    }
+
+    public void playDeathAnimation(int deathType, Player player) {  // 0 for fall death, 1 for all other deaths
+        if (deathType == 0) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
+                GlobalVariables.bossOrcDeathSound.stop();
+                GlobalVariables.bossOrcDeathSound.play();
+                setKilled(true);
+            }),
+                    new KeyFrame(Duration.millis(500), event -> {})
+            );
+            timeline.setOnFinished(event -> {
+                player.increaseCoins(50);
+            });
+            timeline.play();
+        }
+        else if (deathType == 1) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
+                setSpeedY(-1);
+                setSpeedX(5);  // Motion after death
+                setKilled(true);
+                GlobalVariables.bossOrcDeathSound.stop();
+                GlobalVariables.bossOrcDeathSound.play();
+            }),
+                    new KeyFrame(Duration.millis(500), event -> {})
+            );
+            timeline.setOnFinished(event -> {
+                player.increaseCoins(50);
+            });
+            timeline.play();
+        }
     }
 
     public ImageView getBossOrc() {
@@ -142,6 +189,10 @@ public class bossOrc extends Orc implements Collidable {
 
     public static double getJumpSlice() {
         return jumpSlice;
+    }
+
+    public static void setAccelerationX(double accelerationX) {
+        Game.bossOrc.accelerationX = accelerationX;
     }
 
     public static double getAccelerationX() {
@@ -299,5 +350,13 @@ public class bossOrc extends Orc implements Collidable {
 
     public Rectangle getLeftRectangle() {
         return leftRectangle;
+    }
+
+    public boolean isAttacked() {
+        return attacked;
+    }
+
+    public void setAttacked(boolean attacked) {
+        this.attacked = attacked;
     }
 }

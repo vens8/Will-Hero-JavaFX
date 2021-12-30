@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class GlobalVariables {
     // Music
@@ -46,6 +47,8 @@ public class GlobalVariables {
     public static MediaPlayer coinCollectSound = new MediaPlayer(coinCollect);
     public static Media orcDeath = new Media(new File("src/Resources/orcDeath.m4a").toURI().toString());
     public static MediaPlayer orcDeathSound = new MediaPlayer(orcDeath);
+    public static Media bossOrcDeath = new Media(new File("src/Resources/bossDeath.m4a").toURI().toString());
+    public static MediaPlayer bossOrcDeathSound = new MediaPlayer(bossOrcDeath);
 
     // Main timeline
     public static Timeline timeline;
@@ -60,7 +63,7 @@ public class GlobalVariables {
     public static float SCREEN_WIDTH = 676, SCREEN_HEIGHT = 1000;
 
     // Level data
-    public static GameObjectList<GameObject> gameObjects = new GameObjectList<>();
+    public static ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     // Anchor Panes
     public static AnchorPane gameAnchorPane;

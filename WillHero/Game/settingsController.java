@@ -16,7 +16,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.util.Date;
 import java.util.Objects;
@@ -26,6 +28,7 @@ public class settingsController implements Initializable {
     private Stage stage;
     private Scene scene;
     private Parent root;
+    private Main game;
     @FXML
     private ButtonBar musicButtonBar;
     @FXML
@@ -117,6 +120,11 @@ public class settingsController implements Initializable {
         root = loader.load();
         gameState g = new gameState();
         g.setDate(new Date());
+        g.setGame(game);
+        // starting index of Super array (go till its end)
+
+        saveGameData(g);
+
         Controller controller = loader.getController();
         controller.addSavedGame(g);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -124,6 +132,24 @@ public class settingsController implements Initializable {
         alert.setHeaderText("Game saved");
         alert.setContentText("Your game progress has been saved successfully!");
         alert.showAndWait();
+    }
+
+    public void getGame(Main game){
+        this.game = game;
+    }
+
+    public void saveGameData(gameState gameState){  // Change to serialize and the loading part to deserialize
+        try {
+            FileOutputStream fileStream = new FileOutputStream("/Resources/savedGames.txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+
+            objectStream.writeObject(gameState);
+
+            objectStream.close();
+            fileStream.close();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void musicMouseEntered() {

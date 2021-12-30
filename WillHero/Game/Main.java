@@ -18,13 +18,15 @@ import java.util.ResourceBundle;
 public class Main extends Application implements Initializable, Serializable {
     public static Stage myStage;
     private Player player;
-    private Main game;
+    private int highScore;
 
     @Override
     public void start(Stage primaryStage) {
             try {
                 // Create game and player here and pass to Controller.java
                 // playMusic();  // Uncomment
+                gameData gameData = new gameData();  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
+                System.out.println("Created!");
                 primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
                 GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
                 GlobalVariables.mainMenuStage = primaryStage;
@@ -75,6 +77,22 @@ public class Main extends Application implements Initializable, Serializable {
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public static Stage getMyStage() {
+        return myStage;
+    }
+
+    public static void setMyStage(Stage myStage) {
+        Main.myStage = myStage;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
     }
 
     @Override
