@@ -11,6 +11,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.effect.Glow;
@@ -22,6 +24,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -66,27 +69,21 @@ public class gameController implements Initializable {
     private ImageView shurikenImage;
     @FXML
     private ImageView swordImage;
+    @FXML
+    private MediaView videoMediaView;
+
 
     private Camera camera;
     private Main game;
     private Player player;
-    private bossOrc bossOrc;
     private boolean gameStarted;
-    private ArrayList<GameObject> gameObjects;
-    private ArrayList<Platform> platforms;
-    private ArrayList<Chest> chests;
-    private ArrayList<Orc> orcs;
-    private ArrayList<TNT> TNTs;
-    private ArrayList<Coin> coins;
-    private smallPlatform smallPlatform;
-    private mediumPlatform mediumPlatform;
-    private bigPlatform bigPlatform;
+    private ArrayList<GameObject> gameObjects2;
+    private LinkedList<GameObject> gameObjects;
+    private Color scoreColor;
 
-    // Global
-    private KeyFrame keyFrame;
     // FPS computation
     private final long[] frameTimes = new long[100];
-    private int frameTimeIndex = 0 ;
+    private int frameIndex = 0;
     private boolean arrayFilled = false;
     long now;  // Current time
 
@@ -99,13 +96,23 @@ public class gameController implements Initializable {
         GlobalVariables.gameAnchorPane = gameAnchorPane;
         // Use reference of Main game here.
         camera = new Camera(0, 0);
-        gameObjects = new ArrayList<>();
-        bossOrc = new bossOrc(5000, 173);
-        bossOrc.addToScreen(gameAnchorPane);
-        //System.out.println("total size: " + GlobalVariables.gameObjects.size());
+        //gameObjects = new ArrayList<>();
+        gameObjects = new LinkedList<>();   
 
         gameStarted = true;  // local to the game
-
+        scoreColor = Color.BLACK;
+        if (GlobalVariables.difficulty == 50) {  // Hard mode
+            videoMediaView.setMediaPlayer(GlobalVariables.backgroundVideo);
+            scoreColor = Color.WHITE;
+            gameAnchorPane.setOpacity(0.5);
+            GlobalVariables.sound = false;
+            GlobalVariables.backgroundVideo.setCycleCount(MediaPlayer.INDEFINITE);
+            GlobalVariables.backgroundVideo.stop();
+            GlobalVariables.backgroundVideo.play();
+            GlobalVariables.eerieMusic.setCycleCount(MediaPlayer.INDEFINITE);
+            GlobalVariables.eerieMusic.stop();
+            GlobalVariables.eerieMusic.play();
+        }
         GlobalVariables.timeline = new Timeline(new KeyFrame(Duration.millis(10), e -> run()));  // Run a frame every 10 milliseconds (100 fps)
         GlobalVariables.timeline.setCycleCount(Timeline.INDEFINITE);
 
@@ -152,12 +159,13 @@ public class gameController implements Initializable {
             GlobalVariables.buttonHoverSound.play();
         }
     }
+
     public void settingsMouseExited() {
         settingsButton.setEffect(null);
     }
 
     public void reviveButtonClicked() {
-        if (player.getCoins() >= 10) {  // 50 coins to revive
+        if (player.getCoins() >= 10) {  // 100 coins to revive
             player.setRevived(true);
 
             gaussianBlur.setRadius(0);
@@ -179,11 +187,13 @@ public class gameController implements Initializable {
             // Move anchor pane a little forward and place player on a platform
             //System.out.println("here");
             player.setHero(new mainHero(player.getHero().getHero().getLayoutX() - 200, player.getHero().getHero().getLayoutY() + 800));
-            GlobalVariables.timeline.setRate(1);  // reset rate
+            //GlobalVariables.timeline.setRate(1);  // reset rate
             gameStarted = true;
             //GlobalVariables.timeline.play();
-            GlobalVariables.playerReviveSound.stop();
-            GlobalVariables.playerReviveSound.play();
+            if (GlobalVariables.sound) {
+                GlobalVariables.playerReviveSound.stop();
+                GlobalVariables.playerReviveSound.play();
+            }
         }
     }
 
@@ -206,7 +216,7 @@ public class gameController implements Initializable {
         Animations.translateTransition(gameOverAnchorPane, 0, 550, 500, 1, false).play();
         Animations.translateTransition(scoreLabel, 0, -125, 500, 1, false).play();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(250), new KeyValue(gameAnchorPane.effectProperty(), gaussianBlur)),
-                new KeyFrame(Duration.millis(250)   , new KeyValue(bgAnchorPane.effectProperty(), gaussianBlur)),
+                new KeyFrame(Duration.millis(250), new KeyValue(bgAnchorPane.effectProperty(), gaussianBlur)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.scaleXProperty(), 1)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.scaleYProperty(), 1)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.textFillProperty(), Color.rgb(97, 90, 90))));
@@ -257,11 +267,11 @@ public class gameController implements Initializable {
         alert.setHeaderText("You're about to go to the main menu!");
         alert.setContentText("Do you want to save your progress before exiting?");
 
-        if(alert.showAndWait().get() == ButtonType.OK) {
+        if (alert.showAndWait().get() == ButtonType.OK) {
             // Insert code to save game state
 
             // Close current Pause Menu stage
-            stage = (Stage)(exitButton.getScene().getWindow());
+            stage = (Stage) (exitButton.getScene().getWindow());
             stage.close();
 
             // Open Main Menu stage
@@ -288,13 +298,12 @@ public class gameController implements Initializable {
     }
 
     public void setupScene(Main game) {
-        this.game = game;
+        this.game = game;  // Passed from playController
         this.player = game.getPlayer();
         GlobalVariables.gameObjects.add(0, player.getHero());
-        //player.getHero().addToScreen(gameAnchorPane);
         GlobalVariables.scene.setOnMousePressed(mouseEvent -> {
             if (!mouseEvent.isControlDown()) {
-                if(mouseEvent.getPickResult().getIntersectedNode().getId() == null || !mouseEvent.getPickResult().getIntersectedNode().getId().equals("settingsButton")) {
+                if (mouseEvent.getPickResult().getIntersectedNode().getId() == null || !mouseEvent.getPickResult().getIntersectedNode().getId().equals("settingsButton")) {
                     if (GlobalVariables.sound) {
                         GlobalVariables.playerLeapSound.stop();
                         GlobalVariables.playerLeapSound.play();
@@ -303,39 +312,34 @@ public class gameController implements Initializable {
                     player.getHero().setSpeedX(Game.mainHero.getLeapSlice());
                     player.getHero().setLeaped(true);
                     if (player.getHero().getCurrentWeapon() instanceof Shuriken) {
-                        Shuriken shuriken = new Shuriken(player.getHero().getHero().getLayoutX(), player.getHero().getHero().getLayoutY());
+                        Shuriken shuriken = new Shuriken(player.getHero().getHero().getLayoutX(), player.getHero().getHero().getLayoutY(), player.getHero().getCurrentWeapon().getLevel());
                         shuriken.setSpeedX(Shuriken.getThrowSlice());
                         shuriken.setThrown(true);
-                        System.out.println(shuriken);
                         shuriken.addToScreen(gameAnchorPane);
-                        player.getHero().addShuriken(shuriken);
+                        gameObjects.add(shuriken);  // Adding shuriken to gameObjects when hero clicks
+                        player.getHero().addShuriken();
+                    } else if (player.getHero().getCurrentWeapon() instanceof Sword) {
+                        ((Sword) player.getHero().getCurrentWeapon()).setUsed(true);  // Play sword animation
                     }
-                    else if (player.getHero().getCurrentWeapon() instanceof Sword){
-                        try {
-                            Sword sword = (Sword) ((Sword) player.getHero().getCurrentWeapon()).clone();
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // Reset all flags here
+                    // Reset all flags here if any
                 }
             }
         });
     }
 
     public void displayFPS() {
-        now = System.nanoTime();
-        long oldFrameTime = frameTimes[frameTimeIndex] ;
-        frameTimes[frameTimeIndex] = now;
-        frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length ;
-        if (frameTimeIndex == 0) {
-            arrayFilled = true ;
+        now = System.nanoTime();  // Current time in nanoseconds
+        long prevFrameTime = frameTimes[frameIndex];
+        frameTimes[frameIndex] = now;
+        frameIndex = (frameIndex + 1) % frameTimes.length;
+        if (frameIndex == 0) {
+            arrayFilled = true;
         }
         if (arrayFilled) {
-            long elapsedNanos = now - oldFrameTime ;
-            long elapsedNanosPerFrame = elapsedNanos / frameTimes.length ;
-            double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame ;
-            fpsLabel.setText(String.format("%.1f", frameRate));
+            long elapsedNanoseconds = now - prevFrameTime;
+            long elapsedNanosecondsPerFrame = elapsedNanoseconds / frameTimes.length;
+            double frameRate = 1_000_000_000.0 / elapsedNanosecondsPerFrame;
+            fpsLabel.setText(String.format("%.1f", frameRate));  // Display the current FPS on the screen
         }
     }
 
@@ -349,28 +353,24 @@ public class gameController implements Initializable {
 
     private void displayPlayerWeapons() {
         if (player.getHero().getUnlockedWeapons().size() == 2) {
-            for (int i = 0; i < ((mainHero) gameObjects.get(i)).getUnlockedWeapons().size(); i++) {
-                if (((mainHero) gameObjects.get(i)).getUnlockedWeapons().get(i) instanceof Shuriken) {
+            for (int i = 0; i < player.getHero().getUnlockedWeapons().size(); i++) {
+                if (player.getHero().getUnlockedWeapons().get(i) instanceof Shuriken) {
                     shurikenImage.setOpacity(1);
-                    shurikenLevel.setText(String.format("%d", ((Shuriken) ((mainHero) gameObjects.get(i)).getUnlockedWeapons().get(i)).getLevel()));
-                }
-                else {
+                    shurikenLevel.setText(String.format("%d", ((Shuriken) player.getHero().getUnlockedWeapons().get(i)).getLevel()));
+                } else {
                     swordImage.setOpacity(1);
-                    swordLevel.setText(String.format("%d", ((Sword) ((mainHero) gameObjects.get(i)).getUnlockedWeapons().get(i)).getLevel()));
+                    swordLevel.setText(String.format("%d", ((Sword) player.getHero().getUnlockedWeapons().get(i)).getLevel()));
                 }
             }
-        }
-        else if (player.getHero().getUnlockedWeapons().size() == 1) {
+        } else if (player.getHero().getUnlockedWeapons().size() == 1) {
             if (player.getHero().getUnlockedWeapons().get(0) instanceof Shuriken) {
                 shurikenImage.setOpacity(1);
                 shurikenLevel.setText(String.format("%d", ((Shuriken) player.getHero().getUnlockedWeapons().get(0)).getLevel()));
-            }
-            else {
+            } else {
                 swordImage.setOpacity(1);
                 swordLevel.setText(String.format("%d", ((Sword) player.getHero().getUnlockedWeapons().get(0)).getLevel()));
             }
-        }
-        else {
+        } else {
             shurikenImage.setOpacity(0.4);
             shurikenLevel.setText("0");
             swordImage.setOpacity(0.4);
@@ -397,35 +397,25 @@ public class gameController implements Initializable {
                 GlobalVariables.gameObjects.get(i).setAdded(true);
                 if (GlobalVariables.gameObjects.get(i) instanceof mainHero) {
                     ((mainHero) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof smallPlatform) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof smallPlatform) {
                     ((smallPlatform) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof mediumPlatform) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof mediumPlatform) {
                     ((mediumPlatform) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof bigPlatform) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof bigPlatform) {
                     ((bigPlatform) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof greenOrc) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof greenOrc) {
                     ((greenOrc) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof redOrc) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof redOrc) {
                     ((redOrc) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof bossOrc) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof bossOrc) {
                     ((bossOrc) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof coinChest) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof coinChest) {
                     ((coinChest) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof weaponChest) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof weaponChest) {
                     ((weaponChest) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof TNT) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof TNT) {
                     ((TNT) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
-                }
-                else if (GlobalVariables.gameObjects.get(i) instanceof Coin) {
+                } else if (GlobalVariables.gameObjects.get(i) instanceof Coin) {
                     ((Coin) GlobalVariables.gameObjects.get(i)).addToScreen(gameAnchorPane);
                 }
             }
@@ -441,57 +431,49 @@ public class gameController implements Initializable {
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof mediumPlatform) {
+            } else if (gameObjects.get(i) instanceof mediumPlatform) {
                 if (player.getHero().getHero().getLayoutX() - ((mediumPlatform) gameObjects.get(i)).getmPlatform().getLayoutX() >= 600) {
                     ((mediumPlatform) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof bigPlatform) {
+            } else if (gameObjects.get(i) instanceof bigPlatform) {
                 if (player.getHero().getHero().getLayoutX() - ((bigPlatform) gameObjects.get(i)).getbPlatform().getLayoutX() >= 800) {
                     ((bigPlatform) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof greenOrc) {
+            } else if (gameObjects.get(i) instanceof greenOrc) {
                 if (player.getHero().getHero().getLayoutX() - ((greenOrc) gameObjects.get(i)).getGreenOrc().getLayoutX() >= 600) {
                     ((greenOrc) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof redOrc) {
+            } else if (gameObjects.get(i) instanceof redOrc) {
                 if (player.getHero().getHero().getLayoutX() - ((redOrc) gameObjects.get(i)).getRedOrc().getLayoutX() >= 600) {
                     ((redOrc) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof bossOrc) {
+            } else if (gameObjects.get(i) instanceof bossOrc) {
                 if (player.getHero().getHero().getLayoutX() - ((bossOrc) gameObjects.get(i)).getBossOrc().getLayoutX() >= 600) {
                     ((bossOrc) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof coinChest) {
+            } else if (gameObjects.get(i) instanceof coinChest) {
                 if (player.getHero().getHero().getLayoutX() - ((coinChest) gameObjects.get(i)).getCoinChestImageView().getLayoutX() >= 600) {
                     ((coinChest) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof weaponChest) {
+            } else if (gameObjects.get(i) instanceof weaponChest) {
                 if (player.getHero().getHero().getLayoutX() - ((weaponChest) gameObjects.get(i)).getWeaponChestImageView().getLayoutX() >= 600) {
                     ((weaponChest) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
                     gameObjects.remove(gameObjects.get(i));
                 }
-            }
-            else if (gameObjects.get(i) instanceof TNT) {
+            } else if (gameObjects.get(i) instanceof TNT) {
                 if (player.getHero().getHero().getLayoutX() - ((TNT) gameObjects.get(i)).getTntImage().getLayoutX() >= 600) {
                     ((TNT) gameObjects.get(i)).removeFromScreen();
                     System.out.println("Removed: " + gameObjects.get(i));
@@ -502,12 +484,12 @@ public class gameController implements Initializable {
     }
 
     public void playerDeath(int deathType) {  // 0 for fall death, 1 for normal death
-        //GlobalVariables.timeline.setRate(0.1);  // Slow down time on death
-        if (deathType == 0) {
+        GlobalVariables.timeline.pause();
+        // Pause time
+        if (deathType == 0 && GlobalVariables.sound) {
             GlobalVariables.playerFallSound.stop();
             GlobalVariables.playerFallSound.play();
-        }
-        else if (deathType == 1) {
+        } else if (deathType == 1 && GlobalVariables.sound) {
             GlobalVariables.playerDeathSound.stop();
             GlobalVariables.playerDeathSound.play();
         }
@@ -516,7 +498,8 @@ public class gameController implements Initializable {
             reviveButton.setDisable(true);
             reviveButton.setOpacity(0.2);
         }
-        Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {}));
+        Timeline timeline1 = new Timeline(new KeyFrame(Duration.seconds(0.5), event -> {
+        }));
         Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(10), event -> {
             Animations.translateTransition(gameOverAnchorPane, 0, -550, 500, 1, false).play();
             Animations.translateTransition(scoreLabel, 0, 125, 500, 1, false).play();
@@ -525,7 +508,7 @@ public class gameController implements Initializable {
                 new KeyFrame(Duration.millis(250), new KeyValue(bgAnchorPane.effectProperty(), gaussianBlur)),
                 new KeyFrame(Duration.millis(500), new KeyValue(scoreLabel.scaleXProperty(), 2)),
                 new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.scaleYProperty(), 2)),
-                new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.textFillProperty(), Color.BLACK)));
+                new KeyFrame(Duration.millis(250), new KeyValue(scoreLabel.textFillProperty(), scoreColor)));
         SequentialTransition sequentialTransition = new SequentialTransition(timeline1, timeline2, timeline3);
         sequentialTransition.play();
         System.out.println("Game over!");  // Make game over scene and fade transition (bring down opacity of the game scene)
@@ -550,7 +533,7 @@ public class gameController implements Initializable {
         displayPlayerWeapons();
         generateObjects();  // Checks each time whether the next item in queue is within a specified distance of the player (camera)
         destroyObjects();
-        GlobalVariables.timeline.setRate((428.746463 * Math.pow(0.868535805, gameObjects.size())/100));
+        GlobalVariables.timeline.setRate((428.746463 * Math.pow(0.868535805, gameObjects.size()) / GlobalVariables.difficulty));
         camera.update(player.getHero(), gameAnchorPane, bgAnchorPane);  // Follow the player
         if (gameStarted) {
             for (int i = 0; i < gameObjects.size(); i++) {
@@ -566,9 +549,7 @@ public class gameController implements Initializable {
                             } else {
                                 ((mainHero) gameObjects.get(i)).setSetY(((mainHero) gameObjects.get(i)).getSpeedY() + Game.mainHero.getAccelerationY());
                                 ((mainHero) gameObjects.get(i)).setSpeedY(((mainHero) gameObjects.get(i)).getSetY());
-                                //System.out.println("New else speed: " + ((mainHero) gameObjects.get(i)).getSpeedY());
                                 ((mainHero) gameObjects.get(i)).jump();
-                                // Experiment
                             }
                         }
                         if (((mainHero) gameObjects.get(i)).isLeaped()) {
@@ -581,7 +562,7 @@ public class gameController implements Initializable {
                             } else {
                                 // Called at the end of every leap
                                 // Uncomment below code at the end
-                                // ((mainHero) gameObjects.get(i)).setSpeedY(((mainHero) gameObjects.get(i)).getSetY());  // At the end of the leap, set Y speed back to before and X to 0.
+                                //((mainHero) gameObjects.get(i)).setSpeedY(((mainHero) gameObjects.get(i)).getSetY());  // At the end of the leap, set Y speed back to before and X to 0.
                                 ((mainHero) gameObjects.get(i)).setSpeedX(0);
                                 ((mainHero) gameObjects.get(i)).setCurrentLeapLength(0);
                                 ((mainHero) gameObjects.get(i)).setLeaped(false);
@@ -590,31 +571,36 @@ public class gameController implements Initializable {
                             }
                         }
                         if (gameObject instanceof smallPlatform) {
-                            if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((smallPlatform) gameObject).getsPlatformPolygon().getBoundsInParent())) {
-                                System.out.println("Player location: " + player.getHero().getHero().getLayoutX());
-                                System.out.println("Hit the small platform, speed Y: " + ((mainHero) gameObjects.get(i)).getSpeedY());
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                if (GlobalVariables.sound) {
+                                    GlobalVariables.playerJumpSound.stop();
+                                    GlobalVariables.playerJumpSound.play();
+                                }
                                 ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                 ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 System.out.println("Speed on small: " + ((mainHero) gameObjects.get(i)).getSpeedY());
                             }
                         } else if (gameObject instanceof mediumPlatform) {
-                            if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((mediumPlatform) gameObject).getmPlatformPolygon().getBoundsInParent())) {
-                                System.out.println("Player location: " + player.getHero().getHero().getLayoutX());
-                                System.out.println("Hit the medium platform, speed Y: " + ((mainHero) gameObjects.get(i)).getSpeedY());
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                if (GlobalVariables.sound) {
+                                    GlobalVariables.playerJumpSound.stop();
+                                    GlobalVariables.playerJumpSound.play();
+                                }
                                 ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                 ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 System.out.println("Speed on medium: " + ((mainHero) gameObjects.get(i)).getSpeedY());
                             }
                         } else if (gameObject instanceof bigPlatform) {
-                            if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent())) {
-                                System.out.println("Player location: " + player.getHero().getHero().getLayoutX());
-                                System.out.println("Hit the big platform, speed Y: " + ((mainHero) gameObjects.get(i)).getSpeedY());
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                if (GlobalVariables.sound) {
+                                    GlobalVariables.playerJumpSound.stop();
+                                    GlobalVariables.playerJumpSound.play();
+                                }
                                 ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                 ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 System.out.println("Speed on big: " + ((mainHero) gameObjects.get(i)).getSpeedY());
                             }
-                        }
-                        else if (gameObject instanceof redOrc) {
+                        } else if (gameObject instanceof redOrc) {
                             // Player collision with Red Orc
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
@@ -628,22 +614,31 @@ public class gameController implements Initializable {
                                         ((mainHero) gameObjects.get(i)).setLeaped(false);
                                     }
                                 }
+//                                if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((mainHero) gameObjects.get(i)).getSpeedX() > 0) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+//                                    if (GlobalVariables.sound) {
+//                                        GlobalVariables.playerJumpSound.stop();
+//                                        GlobalVariables.playerJumpSound.play();
+//                                    }
+//                                    ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
+//                                    ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
+//                                }
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((mainHero) gameObjects.get(i)).getSpeedX() > 0) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
-                                    GlobalVariables.playerJumpSound.stop();
-                                    GlobalVariables.playerJumpSound.play();
+                                    if (GlobalVariables.sound) {
+                                        GlobalVariables.playerJumpSound.stop();
+                                        GlobalVariables.playerJumpSound.play();
+                                    }
                                     ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                     ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 }
-
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getBottomRectangle().getBoundsInParent()) &&  // Only when the player hits the bottom rectangle, he's considered dead
-                                    !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) ||
-                                            ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) ||
-                                            ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                        !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) ||
+                                                ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) ||
+                                                ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    gameStarted = false;
                                     playerDeath(1);
                                 }
                             }
-                        }
-                        else if (gameObject instanceof greenOrc) {
+                        } else if (gameObject instanceof greenOrc) {
                             // Player collision with Green Orc
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
@@ -658,19 +653,20 @@ public class gameController implements Initializable {
                                     }
                                 }
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((mainHero) gameObjects.get(i)).getSpeedX() > 0) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
-                                    GlobalVariables.playerJumpSound.stop();
-                                    GlobalVariables.playerJumpSound.play();
+                                    if (GlobalVariables.sound) {
+                                        GlobalVariables.playerJumpSound.stop();
+                                        GlobalVariables.playerJumpSound.play();
+                                    }
                                     ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                     ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 }
 
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getBottomRectangle().getBoundsInParent()) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getTopRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((greenOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    gameStarted = false;
                                     playerDeath(1);
                                 }
                             }
-                        }
-
-                        else if (gameObject instanceof bossOrc) {
+                        } else if (gameObject instanceof bossOrc) {
                             // Player collision with Boss Orc
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
@@ -689,44 +685,50 @@ public class gameController implements Initializable {
                                     }
                                 }
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getTopRectangle().getBoundsInParent()) && (((mainHero) gameObjects.get(i)).getSpeedX() <= 0) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getRightRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getBottomRectangle().getBoundsInParent()))) {
-                                    GlobalVariables.playerJumpSound.stop();
-                                    GlobalVariables.playerJumpSound.play();
+                                    if (GlobalVariables.sound) {
+                                        GlobalVariables.playerJumpSound.stop();
+                                        GlobalVariables.playerJumpSound.play();
+                                    }
                                     ((mainHero) gameObjects.get(i)).setCurrentJumpHeight(0);
                                     ((mainHero) gameObjects.get(i)).setSpeedY(-Game.mainHero.getJumpSlice());
                                 }
 
                                 if (((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getBottomRectangle().getBoundsInParent()) && !(((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getTopRectangle().getBoundsInParent()) || ((mainHero) gameObjects.get(i)).getHeroPolygon().getBoundsInParent().intersects(((bossOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    gameStarted = false;
                                     playerDeath(1);
                                 }
                             }
-                        }
-                        else if (gameObject instanceof weaponChest) {
+                        } else if (gameObject instanceof weaponChest) {
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (!((weaponChest) gameObject).isActivated()) {
                                     ((weaponChest) gameObject).playChestAnimation(player);
                                     ((weaponChest) gameObject).setActivated(true);
+                                    // Upgrade existing weapon
+                                    if (((mainHero) gameObjects.get(i)).getCurrentWeapon() != null) {
+                                        if (((weaponChest) gameObject).getWeaponType() == ((mainHero) gameObjects.get(i)).getCurrentWeapon().getWeaponType() && ((mainHero) gameObjects.get(i)).getCurrentWeapon().getLevel() == 1) {
+                                            ((mainHero) gameObjects.get(i)).getCurrentWeapon().upgrade();
+                                        }
+                                    }
                                 }
                             }
-                        }
-                        else if (gameObject instanceof coinChest) {
+                        } else if (gameObject instanceof coinChest) {
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (!((coinChest) gameObject).isActivated()) {
                                     ((coinChest) gameObject).playChestAnimation(player);
                                     ((coinChest) gameObject).setActivated(true);
                                 }
                             }
-                        }
-                        else if (gameObject instanceof TNT) {
+                        } else if (gameObject instanceof TNT) {
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (!((TNT) gameObject).isActivated()) {
                                     ((TNT) gameObject).setActivated(true);
                                     ((TNT) gameObject).playTNTAnimation();  // Resets explosion flags inside
                                 } else if (((TNT) gameObject).isExplosionActivated()) {
+                                    gameStarted = false;
                                     playerDeath(1);
                                 }
                             }
-                        }
-                        else if (gameObject instanceof Coin) {
+                        } else if (gameObject instanceof Coin) {
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (!((Coin) gameObject).isCollected()) {
                                     player.increaseCoins(1);
@@ -736,12 +738,10 @@ public class gameController implements Initializable {
                         }
 
                         if (((mainHero) gameObjects.get(i)).getHeroPolygon().getLayoutY() > 780) {  // player death fall detection
-                            System.out.println("Max: " + player.getHero().getMaxSpeed());
-                            System.out.println("Min: " + player.getHero().getMinSpeed());
+                            gameStarted = false;
                             playerDeath(0);
                         }
-                    }
-                    else if (gameObjects.get(i) instanceof smallPlatform) {
+                    } else if (gameObjects.get(i) instanceof smallPlatform) {
 
                     } else if (gameObjects.get(i) instanceof mediumPlatform) {
 
@@ -756,7 +756,6 @@ public class gameController implements Initializable {
                             ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(((greenOrc) gameObjects.get(i)).getCurrentJumpHeight() + ((greenOrc) gameObjects.get(i)).getSetY());
 
                         } else {
-                            //System.out.println("Main Else");
                             ((greenOrc) gameObjects.get(i)).setSetY(((greenOrc) gameObjects.get(i)).getSpeedY() + Game.greenOrc.getAccelerationY());
                             ((greenOrc) gameObjects.get(i)).setSpeedY(((greenOrc) gameObjects.get(i)).getSetY());
                             ((greenOrc) gameObjects.get(i)).jump();
@@ -787,9 +786,6 @@ public class gameController implements Initializable {
                                 }
                             }
                         } else if (gameObject instanceof bigPlatform) {
-                            System.out.println("green and big");
-                            System.out.println("Green: " + gameObjects.get(i));
-                            System.out.println("Big: " + gameObject);
                             if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent())) {
                                 System.out.println("Green orc killed: " + ((greenOrc) gameObjects.get(i)).isKilled());
                                 if (!((greenOrc) gameObjects.get(i)).isKilled()) {
@@ -797,28 +793,130 @@ public class gameController implements Initializable {
                                     ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
                                 }
                             }
-                        }
-                        if (gameObject instanceof bossOrc) {
-                            // Green orc collision with boss orc
+                        } else if (gameObject instanceof greenOrc && !gameObject.equals(gameObjects.get(i))) {  // Check for green orc other than self
+                            // Green orc collision with green orc
                             if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
-                                System.out.println("REACHED");
-                                if (!((bossOrc) gameObject).isPushed()) {
-                                    System.out.println("INSIDE");
-                                    ((bossOrc) gameObject).setSpeedX((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight()));
-                                    ((bossOrc) gameObject).setPushed(true);
-                                    ((greenOrc) gameObjects.get(i)).setSpeedX(((Game.greenOrc.getWeight() - Game.bossOrc.getWeight()) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight()));
-                                    System.out.println("Green orc after rebound: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
-                                    ((greenOrc) gameObjects.get(i)).push();
-                                    ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                System.out.println("green hit green");
+                                if (((greenOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((greenOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        ((greenOrc) gameObject).setSpeedX(((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.greenOrc.getWeight())) + (((0.0) * ((greenOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.greenOrc.getWeight())));
+                                        ((greenOrc) gameObject).setPushed(true);
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX((((0.0) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.greenOrc.getWeight())) + ((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.greenOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((greenOrc) gameObject).getSpeedX());
+                                        System.out.println("Green orc after rebound: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        ((greenOrc) gameObjects.get(i)).push();
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
                                 }
-                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
-                                    GlobalVariables.playerJumpSound.stop();
-                                    GlobalVariables.playerJumpSound.play();
+                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
                                     ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
                                     ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
                                 }
                             }
+                        } else if (gameObject instanceof redOrc) {
+                            // Green orc collision with red orc
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("green hit red");
+                                if (((greenOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((redOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        ((redOrc) gameObject).setSpeedX(((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.redOrc.getWeight())) + (((Game.redOrc.getWeight() - Game.greenOrc.getWeight()) * ((redOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.redOrc.getWeight())));
+                                        ((redOrc) gameObject).setPushed(true);
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX((((Game.greenOrc.getWeight() - Game.redOrc.getWeight()) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.redOrc.getWeight())) + ((2 * Game.redOrc.getWeight() * ((redOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.redOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((redOrc) gameObject).getSpeedX());
+                                        // Boss orc comes forward and attacks if speed is negative
+                                        ((greenOrc) gameObjects.get(i)).push();
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
+                                }
+                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof bossOrc) {
+                            // Green orc collision with boss orc
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (((greenOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((bossOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        ((bossOrc) gameObject).setSpeedX(((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight())) + (((Game.bossOrc.getWeight() - Game.greenOrc.getWeight()) * ((bossOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight())));
+                                        ((bossOrc) gameObject).setPushed(true);
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX((((Game.greenOrc.getWeight() - Game.bossOrc.getWeight()) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight())) + ((2 * Game.bossOrc.getWeight() * ((bossOrc) gameObject).getSpeedX()) / (Game.greenOrc.getWeight() + Game.bossOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((bossOrc) gameObject).getSpeedX());
+                                        // Boss orc comes forward and attacks if speed is negative
+                                        ((greenOrc) gameObjects.get(i)).push();
+                                        ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
+                                }
+                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof coinChest) {
+                            // Green orc collision with coin chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (!((coinChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((coinChest) gameObject).setSpeedX((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.coinChest.getWeight()));
+                                    ((coinChest) gameObject).setPushed(true);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedX(((Game.greenOrc.getWeight() - Game.coinChest.getWeight()) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.coinChest.getWeight()));
+                                    System.out.println("Green orc after rebound: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                    ((greenOrc) gameObjects.get(i)).push();
+                                    ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((coinChest) gameObject).getCoinChestPolygon().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof weaponChest) {
+                            // Green orc collision with weapon chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (!((weaponChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((weaponChest) gameObject).setSpeedX((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    ((weaponChest) gameObject).setPushed(true);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedX(((Game.greenOrc.getWeight() - Game.weaponChest.getWeight()) * ((greenOrc) gameObjects.get(i)).getSpeedX()) / (Game.greenOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    System.out.println("Green orc after rebound: " + ((greenOrc) gameObjects.get(i)).getSpeedX());
+                                    ((greenOrc) gameObjects.get(i)).push();
+                                    ((greenOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((greenOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((weaponChest) gameObject).getWeaponChestPolygon().getBoundsInParent()) && !(((greenOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((greenOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((greenOrc) gameObjects.get(i)).setSpeedY(-Game.greenOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof TNT) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                if (!((TNT) gameObject).isActivated()) {
+                                    ((TNT) gameObject).setActivated(true);
+                                    ((TNT) gameObject).playTNTAnimation();
+                                } else if (((TNT) gameObject).isExplosionActivated()) {
+                                    if (!((greenOrc) gameObjects.get(i)).isKilled()) {
+                                        ((greenOrc) gameObjects.get(i)).setKilled(true);
+                                        ((greenOrc) gameObjects.get(i)).playDeathAnimation(1, player);
+                                    }
+                                }
+                            }
                         }
+
+                        if (((greenOrc) gameObjects.get(i)).getTopRectangle().getLayoutY() > 780) {  // Death fall detection
+                            ((greenOrc) gameObjects.get(i)).setSpeedY(0);
+                            if (!((greenOrc) gameObjects.get(i)).isKilled()) {
+                                ((greenOrc) gameObjects.get(i)).setKilled(true);
+                                ((greenOrc) gameObjects.get(i)).playDeathAnimation(0, player);
+                            }
+                        }
+
                     } else if (gameObjects.get(i) instanceof redOrc) {
                         // Red Orc movements
                         if (((redOrc) gameObjects.get(i)).getCurrentJumpHeight() > ((redOrc) gameObjects.get(i)).getJumpHeight()) {
@@ -864,7 +962,112 @@ public class gameController implements Initializable {
                                 }
                             }
                         }
-                        else if (gameObject instanceof TNT) {
+                        else if (gameObject instanceof greenOrc) {
+                            // Red orc collision with green orc
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("Red hit green");
+                                if (((redOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((greenOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        ((greenOrc) gameObject).setSpeedX(((2 * Game.redOrc.getWeight() * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.greenOrc.getWeight())) + (((Game.greenOrc.getWeight() - Game.redOrc.getWeight()) * ((greenOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.greenOrc.getWeight())));
+                                        ((greenOrc) gameObject).setPushed(true);
+                                        ((redOrc) gameObjects.get(i)).setSpeedX((((Game.redOrc.getWeight() - Game.greenOrc.getWeight()) * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.greenOrc.getWeight())) + ((2 * Game.greenOrc.getWeight() * ((greenOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.greenOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((greenOrc) gameObject).getSpeedX());
+                                        // Boss orc comes forward and attacks if speed is negative
+                                        ((redOrc) gameObjects.get(i)).push();
+                                        ((redOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
+                                }
+                                if (((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((redOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((greenOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    ((redOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((redOrc) gameObjects.get(i)).setSpeedY(-Game.redOrc.getJumpSlice());
+                                }
+                            }
+                        }
+
+                        else if (gameObject instanceof redOrc) {
+                            // Red orc collision with red orc
+                            if (gameObjects.get(i).collision_detected(gameObject) && !gameObject.equals(gameObjects.get(i))) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (((redOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((redOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        ((redOrc) gameObject).setSpeedX(((2 * Game.redOrc.getWeight() * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.redOrc.getWeight())) + (((0.0) * ((redOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.redOrc.getWeight())));
+                                        ((redOrc) gameObject).setPushed(true);
+                                        ((redOrc) gameObjects.get(i)).setSpeedX((((0.0) * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.redOrc.getWeight())) + ((2 * Game.redOrc.getWeight() * ((redOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.redOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((redOrc) gameObject).getSpeedX());
+                                        ((redOrc) gameObjects.get(i)).push();
+                                        ((redOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
+                                }
+                                if (((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((redOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((redOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    ((redOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((redOrc) gameObjects.get(i)).setSpeedY(-Game.redOrc.getJumpSlice());
+                                }
+                            }
+                        }
+
+                        else if (gameObject instanceof bossOrc) {
+                            // Red orc collision with boss orc
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (((redOrc) gameObjects.get(i)).getRightRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent())) {  // Left collision for push
+                                    if (!((bossOrc) gameObject).isPushed()) {
+                                        System.out.println("Player speed before collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        ((bossOrc) gameObject).setSpeedX(((2 * Game.redOrc.getWeight() * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.bossOrc.getWeight())) + (((Game.bossOrc.getWeight() - Game.redOrc.getWeight()) * ((bossOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.bossOrc.getWeight())));
+                                        ((bossOrc) gameObject).setPushed(true);
+                                        ((redOrc) gameObjects.get(i)).setSpeedX((((Game.redOrc.getWeight() - Game.bossOrc.getWeight()) * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.bossOrc.getWeight())) + ((2 * Game.bossOrc.getWeight() * ((bossOrc) gameObject).getSpeedX()) / (Game.redOrc.getWeight() + Game.bossOrc.getWeight())) - 0.01);
+                                        System.out.println("Player speed after collision: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                        System.out.println("Boss speed after collision: " + ((bossOrc) gameObject).getSpeedX());
+                                        // Boss orc comes forward and attacks if speed is negative
+                                        ((redOrc) gameObjects.get(i)).push();
+                                        ((redOrc) gameObjects.get(i)).setSpeedX(0);
+                                    }
+                                }
+                                if (((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getTopRectangle().getBoundsInParent()) && !(((redOrc) gameObjects.get(i)).getSpeedX() > 0) && !(((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getLeftRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getBottomRectangle().getBoundsInParent()) || ((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((bossOrc) gameObject).getRightRectangle().getBoundsInParent()))) {
+                                    ((redOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((redOrc) gameObjects.get(i)).setSpeedY(-Game.redOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof coinChest) {
+                            // Red orc collision with coin chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (!((coinChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((coinChest) gameObject).setSpeedX((2 * Game.redOrc.getWeight() * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.coinChest.getWeight()));
+                                    ((coinChest) gameObject).setPushed(true);
+                                    ((redOrc) gameObjects.get(i)).setSpeedX(((Game.redOrc.getWeight() - Game.coinChest.getWeight()) * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.coinChest.getWeight()));
+                                    System.out.println("Green orc after rebound: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                    ((redOrc) gameObjects.get(i)).push();
+                                    ((redOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((coinChest) gameObject).getCoinChestPolygon().getBoundsInParent()) && !(((redOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((redOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((redOrc) gameObjects.get(i)).setSpeedY(-Game.redOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof weaponChest) {
+                            // Red orc collision with weapon chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                if (!((weaponChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((weaponChest) gameObject).setSpeedX((2 * Game.redOrc.getWeight() * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    ((weaponChest) gameObject).setPushed(true);
+                                    ((redOrc) gameObjects.get(i)).setSpeedX(((Game.redOrc.getWeight() - Game.weaponChest.getWeight()) * ((redOrc) gameObjects.get(i)).getSpeedX()) / (Game.redOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    System.out.println("Green orc after rebound: " + ((redOrc) gameObjects.get(i)).getSpeedX());
+                                    ((redOrc) gameObjects.get(i)).push();
+                                    ((redOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((redOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((weaponChest) gameObject).getWeaponChestPolygon().getBoundsInParent()) && !(((redOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((redOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((redOrc) gameObjects.get(i)).setSpeedY(-Game.redOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof TNT) {
+                            // Red orc collision with TNT
                             if (gameObjects.get(i).collision_detected(gameObject)) {
                                 if (!((TNT) gameObject).isActivated()) {
                                     ((TNT) gameObject).setActivated(true);
@@ -893,15 +1096,12 @@ public class gameController implements Initializable {
                             ((bossOrc) gameObjects.get(i)).setCurrentJumpHeight(((bossOrc) gameObjects.get(i)).getCurrentJumpHeight() + ((bossOrc) gameObjects.get(i)).getSetY());
 
                         } else {
-                            //System.out.println("Main Else");
                             ((bossOrc) gameObjects.get(i)).setSetY(((bossOrc) gameObjects.get(i)).getSpeedY() + Game.bossOrc.getAccelerationY());
                             ((bossOrc) gameObjects.get(i)).setSpeedY(((bossOrc) gameObjects.get(i)).getSetY());
                             ((bossOrc) gameObjects.get(i)).jump();
                             //jumpHeight += setY;
                         }
                         if (((bossOrc) gameObjects.get(i)).isPushed()) {
-                            System.out.println("Boss Orc speed: " + ((bossOrc) gameObjects.get(i)).getSpeedX());
-                            System.out.println("Bruh value: " + (((bossOrc) gameObjects.get(i)).getSpeedX() + Game.bossOrc.getAccelerationX()));
                             int finalI1 = i;
                             Timeline timeline = new Timeline(new KeyFrame(Duration.millis(500), event -> ((bossOrc) gameObjects.get(finalI1)).push()));
                             timeline.setCycleCount(Timeline.INDEFINITE);
@@ -914,38 +1114,28 @@ public class gameController implements Initializable {
                                     ((bossOrc) gameObjects.get(i)).setSpeedX(-10);
                                 } else {
                                     ((bossOrc) gameObjects.get(i)).setPushed(false);
-                                    System.out.println("First else boss speed here " + ((bossOrc) gameObjects.get(i)).getSpeedX());
-                                    System.out.println("Non Bruh value: " + (((bossOrc) gameObjects.get(i)).getSpeedX() - Game.bossOrc.getAccelerationX()));
                                     if (((bossOrc) gameObjects.get(i)).getSpeedX() - Game.bossOrc.getAccelerationX() <= 0) {
                                         ((bossOrc) gameObjects.get(i)).setSpeedX(((bossOrc) gameObjects.get(i)).getSpeedX() - Game.bossOrc.getAccelerationX());
                                     } else {
-                                        System.out.println("It's the plus");
                                         ((bossOrc) gameObjects.get(i)).setSpeedX(((bossOrc) gameObjects.get(i)).getSpeedX() + Game.bossOrc.getAccelerationX());
                                     }
                                     timeline.play();
                                 }
 
                             } else {
-                                // here
                                 if (((bossOrc) gameObject).isAttacked()) {
-                                    System.out.println("else - if speed here " + ((bossOrc) gameObject).getSpeedX());
                                     ((bossOrc) gameObject).setPushed(false);
-                                    System.out.println("Non Bruh value: " + (((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX()));
                                     if (((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX() <= 0) {
                                         ((bossOrc) gameObject).setSpeedX(((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX());
                                     } else {
-                                        System.out.println("It's the second plus");
                                         ((bossOrc) gameObject).setSpeedX(((bossOrc) gameObject).getSpeedX() + Game.bossOrc.getAccelerationX());
                                     }
                                     ((bossOrc) gameObject).push();
                                 } else {
-                                    System.out.println("else - else speed here " + ((bossOrc) gameObject).getSpeedX());
                                     ((bossOrc) gameObject).setPushed(false);
-                                    System.out.println("Non Bruh value: " + (((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX()));
                                     if (((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX() <= 0) {
                                         ((bossOrc) gameObject).setSpeedX(((bossOrc) gameObject).getSpeedX() - Game.bossOrc.getAccelerationX());
                                     } else {
-                                        System.out.println("It's the third plus");
                                         ((bossOrc) gameObject).setSpeedX(((bossOrc) gameObject).getSpeedX() + Game.bossOrc.getAccelerationX());
                                     }
                                     ((bossOrc) gameObject).push();
@@ -973,103 +1163,229 @@ public class gameController implements Initializable {
                                     ((bossOrc) gameObjects.get(i)).setSpeedY(-Game.bossOrc.getJumpSlice());
                                 }
                             }
+                        } else if (gameObject instanceof coinChest) {
+                            // Boss orc collision with coin chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (!((coinChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((coinChest) gameObject).setSpeedX((2 * Game.bossOrc.getWeight() * ((bossOrc) gameObjects.get(i)).getSpeedX()) / (Game.bossOrc.getWeight() + Game.coinChest.getWeight()));
+                                    ((coinChest) gameObject).setPushed(true);
+                                    ((bossOrc) gameObjects.get(i)).setSpeedX(((Game.bossOrc.getWeight() - Game.coinChest.getWeight()) * ((bossOrc) gameObjects.get(i)).getSpeedX()) / (Game.bossOrc.getWeight() + Game.coinChest.getWeight()));
+                                    System.out.println("Green orc after rebound: " + ((bossOrc) gameObjects.get(i)).getSpeedX());
+                                    ((bossOrc) gameObjects.get(i)).push();
+                                    ((bossOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((bossOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((coinChest) gameObject).getCoinChestPolygon().getBoundsInParent()) && !(((bossOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((bossOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((bossOrc) gameObjects.get(i)).setSpeedY(-Game.bossOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof weaponChest) {
+                            // Boss orc collision with weapon chest
+                            if (gameObjects.get(i).collision_detected(gameObject)) { // Left collision for push
+                                System.out.println("REACHED");
+                                if (!((weaponChest) gameObject).isPushed()) {
+                                    System.out.println("INSIDE");
+                                    ((weaponChest) gameObject).setSpeedX((2 * Game.bossOrc.getWeight() * ((bossOrc) gameObjects.get(i)).getSpeedX()) / (Game.bossOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    ((weaponChest) gameObject).setPushed(true);
+                                    ((bossOrc) gameObjects.get(i)).setSpeedX(((Game.bossOrc.getWeight() - Game.weaponChest.getWeight()) * ((bossOrc) gameObjects.get(i)).getSpeedX()) / (Game.bossOrc.getWeight() + Game.weaponChest.getWeight()));
+                                    ((bossOrc) gameObjects.get(i)).push();
+                                    ((bossOrc) gameObjects.get(i)).setSpeedX(0);
+                                }
+                                if (((bossOrc) gameObjects.get(i)).getBottomRectangle().getBoundsInParent().intersects(((weaponChest) gameObject).getWeaponChestPolygon().getBoundsInParent()) && !(((bossOrc) gameObjects.get(i)).getSpeedX() > 0)) {
+                                    ((bossOrc) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((bossOrc) gameObjects.get(i)).setSpeedY(-Game.bossOrc.getJumpSlice());
+                                }
+                            }
+                        } else if (gameObject instanceof TNT) {
+                            // Boss orc collision with TNT
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                if (!((TNT) gameObject).isActivated()) {
+                                    ((TNT) gameObject).setActivated(true);
+                                    ((TNT) gameObject).playTNTAnimation();
+                                } else if (((TNT) gameObject).isExplosionActivated()) {
+                                    if (!((bossOrc) gameObjects.get(i)).isKilled()) {
+                                        ((bossOrc) gameObjects.get(i)).setKilled(true);
+                                        ((bossOrc) gameObjects.get(i)).playDeathAnimation(1, player);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    else if (gameObjects.get(i) instanceof coinChest) {
+                        // coin chest movements
+                        if (((coinChest) gameObjects.get(i)).getCurrentJumpHeight() > ((coinChest) gameObjects.get(i)).getJumpHeight()) {
+                            ((coinChest) gameObjects.get(i)).setSetY(((coinChest) gameObjects.get(i)).getSpeedY() - Game.coinChest.getAccelerationY());
+                            ((coinChest) gameObjects.get(i)).setSpeedY(((coinChest) gameObjects.get(i)).getSetY());
+                            ((coinChest) gameObjects.get(i)).jump();
+                            ((coinChest) gameObjects.get(i)).setCurrentJumpHeight(((coinChest) gameObjects.get(i)).getCurrentJumpHeight() + ((coinChest) gameObjects.get(i)).getSetY());
+
+                        } else {
+                            ((coinChest) gameObjects.get(i)).setSetY(((coinChest) gameObjects.get(i)).getSpeedY() + Game.coinChest.getAccelerationY());
+                            ((coinChest) gameObjects.get(i)).setSpeedY(((coinChest) gameObjects.get(i)).getSetY());
+                            ((coinChest) gameObjects.get(i)).jump();
+                            //jumpHeight += setY;
+                        }
+                        if (((coinChest) gameObjects.get(i)).isPushed()) {
+                            if (((coinChest) gameObjects.get(i)).getSpeedX() <= 0 || ((coinChest) gameObjects.get(i)).getSpeedX() + Game.coinChest.getAccelerationX() <= 0) {
+                                ((coinChest) gameObjects.get(i)).setPushed(false);
+                            } else {
+                                ((coinChest) gameObjects.get(i)).setSpeedX(((coinChest) gameObjects.get(i)).getSpeedX() + Game.coinChest.getAccelerationX());
+                                ((coinChest) gameObjects.get(i)).push();
+                            }
                         }
 
-                    } else if (gameObjects.get(i) instanceof coinChest) {
+                        if (gameObject instanceof smallPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                System.out.println("This is collision with small platform sir");
+                                    ((coinChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                    ((coinChest) gameObjects.get(i)).setSpeedY(-Game.coinChest.getJumpSlice());
+                            }
+                        } else if (gameObject instanceof mediumPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                ((coinChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                ((coinChest) gameObjects.get(i)).setSpeedY(-Game.coinChest.getJumpSlice());
+                            }
+                        } else if (gameObject instanceof bigPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                ((coinChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                ((coinChest) gameObjects.get(i)).setSpeedY(-Game.coinChest.getJumpSlice());
 
-                    } else if (gameObjects.get(i) instanceof weaponChest) {
+                            }
+                        }
 
-                    } else if (gameObjects.get(i) instanceof TNT) {
+                        if (((coinChest) gameObjects.get(i)).getCoinChestPolygon().getLayoutY() > 780){
+                            ((coinChest) gameObjects.get(i)).setSpeedY(0);  // Stop y axis motion for easy garbage collection
+                        }
+                    }
 
+                    else if (gameObjects.get(i) instanceof weaponChest) {
+                        // coin chest movements
+                        if (((weaponChest) gameObjects.get(i)).getCurrentJumpHeight() > ((weaponChest) gameObjects.get(i)).getJumpHeight()) {
+                            ((weaponChest) gameObjects.get(i)).setSetY(((weaponChest) gameObjects.get(i)).getSpeedY() - Game.weaponChest.getAccelerationY());
+                            ((weaponChest) gameObjects.get(i)).setSpeedY(((weaponChest) gameObjects.get(i)).getSetY());
+                            ((weaponChest) gameObjects.get(i)).jump();
+                            ((weaponChest) gameObjects.get(i)).setCurrentJumpHeight(((weaponChest) gameObjects.get(i)).getCurrentJumpHeight() + ((weaponChest) gameObjects.get(i)).getSetY());
+
+                        } else {
+                            ((weaponChest) gameObjects.get(i)).setSetY(((weaponChest) gameObjects.get(i)).getSpeedY() + Game.weaponChest.getAccelerationY());
+                            ((weaponChest) gameObjects.get(i)).setSpeedY(((weaponChest) gameObjects.get(i)).getSetY());
+                            ((weaponChest) gameObjects.get(i)).jump();
+                            //jumpHeight += setY;
+                        }
+                        if (((weaponChest) gameObjects.get(i)).isPushed()) {
+                            if (((weaponChest) gameObjects.get(i)).getSpeedX() <= 0 || ((weaponChest) gameObjects.get(i)).getSpeedX() + Game.weaponChest.getAccelerationX() <= 0) {
+                                ((weaponChest) gameObjects.get(i)).setPushed(false);
+                            } else {
+                                ((weaponChest) gameObjects.get(i)).setSpeedX(((weaponChest) gameObjects.get(i)).getSpeedX() + Game.weaponChest.getAccelerationX());
+                                ((weaponChest) gameObjects.get(i)).push();
+                            }
+                        }
+
+                        if (gameObject instanceof smallPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                ((weaponChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                ((weaponChest) gameObjects.get(i)).setSpeedY(-Game.weaponChest.getJumpSlice());
+                            }
+                        } else if (gameObject instanceof mediumPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                ((weaponChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                ((weaponChest) gameObjects.get(i)).setSpeedY(-Game.weaponChest.getJumpSlice());
+
+                            }
+                        } else if (gameObject instanceof bigPlatform) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                ((weaponChest) gameObjects.get(i)).setCurrentJumpHeight(0);
+                                ((weaponChest) gameObjects.get(i)).setSpeedY(-Game.weaponChest.getJumpSlice());
+                            }
+                        }
+
+                        if (((weaponChest) gameObjects.get(i)).getWeaponChestPolygon().getLayoutY() > 780) {
+                            ((weaponChest) gameObjects.get(i)).setSpeedY(0);  // Stop y axis motion for easy garbage collection
+                        }
+                    }
+                    else if (gameObjects.get(i) instanceof Shuriken) {
+                        if (((Shuriken) gameObjects.get(i)).isThrown()) {
+                            ((Shuriken) gameObjects.get(i)).setSpeedX(((Shuriken) gameObjects.get(i)).getSpeedX() + Game.Shuriken.getAccelerationX());
+                            ((Shuriken) gameObjects.get(i)).throwShuriken();
+                            ((Shuriken) gameObjects.get(i)).setTotalDistance(((Shuriken) gameObjects.get(i)).getTotalDistance() + ((Shuriken) gameObjects.get(i)).getSpeedX() + Game.Shuriken.getAccelerationX());
+                        }
+
+                        if (gameObject instanceof greenOrc) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                Glow glow1 = new Glow();
+                                Glow glow2 = new Glow();
+                                glow1.setLevel(0.5);
+                                glow2.setLevel(0);
+                                Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((greenOrc) gameObject).getGreenOrc().effectProperty(), glow1)));
+                                Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((greenOrc) gameObject).getGreenOrc().effectProperty(), glow2)));
+                                timeline1.setOnFinished(event -> timeline2.play());
+                                timeline1.play();
+                                ((greenOrc) gameObject).setHealth(((greenOrc) gameObject).getHealth() - (((Shuriken) gameObjects.get(i))).getDamage());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShuriken());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShurikenPolygon());
+                                if (((greenOrc) gameObject).getHealth() <= 0 && !((greenOrc) gameObject).isKilled()) {
+                                    ((greenOrc) gameObject).setKilled(true);
+                                    ((greenOrc) gameObject).playDeathAnimation(1, player);
+                                }
+                                gameObjects.remove(i);  // Remove from gameObjects after collision with orc
+                                player.getHero().removeShuriken();  // To reduce FPS fluctuation
+                            }
+                        }
+                        else if (gameObject instanceof redOrc) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                Glow glow1 = new Glow();
+                                Glow glow2 = new Glow();
+                                glow1.setLevel(0.5);
+                                glow2.setLevel(0);
+                                Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((redOrc) gameObject).getRedOrc().effectProperty(), glow1)));
+                                Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((redOrc) gameObject).getRedOrc().effectProperty(), glow2)));
+                                timeline1.setOnFinished(event -> timeline2.play());
+                                timeline1.play();
+                                ((redOrc) gameObject).setHealth(((redOrc) gameObject).getHealth() - (((Shuriken) gameObjects.get(i))).getDamage());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShuriken());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShurikenPolygon());
+                                if (((redOrc) gameObject).getHealth() <= 0 && !((redOrc) gameObject).isKilled()) {
+                                    ((redOrc) gameObject).setKilled(true);
+                                    ((redOrc) gameObject).playDeathAnimation(1, player);
+                                }
+                                gameObjects.remove(i);  // Remove from gameObjects after collision with orc
+                                player.getHero().removeShuriken();  // To reduce FPS fluctuation
+                            }
+                        }
+                        else if (gameObject instanceof bossOrc) {
+                            if (gameObjects.get(i).collision_detected(gameObject)) {
+                                Glow glow1 = new Glow();
+                                Glow glow2 = new Glow();
+                                glow1.setLevel(0.5);
+                                glow2.setLevel(0);
+                                Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((bossOrc) gameObject).getBossOrc().effectProperty(), glow1)));
+                                Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(((bossOrc) gameObject).getBossOrc().effectProperty(), glow2)));
+                                timeline1.setOnFinished(event -> timeline2.play());
+                                timeline1.play();
+                                ((bossOrc) gameObject).setHealth(((bossOrc) gameObject).getHealth() - (((Shuriken) gameObjects.get(i))).getDamage());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShuriken());
+                                gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShurikenPolygon());
+                                if (((bossOrc) gameObject).getHealth() <= 0 && !((bossOrc) gameObject).isKilled()) {
+                                    ((bossOrc) gameObject).setKilled(true);
+                                    ((bossOrc) gameObject).playDeathAnimation(1, player);
+                                }
+                                gameObjects.remove(i);  // Remove from gameObjects after collision with orc
+                                player.getHero().removeShuriken();  // To reduce FPS fluctuation
+                            }
+                        }
+                        if (((Shuriken) gameObjects.get(i)).getTotalDistance() >= 400) {
+                            System.out.println("Shuriken Attack 2");
+                            gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShuriken());
+                            gameAnchorPane.getChildren().remove(((Shuriken) gameObjects.get(i)).getShurikenPolygon());
+                            gameObjects.remove(i);  // Remove shuriken from gameObjects after 500 distance (for an ever so little better rendering)
+                            player.getHero().removeShuriken();  // To reduce FPS fluctuation
+                        }
                     }
                 }
             }
-
-            for (int i = 0; i < player.getHero().getShurikens().size(); i++) {
-                if ((player.getHero().getShurikens().get(i)).isThrown()) {
-                    (player.getHero().getShurikens().get(i)).setSpeedX((player.getHero().getShurikens().get(i)).getSpeedX() + Game.Shuriken.getAccelerationX());
-                    (player.getHero().getShurikens().get(i)).throwShuriken();
-                    if ((player.getHero().getShurikens().get(i)).collision_detected(bossOrc)) {
-                        Glow glow1 = new Glow();
-                        Glow glow2 = new Glow();
-                        glow1.setLevel(0.5);
-                        glow2.setLevel(0);
-                        Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(bossOrc.getBossOrc().effectProperty(), glow1)));
-                        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), new KeyValue(bossOrc.getBossOrc().effectProperty(), glow2)));
-                        timeline1.setOnFinished(event -> timeline2.play());
-                        timeline1.play();
-                        bossOrc.setHealth(bossOrc.getHealth() - (player.getHero().getShurikens().get(i)).getDamage());
-                        player.getHero().getShurikens().get(i).setThrown(false);
-                        player.getHero().getShurikens().get(i).setSpeedX(0);
-                        player.getHero().getShurikens().get(i).getShuriken().setVisible(false);
-                        player.getHero().getShurikens().get(i).getShuriken().setDisable(true);
-                        player.getHero().getShurikens().get(i).getShurikenPolygon().setVisible(false);
-                        player.getHero().getShurikens().get(i).getShurikenPolygon().setDisable(true);
-                        if (bossOrc.getHealth() <= 0 && !bossOrc.isKilled()) {
-                            bossOrc.setKilled(true);
-                            bossOrc.playDeathAnimation(1, player);
-                        }
-
-                        ((mainHero) gameObjects.get(i)).getShurikens().remove(i);
-                    }
-                    else if ((player.getHero().getShurikens().get(i)).getTotalDistance() >= 500) {
-                        System.out.println("Shuriken Attack 2");
-                        player.getHero().getShurikens().get(i).setThrown(false);
-                        player.getHero().getShurikens().get(i).setSpeedX(0);
-                        player.getHero().getShurikens().get(i).getShuriken().setVisible(false);
-                        player.getHero().getShurikens().get(i).getShuriken().setDisable(true);
-                        player.getHero().getShurikens().get(i).getShurikenPolygon().setVisible(false);
-                        player.getHero().getShurikens().get(i).getShurikenPolygon().setDisable(true);
-                        player.getHero().getShurikens().remove(i);
-                    }
-                }
-            }
-//            for (int i = 0; i < gameObjects.size(); i++) {
-//                if (gameObjects.get(i) instanceof mainHero) {
-//                    if (((mainHero) gameObjects.get(i)).getHeroPolygon().getLayoutY() > 780) {  // Death fall detection
-//                        GlobalVariables.playerFallSound.stop();
-//                        GlobalVariables.playerFallSound.play();
-//                        System.out.println("Game over!");  // Make game over scene and fade transition (bring down opacity of the game scene)
-//                        //GlobalVariables.timeline.pause();
-//    //                try {
-//    //                    TimeUnit.SECONDS.sleep(2);
-//    //                } catch (InterruptedException e) {
-//    //                    e.printStackTrace();
-//    //                }
-//                        // Play player falling translate transition animation and then GlobalVariables.timeline.stop()
-//                        GlobalVariables.timeline.setRate(0.1);  // Slow down time on death
-//                        //GlobalVariables.timeline.stop();
-//                        gameStarted = false;
-//                    }
-//                }
-//                if (gameObjects.get(i) instanceof redOrc){
-//                    if (((redOrc) gameObjects.get(i)).getRedOrcPolygon().getLayoutY() > 780){
-//                        // Adding coins to player and remove from arraylist
-//                        player.increaseCoins(3);
-//                        //gameObjects.remove(i);
-//                    }
-//                }
-//                if (gameObjects.get(i) instanceof greenOrc){
-//                    if (((greenOrc) gameObjects.get(i)).getGreenOrcPolygon().getLayoutY() > 780){
-//                        // Adding coins to player and remove from arraylist
-//                        player.increaseCoins(1);
-//                        //gameObjects.remove(i);
-//                    }
-//                }
-//                if (gameObjects.get(i) instanceof coinChest) {
-//                    if (((coinChest) gameObjects.get(i)).getCoinChestPolygon().getLayoutY() > 780){
-//                        // remove from arraylist
-//                        //gameObjects.remove(i);
-//                    }
-//                }
-//                if (gameObjects.get(i) instanceof weaponChest) {
-//                    if (((weaponChest) gameObjects.get(i)).getWeaponChestPolygon().getLayoutY() > 780){
-//                        // remove from arraylist
-//                        //gameObjects.remove(i);
-//                    }
-//                }
-//            }
-
         }
     }
 }

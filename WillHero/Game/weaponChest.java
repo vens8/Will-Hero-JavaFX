@@ -20,11 +20,24 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
     private Image image5 = new Image("/Resources/wchest5.png", true);
     private Image image6 = new Image("/Resources/wchest6.png", true);
     private Polygon weaponChestPolygon;
-    private boolean activated;
+    private boolean activated, pushed;
     private AnchorPane gameAnchorPane;
+    private double speedX;
+    private double speedY;
+    private double currentJumpHeight;
+    private double setY;
+    private double jumpHeight;
+    private static final double jumpSlice = 0.0001;
+    private static final double accelerationY = 0.0003;
+    private static final double WEIGHT = 5, accelerationX = -0.0125;  // Acceleration of weaponChest is 1.5 times acceleration of greenOrc
 
     public weaponChest(double x, double y, int weaponType) {
         super(x, y);
+        speedX = 0;
+        speedY = -0.0001;
+        pushed = false;
+        currentJumpHeight = 0;
+        jumpHeight = -5;
         weaponChestImageView = new ImageView();
         weaponChestImageView.setImage(image1);
         weaponChestPolygon = new Polygon();
@@ -57,7 +70,7 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
             sword.getSword().setVisible(false);
         }
         else {
-            shuriken = new Shuriken(x + 70, y + 50);
+            shuriken = new Shuriken(x + 70, y + 50, 1);
             sword = null;
             shuriken.getShuriken().setDisable(true);  // Initially should be invisible and non-interactive
             shuriken.getShuriken().setVisible(false);
@@ -70,6 +83,7 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(weaponChestImageView);
         gameAnchorPane.getChildren().add(weaponChestPolygon);
+        weaponChestImageView.toBack();
     }
 
     public void removeFromScreen() {
@@ -78,8 +92,10 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
     }
 
     public void playChestAnimation(Player player) {
-        GlobalVariables.weaponChestOpenSound.stop();
-        GlobalVariables.weaponChestOpenSound.play();
+        if (GlobalVariables.sound) {
+            GlobalVariables.weaponChestOpenSound.stop();
+            GlobalVariables.weaponChestOpenSound.play();
+        }
         Timeline timeline1 = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(weaponChestImageView.imageProperty(), image1)),
                 new KeyFrame(Duration.millis(100), new KeyValue(weaponChestImageView.imageProperty(), image2)),
@@ -178,6 +194,72 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
         this.weaponChestImageView = weaponChestImageView;
     }
 
+    public boolean isPushed() {
+        return pushed;
+    }
+
+    public void setPushed(boolean pushed) {
+        this.pushed = pushed;
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+
+    public double getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    public static double getWeight() {
+        return WEIGHT;
+    }
+
+    public static double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
+    public void push() {  // move chest
+        weaponChestImageView.setLayoutX(weaponChestImageView.getLayoutX() + speedX);
+        weaponChestPolygon.setLayoutX(weaponChestPolygon.getLayoutX() + speedX);
+    }
+
+    public void jump() {
+        weaponChestImageView.setLayoutY(weaponChestImageView.getLayoutY() + speedY);
+        weaponChestPolygon.setLayoutY(weaponChestPolygon.getLayoutY() + speedY);
+    }
+
     public boolean isActivated() {
         return activated;
     }
@@ -189,13 +271,23 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
     public Polygon getWeaponChestPolygon() {
         return weaponChestPolygon;
     }
-    public void setWeaponChestPolygon(Polygon weaponChestPolygon) {
-        this.weaponChestPolygon = weaponChestPolygon;
-    }
 
     @Override
     public boolean collision_detected(GameObject gameObject) {
-        return false; // Dummy
+        if (gameObject instanceof smallPlatform) {
+            return ((smallPlatform) gameObject).getsPlatformPolygon().getBoundsInParent().intersects(weaponChestPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof mediumPlatform) {
+            return ((mediumPlatform) gameObject).getmPlatformPolygon().getBoundsInParent().intersects(weaponChestPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bigPlatform) {
+            return ((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent().intersects(weaponChestPolygon.getBoundsInParent());
+        }
+        return false;
+    }
+
+    public double getJumpHeight() {
+        return jumpHeight;
     }
 }
 

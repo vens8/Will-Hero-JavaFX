@@ -35,6 +35,8 @@ public class mediumPlatform extends Platform implements Collidable{
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(mPlatform);
         gameAnchorPane.getChildren().add(mPlatformPolygon);
+        mPlatform.toBack();
+        mPlatformPolygon.toBack();
     }
 
     public void removeFromScreen() {

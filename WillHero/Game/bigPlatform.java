@@ -37,6 +37,8 @@ public class bigPlatform extends Platform implements Collidable{
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(bPlatform);
         gameAnchorPane.getChildren().add(bPlatformPolygon);
+        bPlatform.toBack();
+        bPlatformPolygon.toBack();
     }
 
     public void removeFromScreen() {

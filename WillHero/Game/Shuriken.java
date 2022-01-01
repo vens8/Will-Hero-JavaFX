@@ -7,18 +7,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class Shuriken extends Weapon implements Collidable, Cloneable {
-    private transient ImageView shuriken;
-    private Polygon shurikenPolygon;
+    private final transient ImageView shuriken;
+    private final Polygon shurikenPolygon;
     private double speedX, totalDistance;  // Distance across X axis
-    private static final double throwSlice = 10;
-    private static final double accelerationX = 0.1;
+    private static final double throwSlice = 0.6;
+    private static final double accelerationX = 0.01;  // Hero's acceleration is 0.00825
     private boolean thrown;
 
-    Shuriken(double x, double y){
+    Shuriken(double x, double y, int level){
         super(x,y);
         speedX = 0;
-        setLevel(1);
-        setDamage(30);
+        setLevel(level);
+        setDamage(10);
         shuriken = new ImageView();
         shurikenPolygon = new Polygon();
         shuriken.setLayoutX(x);
@@ -60,14 +60,8 @@ public class Shuriken extends Weapon implements Collidable, Cloneable {
     public ImageView getShuriken() {
         return shuriken;
     }
-    public void setShuriken(ImageView shuriken) {
-        this.shuriken = shuriken;
-    }
     public Polygon getShurikenPolygon() {
         return shurikenPolygon;
-    }
-    public void setShurikenPolygon(Polygon shurikenPolygon) {
-        this.shurikenPolygon = shurikenPolygon;
     }
     public double getSpeedX() {
         return speedX;
@@ -81,6 +75,18 @@ public class Shuriken extends Weapon implements Collidable, Cloneable {
 
     @Override
     public boolean collision_detected(GameObject gameObject) {
+        if (gameObject instanceof greenOrc) {
+            return ((greenOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof redOrc) {
+            return ((redOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent());
+        }
         if (gameObject instanceof bossOrc) {
             return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
                     ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||

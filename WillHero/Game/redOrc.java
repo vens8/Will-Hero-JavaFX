@@ -16,19 +16,18 @@ import java.util.Random;
 
 public class redOrc extends Orc implements Collidable{
     private final transient ImageView redOrc;
-    private Polygon redOrcPolygon;
     private final Rectangle leftRectangle, topRectangle, rightRectangle, bottomRectangle;
     private double speedY, speedX, jumpHeight, health, damage, currentJumpHeight, setX, setY;
-    private static final double jumpSlice = 1;
-    private static final double accelerationX = -0.4; // acceleration is -0.4 for smooth deceleration
-    private static final double accelerationY = 0.2;
+    private static final double jumpSlice = 0.0166666666666667;
+    private static final double accelerationX = -0.0066666666666667; // acceleration is -0.4 for smooth deceleration
+    private static final double accelerationY = 0.0033333333333333;
     private static final double weight = 8;
     private boolean pushed, killed;
     private AnchorPane gameAnchorPane;
 
     public redOrc(double x, double y) {
         super(x, y);
-        speedY = -2;
+        speedY = -0.0166666666666667;
         jumpHeight = -60;  // -60
         currentJumpHeight = 0;
         pushed = false;
@@ -49,6 +48,8 @@ public class redOrc extends Orc implements Collidable{
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 2);
         leftRectangle.setLayoutY(y + 9);
+//        leftRectangle.setStroke(Color.BLUE);
+//        leftRectangle.setStrokeWidth(2);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
@@ -58,6 +59,8 @@ public class redOrc extends Orc implements Collidable{
         topRectangle.setArcWidth(5);
         topRectangle.setLayoutX(x + 2);
         topRectangle.setLayoutY(y);
+//        topRectangle.setStroke(Color.BLUE);
+//        topRectangle.setStrokeWidth(2);
         topRectangle.setFill(Color.TRANSPARENT);
 
         rightRectangle = new Rectangle();
@@ -67,6 +70,8 @@ public class redOrc extends Orc implements Collidable{
         rightRectangle.setArcWidth(5);
         rightRectangle.setLayoutX(x + 42);
         rightRectangle.setLayoutY(y + 9);
+//        rightRectangle.setStroke(Color.BLUE);
+//        rightRectangle.setStrokeWidth(2);
         rightRectangle.setFill(Color.TRANSPARENT);
 
         bottomRectangle = new Rectangle();
@@ -76,6 +81,8 @@ public class redOrc extends Orc implements Collidable{
         bottomRectangle.setArcWidth(5);
         bottomRectangle.setLayoutX(x + 3);
         bottomRectangle.setLayoutY(y + 42);
+//        bottomRectangle.setStroke(Color.BLUE);
+//        bottomRectangle.setStrokeWidth(2);
         bottomRectangle.setFill(Color.TRANSPARENT);
     }
 
@@ -86,6 +93,7 @@ public class redOrc extends Orc implements Collidable{
         gameAnchorPane.getChildren().add(topRectangle);
         gameAnchorPane.getChildren().add(rightRectangle);
         gameAnchorPane.getChildren().add(bottomRectangle);
+        redOrc.toBack();
     }
 
     public void removeFromScreen() {
@@ -115,8 +123,10 @@ public class redOrc extends Orc implements Collidable{
     public void playDeathAnimation(int deathType, Player player) {  // 0 for fall death, 1 for all other deaths
         if (deathType == 0) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
-                GlobalVariables.orcDeathSound.stop();
-                GlobalVariables.orcDeathSound.play();
+                if (GlobalVariables.sound) {
+                    GlobalVariables.orcDeathSound.stop();
+                    GlobalVariables.orcDeathSound.play();
+                }
                 setKilled(true);
             }),
                     new KeyFrame(Duration.millis(500), event -> {})
@@ -153,9 +163,7 @@ public class redOrc extends Orc implements Collidable{
     public ImageView getRedOrc() {
         return redOrc;
     }
-    public Polygon getRedOrcPolygon() {
-        return redOrcPolygon;
-    }
+
     public double getSpeedY() {
         return speedY;
     }

@@ -27,29 +27,11 @@ public class mainHero extends GameObject implements Collidable {
     private static final double leapSlice = 0.06675;
     private static final double accelerationX = 0.00825;
     private static final double accelerationY = 0.00325;  // Final values & can be accessed from anywhere
-//    private static final double HEIGHT = 74.925048828125;
-//    private static final double WIDTH = 76.4000015258789;
-//    private static final double WEIGHT = 30;  // 30
-//    private static final double jumpSlice = 1.5;
-//    private static final double leapSlice = 4;
-//    private static final double accelerationX = 0.5;
-//    private static final double accelerationY = 0.2;  // Final values & can be accessed from anywhere
     private Weapon currentWeapon;
     private boolean leaped;
     private AnchorPane gameAnchorPane;
     private ArrayList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
-    private ArrayList<Shuriken> shurikens;
-    private double maxSpeed;
-
-    public double getMinSpeed() {
-        return minSpeed;
-    }
-
-    public void setMinSpeed(double minSpeed) {
-        this.minSpeed = minSpeed;
-    }
-
-    private double minSpeed;
+    private int shurikens;
 
     public mainHero(double x, double y) {
         super(new Position(x, y));
@@ -97,7 +79,8 @@ public class mainHero extends GameObject implements Collidable {
         heroPolygon.setScaleX(0.55);
         heroPolygon.setScaleY(0.55);
         unlockedWeapons = new ArrayList<>();
-        shurikens = new ArrayList<>();
+        shurikens = 0;
+        currentWeapon = null;
     }
 
     public ImageView getHero() {
@@ -110,6 +93,8 @@ public class mainHero extends GameObject implements Collidable {
 
     public void addToScreen(AnchorPane gameAnchorPane) {
         this.gameAnchorPane = gameAnchorPane;
+        hero.toFront();
+        heroPolygon.toFront();
         gameAnchorPane.getChildren().add(hero);
         gameAnchorPane.getChildren().add(heroPolygon);
     }
@@ -240,14 +225,6 @@ public class mainHero extends GameObject implements Collidable {
         this.currentJumpHeight = currentJumpHeight;
     }
 
-    public double getMaxSpeed() {
-        return maxSpeed;
-    }
-
-    public void setMaxSpeed(double maxSpeed) {
-        this.maxSpeed = maxSpeed;
-    }
-
     public double getSetX() {
         return setX;
     }
@@ -302,27 +279,44 @@ public class mainHero extends GameObject implements Collidable {
 
     public void addWeapon(Weapon weapon) throws CloneNotSupportedException {
         if (weapon instanceof Shuriken) {
-            currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY());
-            if (unlockedWeapons.contains(currentWeapon)) {
-                currentWeapon.upgrade();
+            boolean shurikenFound = false;
+            for (GameObject unlockedWeapon : unlockedWeapons) {
+                if (unlockedWeapon instanceof Shuriken) {
+                    currentWeapon.upgrade();
+                    shurikenFound = true;
+                }
             }
-            ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
+            if (!shurikenFound) {  // Add to unlocked weapons only if an instance doesn't already exist.
+                currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY(), 1);
+                ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
+                unlockedWeapons.add(currentWeapon);
+            }
         }
         else {
-            currentWeapon = new Sword(hero.getLayoutX(), hero.getLayoutY());
-            if (unlockedWeapons.contains(currentWeapon)) {
-                currentWeapon.upgrade();
+            boolean swordFound = false;
+            for (GameObject unlockedWeapon : unlockedWeapons) {
+                if (unlockedWeapon instanceof Sword) {
+                    currentWeapon.upgrade();
+                    swordFound = true;
+                }
             }
-            ((Sword) currentWeapon).addToScreen(gameAnchorPane);
+            if (!swordFound) {  // Add to unlocked weapons only if an instance doesn't already exist.
+                currentWeapon = new Sword(hero.getLayoutX() - 30, hero.getLayoutY() + 22);
+                ((Sword) currentWeapon).addToScreen(gameAnchorPane);
+                unlockedWeapons.add(currentWeapon);
+            }
         }
-        unlockedWeapons.add(currentWeapon);
     }
 
-    public ArrayList<Shuriken> getShurikens() {
+    public int getShurikens() {
         return shurikens;
     }
 
-    public void addShuriken(Shuriken shuriken) {
-        shurikens.add(shuriken);
+    public void addShuriken() {
+        shurikens += 1;
+    }
+
+    public void removeShuriken() {
+        shurikens -= 1;
     }
 }

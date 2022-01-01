@@ -1,10 +1,14 @@
 package Game;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.SequentialTransition;
+import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.util.Duration;
 
 public class Sword extends Weapon {
     private transient ImageView sword;
@@ -18,6 +22,7 @@ public class Sword extends Weapon {
         speedY = -4;
         setLevel(1);
         setDamage(30);
+        used = false;
         sword = new ImageView();
         swordPolygon = new Polygon();
         sword.setLayoutX(x);
@@ -26,8 +31,8 @@ public class Sword extends Weapon {
         sword.setFitHeight(45.0);
         sword.setPreserveRatio(true);
         sword.setImage(new Image("/Resources/sword.png", true));
-        swordPolygon.setLayoutX(x + 56);
-        swordPolygon.setLayoutY(y + 32);
+        swordPolygon.setLayoutX(x + 55);
+        swordPolygon.setLayoutY(y - 31);
         swordPolygon.setFill(Color.TRANSPARENT);
         swordPolygon.setStroke(Color.RED);  // remove
         swordPolygon.setStrokeWidth(2);  // remove
@@ -48,10 +53,12 @@ public class Sword extends Weapon {
                 -43.75, 18.5,
                 -39.41667175292969, 21.33331298828125,
                 -26.25, 34.33331298828125);
-        sword.setScaleX(0.5);
-        sword.setScaleY(0.5);
-        swordPolygon.setScaleX(0.5);
-        swordPolygon.setScaleY(0.5);
+        sword.setScaleX(0.85);
+        sword.setScaleY(0.85);
+        sword.setRotate(-180);  // Initial rotation
+        swordPolygon.setRotate(-224);
+        swordPolygon.setScaleX(0.85);
+        swordPolygon.setScaleY(0.85);
     }
 
     public void addToScreen(AnchorPane anchorPane) {
@@ -60,7 +67,6 @@ public class Sword extends Weapon {
     }
 
     public void useSword() {
-
     }
 
     public boolean isUsed() {

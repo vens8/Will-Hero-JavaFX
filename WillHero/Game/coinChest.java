@@ -20,11 +20,25 @@ public class coinChest extends Chest implements Collidable{
     private final Image image5 = new Image("/Resources/cchest5.png", true);
     private final Image image6 = new Image("/Resources/cchest6.png", true);
     private Polygon coinChestPolygon;
-    private boolean activated;
+    private boolean activated, pushed;
     private AnchorPane gameAnchorPane;
+    private double speedX;
+    private double speedY;
+    private double currentJumpHeight;
+    private double setY;
+    private double jumpHeight;
+    private static final double jumpSlice = 0.0001;
+    private static final double WEIGHT = 5;
+    private static final double accelerationX = -0.0125; // Acceleration of coin chest is 1.5 times acceleration of greenOrc
+    private static final double accelerationY = 0.0003;
 
     public coinChest(double x, double y, int coins) {
         super(x, y);
+        speedX = 0;
+        speedY = -0.0001;
+        currentJumpHeight = 0;
+        jumpHeight = -5;
+        pushed = false;
         activated = false;
         coinChestImageView = new ImageView();
         coinChestImageView.setImage(image1);
@@ -57,8 +71,10 @@ public class coinChest extends Chest implements Collidable{
 
     public void playChestAnimation(Player player) {
         coin.addToScreen(gameAnchorPane);
-        GlobalVariables.coinChestOpenSound.stop();
-        GlobalVariables.coinChestOpenSound.play();
+        if (GlobalVariables.sound) {
+            GlobalVariables.coinChestOpenSound.stop();
+            GlobalVariables.coinChestOpenSound.play();
+        }
         Timeline timeline1 = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(coinChestImageView.imageProperty(), image1)),
                 new KeyFrame(Duration.millis(100), new KeyValue(coinChestImageView.imageProperty(), image2)),
@@ -99,12 +115,84 @@ public class coinChest extends Chest implements Collidable{
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(coinChestImageView);
         gameAnchorPane.getChildren().add(coinChestPolygon);
+        coinChestImageView.toBack();
     }
 
     public void removeFromScreen() {
         gameAnchorPane.getChildren().remove(coinChestImageView);
         gameAnchorPane.getChildren().remove(coinChestPolygon);
     }
+
+
+    public boolean isPushed() {
+        return pushed;
+    }
+
+    public void setPushed(boolean pushed) {
+        this.pushed = pushed;
+    }
+
+    public double getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    public static double getWeight() {
+        return WEIGHT;
+    }
+
+    public static double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public void push() {  // move chest
+        coinChestImageView.setLayoutX(coinChestImageView.getLayoutX() + speedX);
+        coinChestPolygon.setLayoutX(coinChestPolygon.getLayoutX() + speedX);
+    }
+
+    public void jump() {
+        coinChestImageView.setLayoutY(coinChestImageView.getLayoutY() + speedY);
+        coinChestPolygon.setLayoutY(coinChestPolygon.getLayoutY() + speedY);
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+    public double getJumpHeight() {
+        return jumpHeight;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
 
     public Coin getCoin(){
         return coin;
@@ -127,7 +215,16 @@ public class coinChest extends Chest implements Collidable{
 
     @Override
     public boolean collision_detected(GameObject gameObject) {
-        return false; // Dummy
+        if (gameObject instanceof smallPlatform) {
+            return ((smallPlatform) gameObject).getsPlatformPolygon().getBoundsInParent().intersects(coinChestPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof mediumPlatform) {
+            return ((mediumPlatform) gameObject).getmPlatformPolygon().getBoundsInParent().intersects(coinChestPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bigPlatform) {
+            return ((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent().intersects(coinChestPolygon.getBoundsInParent());
+        }
+        return false;
     }
 
     public boolean isActivated() {

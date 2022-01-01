@@ -3,6 +3,8 @@ package Game;
 import javafx.animation.*;
 import javafx.event.Event;
 import javafx.scene.Node;
+import javafx.scene.chart.Axis;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class Animations {

@@ -9,10 +9,11 @@ public class gameData {
     Random random = new Random();
     private final ImageView princess = new ImageView(new Image("/Resources/player.png", true));
     public gameData() {
-        //GlobalVariables.gameObjects.add(new mainHero(27, 290));
         GlobalVariables.gameObjects.add(new mediumPlatform(-18, 208));
         GlobalVariables.gameObjects.add(new smallPlatform(287, 252));
-        GlobalVariables.gameObjects.add(new greenOrc(856, 275));
+        //GlobalVariables.gameObjects.add(new greenOrc(730, 275)); // Add at the end
+        GlobalVariables.gameObjects.add(new weaponChest(700, 211, 0));  // test!
+        GlobalVariables.gameObjects.add(new weaponChest(880, 211, 0));  // test!
         GlobalVariables.gameObjects.add(new Coin(930, 236));
         GlobalVariables.gameObjects.add(new Coin(960, 236));
         GlobalVariables.gameObjects.add(new Coin(990, 236));

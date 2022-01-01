@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
@@ -14,7 +15,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.Controller">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.playController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -88,6 +89,7 @@
                       </Label>
                </children>
             </AnchorPane>
+            <ComboBox fx:id="chooseDifficulty" layoutX="431.0" layoutY="470.0" prefHeight="38.0" prefWidth="150.0" style="-fx-background-color: linear-gradient(to top, blue, grey); -fx-shadow-highlight-color: #EAEC03; -fx-border-color: #ffd700; -fx-background-insets: 0 0 -1 0, 0, 1, 2; -fx-text-base-color: #ffd700; -fx-background-radius: 8; -fx-border-radius: 8; -fx-font-size: 15; -fx-font-family: &quot;Dubai Medium&quot;;" />
             <ImageView fx:id="homeButton" fitHeight="71.0" fitWidth="79.0" layoutX="921.0" layoutY="590.0" onMouseClicked="#homeButtonClicked" onMouseEntered="#homeMouseEntered" onMouseExited="#homeMouseExited" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Resources/homeButton.png" />

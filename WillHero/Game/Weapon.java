@@ -1,11 +1,12 @@
 package Game;
 
-public abstract class Weapon extends GameObject implements Collidable {
+public abstract class Weapon extends GameObject implements Collidable, Cloneable {
     private double damage;
     private int level, weaponType;
 
     Weapon(double x, double y) {
         super(new Position(x, y));
+        weaponType = -1;
     }
 
     public double getDamage () {

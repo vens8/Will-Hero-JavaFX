@@ -1,7 +1,6 @@
 package Game;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,16 +17,16 @@ public class bossOrc extends Orc implements Collidable {
     private final Rectangle bottomRectangle;
     private double speedY, speedX, health, damage, currentJumpHeight, setX, setY;
     private static final double jumpHeight = -15;
-    private static final double jumpSlice = 0.2;
-    private static double accelerationX = -0.2; // acceleration is -0.2 for smooth deceleration
-    private static final double accelerationY = 0.02;
+    private static final double jumpSlice = 0.0033333333333333;
+    private static double accelerationX = -0.0033333333333333; // acceleration is -0.2 for smooth deceleration
+    private static final double accelerationY = 0.00033333333333333;
     private static final double weight = 2000;  // Heavy and bulky and can push the player off
     private boolean pushed, killed, attacked;
     private AnchorPane gameAnchorPane;
 
     bossOrc(double x, double y) {
         super(x, y);
-        speedY = -0.2;
+        speedY = -0.0033333333333333;
         currentJumpHeight = 0;
         pushed = false;
         killed = false;
@@ -48,6 +47,8 @@ public class bossOrc extends Orc implements Collidable {
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 10);
         leftRectangle.setLayoutY(y + 14);
+        leftRectangle.setStrokeWidth(2);
+        leftRectangle.setStroke(Color.BLUE);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
@@ -87,6 +88,7 @@ public class bossOrc extends Orc implements Collidable {
         gameAnchorPane.getChildren().add(topRectangle);
         gameAnchorPane.getChildren().add(rightRectangle);
         gameAnchorPane.getChildren().add(bottomRectangle);
+        bossOrc.toBack();
     }
 
     public void removeFromScreen() {
@@ -132,8 +134,10 @@ public class bossOrc extends Orc implements Collidable {
                 setSpeedY(-1);
                 setSpeedX(5);  // Motion after death
                 setKilled(true);
-                GlobalVariables.bossOrcDeathSound.stop();
-                GlobalVariables.bossOrcDeathSound.play();
+                if (GlobalVariables.sound) {
+                    GlobalVariables.bossOrcDeathSound.stop();
+                    GlobalVariables.bossOrcDeathSound.play();
+                }
             }),
                     new KeyFrame(Duration.millis(500), event -> {})
             );
@@ -154,7 +158,7 @@ public class bossOrc extends Orc implements Collidable {
     public double getSpeedX() {
         return speedX;
     }
-    public double getJumpHeight() {
+    public static double getJumpHeight() {
         return jumpHeight;
     }
     public double getHealth() {

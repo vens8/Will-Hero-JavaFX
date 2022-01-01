@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class GlobalVariables {
     // Music
-    public static boolean music = false;
+    public static boolean music = false;  // false by default can be changed to true at the end
     public static Media gameMusic = new Media(Paths.get("src/Resources/gameMusic.mp3").toUri().toString());
     public static MediaPlayer mediaPlayer = new MediaPlayer(gameMusic);
     public static Media buttonClick = new Media(new File("src/Resources/buttonClick.m4a").toURI().toString());
@@ -49,9 +49,15 @@ public class GlobalVariables {
     public static MediaPlayer orcDeathSound = new MediaPlayer(orcDeath);
     public static Media bossOrcDeath = new Media(new File("src/Resources/bossDeath.m4a").toURI().toString());
     public static MediaPlayer bossOrcDeathSound = new MediaPlayer(bossOrcDeath);
+    public static Media eerie = new Media(new File("src/Resources/eerieMusic.mp3").toURI().toString());
+    public static MediaPlayer eerieMusic = new MediaPlayer(eerie);
+
+    // Visuals
+    public static Media background = new Media(new File("src/Resources/hardMode.mp4").toURI().toString());
+    public static MediaPlayer backgroundVideo = new MediaPlayer(background);
 
     // Main timeline
-    public static Timeline timeline;
+    public static Timeline timeline = new Timeline();
 
     // Sound
     public static boolean sound = true;
@@ -64,6 +70,7 @@ public class GlobalVariables {
 
     // Level data
     public static ArrayList<GameObject> gameObjects = new ArrayList<>();
+    public static double difficulty = 100;
 
     // Anchor Panes
     public static AnchorPane gameAnchorPane;

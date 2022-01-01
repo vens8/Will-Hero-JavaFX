@@ -8,6 +8,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.media.MediaView?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
@@ -23,6 +24,11 @@
       </ImageView>
   </children>
 </AnchorPane>
+      <AnchorPane fx:id="videoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1002.0">
+         <children>
+            <MediaView fx:id="videoMediaView" fitHeight="720.0" fitWidth="1280.0" AnchorPane.leftAnchor="0.0" />
+         </children>
+      </AnchorPane>
       <AnchorPane fx:id="gameAnchorPane" prefHeight="675.0" prefWidth="10010.0" />
       <AnchorPane fx:id="staticAnchorPane" layoutX="1.0" prefHeight="669.0" prefWidth="1002.0">
       	<children>
@@ -97,12 +103,12 @@
             </ImageView>
             <Group fx:id="reviveButton" layoutX="115.0" layoutY="68.0" onMouseClicked="#reviveButtonClicked" onMouseEntered="#reviveMouseEntered" onMouseExited="#reviveMouseExited">
                <children>
-                  <ImageView fitHeight="42.0" fitWidth="186.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="42.0" fitWidth="184.0" layoutX="1.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../Resources/reviveButton.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="153.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" x="4.0">
                      <image>
                         <Image url="@../Resources/coin.png" />
                      </image>
@@ -142,12 +148,12 @@
                   <Image url="@../Resources/youDied.png" />
                </image>
                <effect>
-                  <InnerShadow height="0.0" radius="63.25" width="255.0">
+                  <InnerShadow height="127.5" radius="95.125" width="255.0">
                      <color>
                         <Color red="1.0" />
                      </color>
                      <input>
-                        <Reflection bottomOpacity="0.05" fraction="0.54" topOpacity="0.28" />
+                        <Reflection fraction="1.0" topOpacity="0.12" />
                      </input>
                   </InnerShadow>
                </effect>
