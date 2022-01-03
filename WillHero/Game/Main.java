@@ -19,13 +19,13 @@ public class Main extends Application implements Initializable, Serializable {
     public static Stage myStage;
     private Player player;
     private int highScore;
+    private int gameMode;
 
     @Override
     public void start(Stage primaryStage) {
             try {
-                // Create game and player here and pass to Controller.java
-                // playMusic();  // Uncomment
-                gameData gameData = new gameData();  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
+                highScore = 0;
+                playMusic();
                 System.out.println("Created!");
                 primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
                 GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
@@ -33,7 +33,7 @@ public class Main extends Application implements Initializable, Serializable {
                 primaryStage.setTitle("Will Hero");
                 GlobalVariables.scene = new Scene(GlobalVariables.root);
                 primaryStage.setScene(GlobalVariables.scene);
-                // primaryStage.setResizable(false);  Uncomment at the end!!
+                primaryStage.setResizable(false);  //Uncomment at the end!!
                 primaryStage.show();
                 primaryStage.setOnCloseRequest(event -> {
                     try {
@@ -93,6 +93,14 @@ public class Main extends Application implements Initializable, Serializable {
 
     public void setHighScore(int highScore) {
         this.highScore = highScore;
+    }
+
+    public int getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(int gameMode) {
+        this.gameMode = gameMode;
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class GlobalVariables {
     // Music
-    public static boolean music = false;  // false by default can be changed to true at the end
+    public static boolean music = true;  // false by default can be changed to true at the end (changed)
     public static Media gameMusic = new Media(Paths.get("src/Resources/gameMusic.mp3").toUri().toString());
     public static MediaPlayer mediaPlayer = new MediaPlayer(gameMusic);
     public static Media buttonClick = new Media(new File("src/Resources/buttonClick.m4a").toURI().toString());
@@ -43,6 +43,8 @@ public class GlobalVariables {
     public static MediaPlayer tntExplosionSound = new MediaPlayer(tntExplosion);
     public static Media playerRevive = new Media(new File("src/Resources/playerRevive.m4a").toURI().toString());
     public static MediaPlayer playerReviveSound = new MediaPlayer(playerRevive);
+    public static Media playerReviveThud = new Media(new File("src/Resources/playerReviveThud.m4a").toURI().toString());
+    public static MediaPlayer playerReviveThudMusic = new MediaPlayer(playerReviveThud);
     public static Media coinCollect = new Media(new File("src/Resources/coinCollect.m4a").toURI().toString());
     public static MediaPlayer coinCollectSound = new MediaPlayer(coinCollect);
     public static Media orcDeath = new Media(new File("src/Resources/orcDeath.m4a").toURI().toString());

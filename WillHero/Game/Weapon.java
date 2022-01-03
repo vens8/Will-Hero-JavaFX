@@ -30,7 +30,7 @@ public abstract class Weapon extends GameObject implements Collidable, Cloneable
 
     public void upgrade(){
         ++level;
-        damage *= 2; // Change here;
+        damage *= 2;
     }
 
     @Override

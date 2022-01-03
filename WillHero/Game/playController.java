@@ -92,13 +92,18 @@ public class playController implements Initializable {
             GlobalVariables.buttonClickSound.play();
         }
         if (chooseDifficulty.getValue().equals("Easy")) {
+            game.setGameMode(1);
+            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 200;
         }
         else if (chooseDifficulty.getValue().equals("Normal")) {
+            game.setGameMode(1);
+            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 100;
         }
         else {
-            // Get a scary lightning gif and use as background
+            game.setGameMode(2);
+            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 50;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));

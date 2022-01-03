@@ -18,7 +18,7 @@ public class greenOrc extends Orc implements Collidable{
     private static final double jumpSlice = 0.0166666666666667;
     private static final double accelerationX = -0.0083333333333333; // match with that of mainHero
     private static final double accelerationY = 0.0016666666666667;
-    private static final double weight = 3;
+    private static final double weight = 5;
     private boolean pushed, killed;
     private AnchorPane gameAnchorPane;
 
@@ -47,8 +47,6 @@ public class greenOrc extends Orc implements Collidable{
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 4);
         leftRectangle.setLayoutY(y + 8);
-//        leftRectangle.setStroke(Color.RED);
-//        leftRectangle.setStrokeWidth(2);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
@@ -58,8 +56,6 @@ public class greenOrc extends Orc implements Collidable{
         topRectangle.setArcWidth(5);
         topRectangle.setLayoutX(x + 3);
         topRectangle.setLayoutY(y);
-//        topRectangle.setStroke(Color.RED);
-//        topRectangle.setStrokeWidth(2);
         topRectangle.setFill(Color.TRANSPARENT);
 
         rightRectangle = new Rectangle();
@@ -69,8 +65,6 @@ public class greenOrc extends Orc implements Collidable{
         rightRectangle.setArcWidth(5);
         rightRectangle.setLayoutX(x + 41);
         rightRectangle.setLayoutY(y + 8);
-//        rightRectangle.setStroke(Color.RED);
-//        rightRectangle.setStrokeWidth(2);
         rightRectangle.setFill(Color.TRANSPARENT);
 
         bottomRectangle = new Rectangle();
@@ -80,8 +74,6 @@ public class greenOrc extends Orc implements Collidable{
         bottomRectangle.setArcWidth(5);
         bottomRectangle.setLayoutX(x + 5);
         bottomRectangle.setLayoutY(y + 41);
-//        bottomRectangle.setStroke(Color.RED);
-//        bottomRectangle.setStrokeWidth(2);
         bottomRectangle.setFill(Color.TRANSPARENT);
     }
 
@@ -92,7 +84,7 @@ public class greenOrc extends Orc implements Collidable{
         gameAnchorPane.getChildren().add(topRectangle);
         gameAnchorPane.getChildren().add(rightRectangle);
         gameAnchorPane.getChildren().add(bottomRectangle);
-        greenOrc.toBack();
+        greenOrc.toFront();
     }
 
     public void removeFromScreen() {
@@ -137,7 +129,7 @@ public class greenOrc extends Orc implements Collidable{
         }
         else if (deathType == 1) {
             Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(100), event -> {
-                setSpeedY(-5);
+                setSpeedY(-0.5);
                 Animations.rotateTransition(greenOrc, 360, 500, 5, false).play();
                 Animations.rotateTransition(leftRectangle, 360, 500, 5, false).play();
                 Animations.rotateTransition(topRectangle, 360, 500, 5, false).play();
@@ -146,8 +138,10 @@ public class greenOrc extends Orc implements Collidable{
                 setKilled(true);
             }));
             Timeline timeline2 = new Timeline(new KeyFrame(Duration.ZERO, event -> {
-                GlobalVariables.orcDeathSound.stop();
-                GlobalVariables.orcDeathSound.play();
+                if (GlobalVariables.sound) {
+                    GlobalVariables.orcDeathSound.stop();
+                    GlobalVariables.orcDeathSound.play();
+                }
             }),
                     new KeyFrame(Duration.millis(500), event -> {})
             );

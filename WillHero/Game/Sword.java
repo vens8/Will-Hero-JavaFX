@@ -1,6 +1,7 @@
 package Game;
 
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.scene.image.Image;
@@ -9,6 +10,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
+
+import java.sql.Time;
 
 public class Sword extends Weapon {
     private transient ImageView sword;
@@ -34,8 +37,6 @@ public class Sword extends Weapon {
         swordPolygon.setLayoutX(x + 55);
         swordPolygon.setLayoutY(y - 31);
         swordPolygon.setFill(Color.TRANSPARENT);
-        swordPolygon.setStroke(Color.RED);  // remove
-        swordPolygon.setStrokeWidth(2);  // remove
         swordPolygon.getPoints().setAll(
                 -32.08332824707031, 42.0,
                 -30.083328247070312, 43.5,
@@ -67,6 +68,19 @@ public class Sword extends Weapon {
     }
 
     public void useSword() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.swordKillSound.stop();
+            GlobalVariables.swordKillSound.play();
+        }
+        Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(150), new KeyValue(sword.rotateProperty(), 45)),
+                new KeyFrame(Duration.millis(150), new KeyValue(swordPolygon.rotateProperty(), 0)));
+        Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), event -> {
+            sword.setRotate(-180);  // reset to initial rotation position
+            swordPolygon.setRotate(-224);
+            used = false;  // After the sword is used
+        }));
+        timeline1.setOnFinished(event -> timeline2.play());
+        timeline1.play();
     }
 
     public boolean isUsed() {
@@ -80,14 +94,8 @@ public class Sword extends Weapon {
     public ImageView getSword() {
         return sword;
     }
-    public void setSword(ImageView sword) {
-        this.sword = sword;
-    }
     public Polygon getSwordPolygon() {
         return swordPolygon;
-    }
-    public void setSwordPolygon(Polygon swordPolygon) {
-        this.swordPolygon = swordPolygon;
     }
     public double getSpeedX() {
         return speedX;
@@ -104,6 +112,27 @@ public class Sword extends Weapon {
 
     @Override
     public boolean collision_detected(GameObject gameObject) {
+        if (gameObject instanceof greenOrc) {
+            return ((greenOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((greenOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof redOrc) {
+            return ((redOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bossOrc) {
+            return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent()) ||
+                    ((bossOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(swordPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof TNT) {
+            return ((TNT) gameObject).getTntPolygon().getBoundsInParent().intersects(swordPolygon.getBoundsInParent());
+        }
         return false; // Dummy
     }
 

@@ -53,8 +53,6 @@ public class mainHero extends GameObject implements Collidable {
         heroPolygon.setLayoutX(x + 46);
         heroPolygon.setLayoutY(y);
         heroPolygon.setFill(Color.TRANSPARENT);
-        heroPolygon.setStroke(Color.RED);  // remove
-        heroPolygon.setStrokeWidth(2);  // remove
         heroPolygon.getPoints().setAll(
                 -62.55001449584961, 58.92502975463867,
                 13.849987030029297, 58.92502975463867,
@@ -97,13 +95,6 @@ public class mainHero extends GameObject implements Collidable {
         heroPolygon.toFront();
         gameAnchorPane.getChildren().add(hero);
         gameAnchorPane.getChildren().add(heroPolygon);
-    }
-
-    public void manualMove(double x, double y) {  // Can remove if not used
-        hero.setLayoutY(hero.getLayoutY() + y);
-        heroPolygon.setLayoutY(heroPolygon.getLayoutY() + y);
-        hero.setLayoutX(hero.getLayoutX() + x);
-        heroPolygon.setLayoutX(heroPolygon.getLayoutX() + x);
     }
 
     public void setSpeedX(double speedX) {
@@ -277,34 +268,34 @@ public class mainHero extends GameObject implements Collidable {
         return unlockedWeapons;
     }
 
-    public void addWeapon(Weapon weapon) throws CloneNotSupportedException {
-        if (weapon instanceof Shuriken) {
+    public boolean addWeapon(int weaponType) {
+        if (weaponType == 0) {
             boolean shurikenFound = false;
             for (GameObject unlockedWeapon : unlockedWeapons) {
                 if (unlockedWeapon instanceof Shuriken) {
-                    currentWeapon.upgrade();
                     shurikenFound = true;
+                    return shurikenFound;
                 }
             }
-            if (!shurikenFound) {  // Add to unlocked weapons only if an instance doesn't already exist.
-                currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY(), 1);
-                ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
-                unlockedWeapons.add(currentWeapon);
-            }
+            // Add to unlocked weapons only if an instance doesn't already exist.
+            currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY(), 1);
+            ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
+            unlockedWeapons.add(currentWeapon);
+            return shurikenFound;
         }
         else {
             boolean swordFound = false;
             for (GameObject unlockedWeapon : unlockedWeapons) {
                 if (unlockedWeapon instanceof Sword) {
-                    currentWeapon.upgrade();
                     swordFound = true;
+                    return swordFound;
                 }
             }
-            if (!swordFound) {  // Add to unlocked weapons only if an instance doesn't already exist.
-                currentWeapon = new Sword(hero.getLayoutX() - 30, hero.getLayoutY() + 22);
-                ((Sword) currentWeapon).addToScreen(gameAnchorPane);
-                unlockedWeapons.add(currentWeapon);
-            }
+            // Add to unlocked weapons only if an instance doesn't already exist.
+            currentWeapon = new Sword(hero.getLayoutX() - 45, hero.getLayoutY() + 22);
+            ((Sword) currentWeapon).addToScreen(gameAnchorPane);
+            unlockedWeapons.add(currentWeapon);
+            return swordFound;
         }
     }
 

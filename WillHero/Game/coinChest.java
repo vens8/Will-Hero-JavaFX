@@ -37,7 +37,7 @@ public class coinChest extends Chest implements Collidable{
         speedX = 0;
         speedY = -0.0001;
         currentJumpHeight = 0;
-        jumpHeight = -5;
+        jumpHeight = -3;
         pushed = false;
         activated = false;
         coinChestImageView = new ImageView();
@@ -115,7 +115,7 @@ public class coinChest extends Chest implements Collidable{
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(coinChestImageView);
         gameAnchorPane.getChildren().add(coinChestPolygon);
-        coinChestImageView.toBack();
+        coinChestImageView.toFront();
     }
 
     public void removeFromScreen() {

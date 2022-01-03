@@ -143,7 +143,7 @@
                   </ImageView>
                </children>
             </Group>
-            <ImageView fitHeight="30.0" fitWidth="126.0" layoutX="148.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="endMessage" fitHeight="30.0" fitWidth="126.0" layoutX="148.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../Resources/youDied.png" />
                </image>

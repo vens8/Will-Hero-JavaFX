@@ -167,16 +167,16 @@ public class pauseController implements Initializable {
         // Reopen game stage
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));
         GlobalVariables.root = loader.load();
-        //stage = (Stage) (restartGameButtonBar.getScene().getWindow());
         mainGameStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         GlobalVariables.scene = new Scene(GlobalVariables.root);
         gameController gameController = loader.getController();
 
-        // Reset player properties
-        player.setScore(0);
-        player.setHero(new mainHero(50, 290));
-        player.setRevived(false);
+        // Reset game/player properties
+        game.getPlayer().setScore(0);
+        game.getPlayer().setHero(new mainHero(50, 290));
+        game.getPlayer().setRevived(false);
         gameController.resetFlags();
+        gameData gameData = new gameData(game.getGameMode());
         gameController.setupScene(game);
         mainGameStage.setScene(GlobalVariables.scene);
         mainGameStage.show();

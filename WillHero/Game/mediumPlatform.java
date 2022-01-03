@@ -6,13 +6,25 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+import java.util.Random;
+
 public class mediumPlatform extends Platform implements Collidable{
     private final transient ImageView mPlatform;
     private final Polygon mPlatformPolygon;
     private AnchorPane gameAnchorPane;
+    private double speedY;
+    private double currentJumpHeight;
+    private double setY;
+    private int jumpHeight;
+    private static final double jumpSlice = 0.01;
+    private static final double accelerationY = 0.00003;
+    Random random = new Random();
 
     mediumPlatform(double x, double y){
         super(x, y);
+        speedY = 0.0001;
+        currentJumpHeight = 0;
+        jumpHeight = random.nextInt(3);
         mPlatform = new ImageView();
         mPlatformPolygon = new Polygon();
         mPlatform.setLayoutX(x);
@@ -44,6 +56,51 @@ public class mediumPlatform extends Platform implements Collidable{
         gameAnchorPane.getChildren().remove(mPlatformPolygon);
     }
 
+    public void jump() {
+        mPlatform.setLayoutY(mPlatform.getLayoutY() + speedY);
+        mPlatformPolygon.setLayoutY(mPlatformPolygon.getLayoutY() + speedY);
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+
+    public int getJumpHeight() {
+        return jumpHeight;
+    }
+
+    public void setJumpHeight(int jumpHeight) {
+        this.jumpHeight = jumpHeight;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
+    }
+
     public ImageView getmPlatform() {
         return mPlatform;
     }
@@ -51,6 +108,7 @@ public class mediumPlatform extends Platform implements Collidable{
     public Polygon getmPlatformPolygon() {
         return mPlatformPolygon;
     }
+
 
     @Override
     public boolean collision_detected(GameObject gameObject) {

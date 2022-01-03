@@ -18,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
@@ -56,8 +57,10 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException {
         game = new Main();
-        player = new Player(new mainHero(50, 290)); // 50, 290
+        player = new Player(new mainHero(50, 290)); // starting position (50, 290)
         game.setPlayer(player);
+        highscoreLabel.setText(String.format("%d", game.getHighScore()));
+        coinsLabel.setText(String.format("%d", game.getPlayer().getCoins()));
         try {
             Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
             loadGameListView.getItems().addAll(GlobalVariables.gameStates);  // Display all the game states in the listView
@@ -69,30 +72,11 @@ public class Controller implements Initializable {
     }
 
     public void settingsButtonClicked() throws IOException {
-//        if (GlobalVariables.sound) {
-//            GlobalVariables.buttonClickSound.stop();
-//            GlobalVariables.buttonClickSound.play();
-//        }
-//        stage = new Stage();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
-//        root = loader.load();
-//        stage.setScene(new Scene(root));
-//        settingsController settingsController = loader.getController();
-//        settingsController.getGame(game);
-//
-//        //root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
-//        stage.setScene(new Scene(root));
-//        stage.initModality(Modality.APPLICATION_MODAL);
-//        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-//        stage.initOwner(settingsButton.getScene().getWindow());
-//        stage.showAndWait();
-
         if (GlobalVariables.sound) {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
         stage = new Stage();
-        //root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings.fxml")));
         FXMLLoader loader = new FXMLLoader(getClass().getResource("settings.fxml"));
         root = loader.load();
         stage.setScene(new Scene(root));
@@ -140,11 +124,16 @@ public class Controller implements Initializable {
             GlobalVariables.buttonClickSound.play();
         }
 
-        FileInputStream fileStream = new FileInputStream("/Resources/savedGames.txt");
-        ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+        try {
+            FileInputStream fileStream = new FileInputStream("/Resources/savedGames.txt");
+            ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+            gameState savedState = (gameState) objectStream.readObject();
+        }
+        catch (FileNotFoundException f) {
+            System.out.println("not found!");
+        }
 
-        gameState savedState = (gameState) objectStream.readObject();
-        //this is where the magic happens
+        //this is where the magic happens :)
 
         stage = new Stage();
         root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loadGameMenu.fxml")));

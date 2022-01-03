@@ -11,6 +11,7 @@ public class Coin extends GameObject implements Collidable{
     private transient ImageView coinImage;
     private Polygon coinPolygon;
     private boolean collected;
+    private AnchorPane gameAnchorPane;
 
     Coin(double x, double y) {
         super(new Position(x, y));
@@ -38,12 +39,23 @@ public class Coin extends GameObject implements Collidable{
                 -9.58331298828125, -38.508331298828125);
     }
 
-    public void addToScreen(AnchorPane anchorPane) {
-        anchorPane.getChildren().add(coinImage);
-        anchorPane.getChildren().add(coinPolygon);
+    public void addToScreen(AnchorPane gameAnchorPane) {
+        this.gameAnchorPane = gameAnchorPane;
+        gameAnchorPane.getChildren().add(coinImage);
+        gameAnchorPane.getChildren().add(coinPolygon);
     }
 
+    public void removeFromScreen() {
+        gameAnchorPane.getChildren().remove(coinImage);
+        gameAnchorPane.getChildren().remove(coinPolygon);
+    }
+
+
     public void playCoinAnimation() {
+        if (GlobalVariables.sound) {
+            GlobalVariables.coinCollectSound.stop();
+            GlobalVariables.coinCollectSound.play();
+        }
         collected = true;
         GlobalVariables.gameAnchorPane.getChildren().removeAll(coinImage, coinPolygon);
     }

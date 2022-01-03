@@ -37,7 +37,7 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
         speedY = -0.0001;
         pushed = false;
         currentJumpHeight = 0;
-        jumpHeight = -5;
+        jumpHeight = -3;
         weaponChestImageView = new ImageView();
         weaponChestImageView.setImage(image1);
         weaponChestPolygon = new Polygon();
@@ -83,7 +83,7 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
         this.gameAnchorPane = gameAnchorPane;
         gameAnchorPane.getChildren().add(weaponChestImageView);
         gameAnchorPane.getChildren().add(weaponChestPolygon);
-        weaponChestImageView.toBack();
+        weaponChestImageView.toFront();
     }
 
     public void removeFromScreen() {
@@ -135,12 +135,6 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
                 sword.getSwordPolygon().setDisable(true);
                 sword.getSwordPolygon().setVisible(false);
                 this.gameAnchorPane.getChildren().removeAll(sword.getSword(), sword.getSwordPolygon());
-                try {
-                    player.getHero().addWeapon(sword);
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                }
-                // Remove from gameObjects as well
             }));
         }
         else {
@@ -154,12 +148,6 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
                 shuriken.getShurikenPolygon().setDisable(true);
                 shuriken.getShurikenPolygon().setVisible(false);
                 this.gameAnchorPane.getChildren().removeAll(shuriken.getShuriken(), shuriken.getShurikenPolygon());
-                try {
-                    player.getHero().addWeapon(shuriken);
-                } catch (CloneNotSupportedException e) {
-                    e.printStackTrace();
-                }
-                // Remove from gameObjects as well
             }));
         }
         timeline3.setCycleCount(1);

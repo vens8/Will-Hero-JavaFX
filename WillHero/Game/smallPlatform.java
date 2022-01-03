@@ -6,13 +6,25 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+import java.util.Random;
+
 public class smallPlatform extends Platform implements Collidable {
     private transient ImageView sPlatform;
     private Polygon sPlatformPolygon;
     private AnchorPane gameAnchorPane;
+    private double speedY;
+    private double currentJumpHeight;
+    private double setY;
+    private int jumpHeight;
+    private static final double jumpSlice = 0.01;
+    private static final double accelerationY = 0.00003;
+    Random random = new Random();
 
     public smallPlatform(double x, double y){
         super(x, y);
+        speedY = 0.0001;
+        currentJumpHeight = 0;
+        jumpHeight = random.nextInt(4);
         sPlatform = new ImageView();
         sPlatformPolygon = new Polygon();
         sPlatform.setLayoutX(x);
@@ -23,8 +35,6 @@ public class smallPlatform extends Platform implements Collidable {
         sPlatform.setImage(new Image("/Resources/smallPlatform.png", true));
         sPlatformPolygon.setLayoutX(x + 91);
         sPlatformPolygon.setLayoutY(y + 166);
-        sPlatformPolygon.setStroke(Color.BLUE);
-        sPlatformPolygon.setStrokeWidth(2);
         sPlatformPolygon.setFill(Color.TRANSPARENT);
         sPlatformPolygon.getPoints().setAll(
                 102.583251953125, -54.000030517578125,
@@ -46,11 +56,56 @@ public class smallPlatform extends Platform implements Collidable {
         gameAnchorPane.getChildren().remove(sPlatformPolygon);
     }
 
+    public void jump() {
+        sPlatform.setLayoutY(sPlatform.getLayoutY() + speedY);
+        sPlatformPolygon.setLayoutY(sPlatformPolygon.getLayoutY() + speedY);
+    }
+
     public ImageView getsPlatform() {
         return sPlatform;
     }
     public Polygon getsPlatformPolygon() {
         return sPlatformPolygon;
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+
+    public int getJumpHeight() {
+        return jumpHeight;
+    }
+
+    public void setJumpHeight(int jumpHeight) {
+        this.jumpHeight = jumpHeight;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class Shuriken extends Weapon implements Collidable, Cloneable {
         super(x,y);
         speedX = 0;
         setLevel(level);
-        setDamage(10);
+        setDamage(30);
         shuriken = new ImageView();
         shurikenPolygon = new Polygon();
         shuriken.setLayoutX(x);
@@ -30,6 +30,8 @@ public class Shuriken extends Weapon implements Collidable, Cloneable {
         shurikenPolygon.setLayoutX(x + 36);
         shurikenPolygon.setLayoutY(y + 51);
         shurikenPolygon.setFill(Color.TRANSPARENT);
+        shurikenPolygon.setStroke(Color.BLACK);
+        shurikenPolygon.setStrokeWidth(1);
         shurikenPolygon.getPoints().setAll(
                 -19.583328247070312, -49.16668701171875, -17.583328247070312, -34.67498779296875, -12.583328247070312, -28.00830078125, -21.25, -28.00830078125, -36.0, -23.0, -21.25, -16.50830078125, -12.583328247070312, -18.00830078125, -17.583328247070312, -11.5, -19.583328247070312, 5.0, -6.75, -4.50830078125, -3.75, -11.5, -1.0833282470703125, -4.50830078125, 12.25, 5.0, 10.583328247070312, -11.5, 6.25, -18.00830078125, 13.75, -16.50830078125, 27.878326416015625, -23.0, 13.75, -29.67498779296875, 6.25, -29.67498779296875, 10.583328247070312, -34.67498779296875, 12.25, -49.16668701171875, -1.0833282470703125, -40.8416748046875, -3.75, -34.67498779296875, -6.75, -40.8416748046875
         );
@@ -87,11 +89,14 @@ public class Shuriken extends Weapon implements Collidable, Cloneable {
                     ((redOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
                     ((redOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent());
         }
-        if (gameObject instanceof bossOrc) {
+        else if (gameObject instanceof bossOrc) {
             return ((bossOrc) gameObject).getLeftRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
                     ((bossOrc) gameObject).getTopRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
                     ((bossOrc) gameObject).getRightRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent()) ||
                     ((bossOrc) gameObject).getBottomRectangle().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof TNT) {
+            return ((TNT) gameObject).getTntPolygon().getBoundsInParent().intersects(shurikenPolygon.getBoundsInParent());
         }
         return false;
     }

@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.io.ObjectOutputStream;
+
 public class bossOrc extends Orc implements Collidable {
     private transient ImageView bossOrc;
     private final Rectangle leftRectangle;
@@ -18,7 +20,7 @@ public class bossOrc extends Orc implements Collidable {
     private double speedY, speedX, health, damage, currentJumpHeight, setX, setY;
     private static final double jumpHeight = -15;
     private static final double jumpSlice = 0.0033333333333333;
-    private static double accelerationX = -0.0033333333333333; // acceleration is -0.2 for smooth deceleration
+    private static double accelerationX = -0.0033333333333333; // smooth acceleration
     private static final double accelerationY = 0.00033333333333333;
     private static final double weight = 2000;  // Heavy and bulky and can push the player off
     private boolean pushed, killed, attacked;
@@ -88,7 +90,7 @@ public class bossOrc extends Orc implements Collidable {
         gameAnchorPane.getChildren().add(topRectangle);
         gameAnchorPane.getChildren().add(rightRectangle);
         gameAnchorPane.getChildren().add(bottomRectangle);
-        bossOrc.toBack();
+        bossOrc.toFront();
     }
 
     public void removeFromScreen() {
@@ -118,8 +120,10 @@ public class bossOrc extends Orc implements Collidable {
     public void playDeathAnimation(int deathType, Player player) {  // 0 for fall death, 1 for all other deaths
         if (deathType == 0) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
-                GlobalVariables.bossOrcDeathSound.stop();
-                GlobalVariables.bossOrcDeathSound.play();
+                if (GlobalVariables.sound) {
+                    GlobalVariables.bossOrcDeathSound.stop();
+                    GlobalVariables.bossOrcDeathSound.play();
+                }
                 setKilled(true);
             }),
                     new KeyFrame(Duration.millis(500), event -> {})
@@ -132,7 +136,7 @@ public class bossOrc extends Orc implements Collidable {
         else if (deathType == 1) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
                 setSpeedY(-1);
-                setSpeedX(5);  // Motion after death
+                setSpeedX(2);  // Motion after death
                 setKilled(true);
                 if (GlobalVariables.sound) {
                     GlobalVariables.bossOrcDeathSound.stop();

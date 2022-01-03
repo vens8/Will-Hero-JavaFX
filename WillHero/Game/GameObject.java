@@ -3,7 +3,7 @@ package Game;
 import java.io.Serializable;
 
 public abstract class GameObject implements Collidable, Serializable {
-    private Position P;
+    private Position P;  // Initial position of any gameObject
     private boolean added;  // Check if the game object has been added to the list (screen)
 
     public GameObject(Position P) {

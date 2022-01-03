@@ -11,12 +11,6 @@ public class Camera {
     }
 
     public void update(mainHero hero, AnchorPane gameAnchorPane, AnchorPane bgAnchorPane) {
-//        offsetX = (hero.getHeroPolygon().getLayoutX() + mainHero.WIDTH / 2) - GlobalVariables.SCREEN_WIDTH / 2;
-//        offsetY = (hero.getHeroPolygon().getLayoutY() + mainHero.HEIGHT / 2) - GlobalVariables.SCREEN_HEIGHT / 2;
-//        offsetX = ((hero.getHeroPolygon().getLayoutX() + (mainHero.WIDTH / 2) - offsetX) - GlobalVariables.SCREEN_WIDTH / 2) * 0.5;
-//        offsetY = ((hero.getHeroPolygon().getLayoutY() + (mainHero.HEIGHT / 2) - offsetY) - GlobalVariables.SCREEN_HEIGHT / 2) * 0.05;
-
-
         offsetX = ((hero.getHeroPolygon().getLayoutX() - 73) - 200);
         offsetY = (hero.getHeroPolygon().getLayoutY() - 290) * 0.1; // 0.05
 
@@ -28,10 +22,6 @@ public class Camera {
 
     }
 
-//    public void move() {
-//        this.setTranslateX(-offsetX);
-//        this.setTranslateY(-offsetY);
-//    }
     public double getOffsetX() {
         return offsetX;
     }

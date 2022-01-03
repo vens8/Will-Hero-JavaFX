@@ -13,14 +13,28 @@ public class TNT extends GameObject implements Collidable{
     private transient ImageView explosionImage;
     private Polygon tntPolygon;
     private Polygon explosionPolygon;
-    private boolean activated, explosionActivated;
+    private boolean activated, explosionActivated, pushed;
     private AnchorPane gameAnchorPane;
+    private double speedX;
+    private double speedY;
+    private double currentJumpHeight;
+    private double setY;
+    private double jumpHeight;
+    private static final double jumpSlice = 0.0001;
+    private static final double WEIGHT = 15;
+    private static final double accelerationX = -0.0125;
+    private static final double accelerationY = 0.0003;
 
 
     TNT(double x, double y) {
         super(new Position(x, y));
         activated = false;
         explosionActivated = false;
+        speedX = 0;
+        speedY = -0.0001;
+        currentJumpHeight = 0;
+        jumpHeight = -0.005;
+        pushed = false;
         tntImage = new ImageView();
         explosionImage = new ImageView();
         tntPolygon = new Polygon();
@@ -33,6 +47,8 @@ public class TNT extends GameObject implements Collidable{
         tntImage.setImage(new Image("/Resources/tnt.png", true));
         tntPolygon.setLayoutX(x + 28);
         tntPolygon.setLayoutY(y + 21);
+        tntPolygon.setStrokeWidth(2);
+        tntPolygon.setStroke(Color.BLUE);
         tntPolygon.setFill(Color.TRANSPARENT);
         tntPolygon.getPoints().setAll(
                 -22.91668701171875, 40.82501220703125,
@@ -254,6 +270,15 @@ public class TNT extends GameObject implements Collidable{
                 return ((Shuriken) gameObject).getShurikenPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
             }
         }
+        else if (gameObject instanceof smallPlatform) {
+            return ((smallPlatform) gameObject).getsPlatformPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof mediumPlatform) {
+            return ((mediumPlatform) gameObject).getmPlatformPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+        }
+        else if (gameObject instanceof bigPlatform) {
+            return ((bigPlatform) gameObject).getbPlatformPolygon().getBoundsInParent().intersects(tntPolygon.getBoundsInParent());
+        }
         return false;
     }
 
@@ -271,5 +296,83 @@ public class TNT extends GameObject implements Collidable{
 
     public void setExplosionActivated(boolean explosionActivated) {
         this.explosionActivated = explosionActivated;
+    }
+
+    public boolean isPushed() {
+        return pushed;
+    }
+
+    public void setPushed(boolean pushed) {
+        this.pushed = pushed;
+    }
+
+    public void push() {  // move chest
+        tntImage.setLayoutX(tntImage.getLayoutX() + speedX);
+        tntPolygon.setLayoutX(tntPolygon.getLayoutX() + speedX);
+        explosionImage.setLayoutX(explosionImage.getLayoutX() + speedX);
+        explosionPolygon.setLayoutX(explosionPolygon.getLayoutX() + speedX);
+    }
+
+    public void jump() {
+        tntImage.setLayoutY(tntImage.getLayoutY() + speedY);
+        tntPolygon.setLayoutY(tntPolygon.getLayoutY() + speedY);
+        explosionImage.setLayoutY(explosionImage.getLayoutY() + speedY);
+        explosionPolygon.setLayoutY(explosionPolygon.getLayoutY() + speedY);
+    }
+
+    public double getSpeedX() {
+        return speedX;
+    }
+
+    public void setSpeedX(double speedX) {
+        this.speedX = speedX;
+    }
+
+    public double getSpeedY() {
+        return speedY;
+    }
+
+    public void setSpeedY(double speedY) {
+        this.speedY = speedY;
+    }
+
+    public double getCurrentJumpHeight() {
+        return currentJumpHeight;
+    }
+
+    public void setCurrentJumpHeight(double currentJumpHeight) {
+        this.currentJumpHeight = currentJumpHeight;
+    }
+
+    public double getSetY() {
+        return setY;
+    }
+
+    public void setSetY(double setY) {
+        this.setY = setY;
+    }
+
+    public double getJumpHeight() {
+        return jumpHeight;
+    }
+
+    public void setJumpHeight(double jumpHeight) {
+        this.jumpHeight = jumpHeight;
+    }
+
+    public static double getJumpSlice() {
+        return jumpSlice;
+    }
+
+    public static double getWeight() {
+        return WEIGHT;
+    }
+
+    public static double getAccelerationX() {
+        return accelerationX;
+    }
+
+    public static double getAccelerationY() {
+        return accelerationY;
     }
 }
