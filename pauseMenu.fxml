@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="452.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.pauseController">
+    <children>
+        <AnchorPane layoutX="58.0" layoutY="49.0" prefHeight="465.0" prefWidth="396.0" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="4.0">
+            <children>
+                <Rectangle arcHeight="100.0" height="519.0" layoutX="-9.0" layoutY="-6.0" stroke="#966868" strokeType="OUTSIDE" strokeWidth="3.0" width="452.0">
+                    <fill>
+                        <RadialGradient centerX="0.5" centerY="0.5" focusDistance="-0.031007722366687807" radius="0.5387596751368323">
+                            <stops>
+                                <Stop>
+                                    <color>
+                                        <Color red="1.0" green="1.0" blue="1.0" />
+                                    </color>
+                                </Stop>
+                                <Stop offset="1.0">
+                                    <color>
+                                        <Color red="0.8096708059310913" green="0.7716049551963806" blue="1.0" />
+                                    </color>
+                                </Stop>
+                            </stops>
+                        </RadialGradient>
+                    </fill>
+                </Rectangle>
+                <Label alignment="CENTER" contentDisplay="CENTER" layoutX="62.0" prefHeight="95.0" prefWidth="320.0" text="Game Paused" textAlignment="CENTER" AnchorPane.bottomAnchor="415.0" AnchorPane.leftAnchor="62.0" AnchorPane.rightAnchor="64.0" AnchorPane.topAnchor="0.0">
+                    <font>
+                        <Font name="Dubai Medium" size="48.0" />
+                    </font>
+                </Label>
+                <ButtonBar fx:id="saveGameButtonBar" layoutX="44.0" layoutY="355.0" onMouseClicked="#saveGameClicked" onMouseEntered="#saveGameMouseEntered" onMouseExited="#saveGameMouseExited" prefHeight="70.0" prefWidth="345.0">
+                    <buttons>
+                        <ImageView fitHeight="41.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Resources/save.png" />
+                            </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="246.0" text="Save Game" textAlignment="CENTER">
+                            <font>
+                                <Font name="Dubai Medium" size="32.0" />
+                            </font>
+                        </Label>
+                    </buttons>
+                </ButtonBar>
+                <StackPane layoutX="64.0" layoutY="229.0">
+                    <children>
+                        <ButtonBar fx:id="musicButtonBar" onMouseClicked="#musicClicked" onMouseEntered="#musicMouseEntered" onMouseExited="#musicMouseExited">
+                            <buttons>
+                                <ImageView fx:id="musicIcon" fitHeight="57.0" fitWidth="52.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Resources/musicon.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="musicLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="72.0" prefWidth="235.0" text="Music On" textAlignment="CENTER">
+                                    <font>
+                                        <Font name="Dubai Medium" size="32.0" />
+                                    </font>
+                                </Label>
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </StackPane>
+                <StackPane layoutX="50.0" layoutY="291.0">
+                    <children>
+                        <ButtonBar fx:id="soundButtonBar" onMouseClicked="#soundClicked" onMouseEntered="#soundMouseEntered" onMouseExited="#soundMouseExited" prefHeight="70.0" prefWidth="345.0">
+                            <buttons>
+                                <ImageView fx:id="soundIcon" fitHeight="57.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                        <Image url="@../Resources/soundon.png" />
+                                    </image>
+                                </ImageView>
+                                <Label fx:id="soundLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="244.0" text="Sound On" textAlignment="CENTER">
+                                    <font>
+                                        <Font name="Dubai Medium" size="32.0" />
+                                    </font>
+                                </Label>
+                            </buttons>
+                        </ButtonBar>
+                    </children>
+                </StackPane>
+            <StackPane layoutX="60.0" layoutY="104.0">
+               <children>
+                  <ButtonBar fx:id="resumeGameButtonBar" onMouseClicked="#resumeClicked" onMouseEntered="#resumeMouseEntered" onMouseExited="#resumeMouseExited">
+                     <buttons>
+                        <ImageView fitHeight="61.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Resources/play.png" />
+                           </image>
+                        </ImageView>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="72.0" prefWidth="232.0" text="Resume Game" textAlignment="CENTER">
+                           <font>
+                              <Font name="Dubai Medium" size="32.0" />
+                           </font>
+                        </Label>
+                     </buttons>
+                  </ButtonBar>
+               </children>
+            </StackPane>
+            <ButtonBar fx:id="restartGameButtonBar" layoutX="60.0" layoutY="167.0" onMouseClicked="#restartClicked" onMouseEntered="#restartMouseEntered" onMouseExited="#restartMouseExited">
+               <buttons>
+                  <ImageView fitHeight="61.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/restart.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="72.0" prefWidth="232.0" text="Restart Game" textAlignment="CENTER">
+                     <font>
+                        <Font name="Dubai Medium" size="32.0" />
+                     </font>
+                  </Label>
+               </buttons>
+            </ButtonBar>
+            <ButtonBar fx:id="exitButtonBar" layoutX="44.0" layoutY="419.0" onMouseClicked="#exitClicked" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited" prefHeight="70.0" prefWidth="345.0">
+               <buttons>
+                  <ImageView fitHeight="41.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/exitGame.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="58.0" prefWidth="245.0" text="Main Menu" textAlignment="CENTER">
+                     <font>
+                        <Font name="Dubai Medium" size="32.0" />
+                     </font>
+                  </Label>
+               </buttons>
+            </ButtonBar>
+            </children>
+        </AnchorPane>
+    </children>
+</AnchorPane>

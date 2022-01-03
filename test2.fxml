@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Polygon?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.pauseController">
+   <children>
+      <ImageView fx:id="swordImage" fitHeight="150.0" fitWidth="200.0" layoutX="123.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true" scaleX="0.5" scaleY="0.5">
+         <image>
+            <Image url="@../Resources/sword.png" />
+         </image>
+      </ImageView>
+      <Polygon fill="DODGERBLUE" layoutX="230.0" layoutY="63.5" points="-32.08332824707031, 42.0,                 -30.083328247070312, 43.5,                 -24.583328247070312, 38.16668701171875,                 15.083328247070312, 75.66668701171875,                 26.25, 79.16668701171875,                 23.416671752929688, 70.5,                 -18.916671752929688, 32.5,                 -14.416671752929688, 27.33331298828125,                 -16.416671752929688, 25.5,                 -22.583328247070312, 30.33331298828125,                 -37.41667175292969, 18.5,                 -39.41667175292969, 14.66668701171875,                 -41.416656494140625, 16.33331298828125,                 -43.75, 18.5,                 -39.41667175292969, 21.33331298828125,                 -26.25, 34.33331298828125" rotate="-44.0" stroke="BLACK" strokeType="INSIDE" />
+   </children>
+</AnchorPane>

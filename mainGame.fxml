@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.Reflection?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="mainAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="999.0" style="-fx-background-color: #33bef9;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Game.gameController">
+   <children>
+      <AnchorPane fx:id="bgAnchorPane" prefHeight="200.0" prefWidth="200.0">
+      	<children>
+      		<ImageView fitHeight="944.0" fitWidth="10009.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0">
+         <image>
+            <Image url="@../Resources/background2.png" />
+         </image>
+      </ImageView>
+  </children>
+</AnchorPane>
+      <AnchorPane fx:id="videoAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="675.0" prefWidth="1002.0">
+         <children>
+            <MediaView fx:id="videoMediaView" fitHeight="720.0" fitWidth="1280.0" AnchorPane.leftAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="gameAnchorPane" prefHeight="675.0" prefWidth="10010.0" />
+      <AnchorPane fx:id="staticAnchorPane" layoutX="1.0" prefHeight="669.0" prefWidth="1002.0">
+      	<children>
+      		<Label fx:id="coinLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="890.0" layoutY="10.0" prefHeight="60.0" prefWidth="89.0" text="9999" textAlignment="CENTER" textFill="#635d5d" wrapText="true">
+         <font>
+            <Font name="Dubai Medium" size="33.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="65.0" fitWidth="42.0" layoutX="833.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+         <image>
+            <Image url="@../Resources/coin.png" />
+         </image>
+      </ImageView>
+      		<Label layoutX="907.0" layoutY="631.0" prefHeight="37.0" prefWidth="48.0" text="FPS" textFill="#595555">
+         <font>
+            <Font name="Dubai Medium" size="19.0" />
+         </font>
+      </Label>
+      <Label fx:id="fpsLabel" layoutX="948.0" layoutY="636.0" prefHeight="30.0" prefWidth="41.0" text="0" textFill="#d10000">
+         <font>
+            <Font name="Dubai Medium" size="16.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="shurikenImage" fitHeight="56.0" fitWidth="70.0" layoutX="23.0" layoutY="595.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/shuriken.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="scoreLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="452.0" layoutY="13.0" prefHeight="56.0" prefWidth="114.0" text="100" textAlignment="CENTER" textFill="#615a5a" AnchorPane.leftAnchor="452.0" AnchorPane.rightAnchor="433.0">
+         <font>
+            <Font name="Dubai Medium" size="28.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="settingsButton" fitHeight="64.0" fitWidth="64.0" layoutX="11.0" layoutY="12.0" onMouseClicked="#settingsButtonClicked" onMouseEntered="#settingsMouseEntered" onMouseExited="#settingsMouseExited" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Resources/settings.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="swordImage" fitHeight="45.0" fitWidth="98.0" layoutX="126.0" layoutY="607.0" opacity="0.4" pickOnBounds="true" preserveRatio="true" rotate="44.0">
+         <image>
+            <Image url="@../Resources/sword.png" />
+         </image>
+      </ImageView>
+      <StackPane layoutX="69.0" layoutY="580.0" prefHeight="68.0" prefWidth="42.0">
+         <children>
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label fx:id="shurikenLevel" prefHeight="25.0" prefWidth="0.0" text="0" textFill="#fcff00">
+               <font>
+                  <Font name="Dubai Medium" size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+      <StackPane layoutX="170.0" layoutY="580.0" prefHeight="68.0" prefWidth="42.0">
+         <children>
+            <Circle fill="#5cf1ff00" radius="19.0" stroke="#ddff00" strokeType="OUTSIDE" strokeWidth="2.0" />
+            <Label fx:id="swordLevel" prefHeight="25.0" prefWidth="0.0" text="0" textFill="#fcff00">
+               <font>
+                  <Font name="Dubai Medium" size="23.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
+      	</children>
+      </AnchorPane>
+      <AnchorPane fx:id="gameOverAnchorPane" layoutX="311.0" layoutY="776.0" prefHeight="221.0" prefWidth="414.0">
+         <children>
+            <ImageView fitHeight="226.0" fitWidth="416.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/gameOver.png" />
+               </image>
+            </ImageView>
+            <Group fx:id="reviveButton" layoutX="115.0" layoutY="68.0" onMouseClicked="#reviveButtonClicked" onMouseEntered="#reviveMouseEntered" onMouseExited="#reviveMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="184.0" layoutX="1.0" layoutY="-2.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/reviveButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="153.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/coin.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="restartButton" layoutX="115.0" layoutY="115.0" onMouseClicked="#restartButtonClicked" onMouseEntered="#restartMouseEntered" onMouseExited="#restartMouseExited">
+               <children>
+                  <ImageView fitHeight="43.0" fitWidth="184.0" layoutX="1.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/restartGameButton.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="33.0" fitWidth="34.0" layoutX="145.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/restart.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <Group fx:id="exitButton" layoutX="115.0" layoutY="166.0" onMouseClicked="#exitButtonClicked" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited">
+               <children>
+                  <ImageView fitHeight="42.0" fitWidth="182.0" layoutX="1.0" layoutY="-2.0" onMouseEntered="#exitMouseEntered" onMouseExited="#exitMouseExited" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../Resources/exitGameButton2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="24.0" fitWidth="24.0" layoutX="144.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" x="4.0">
+                     <image>
+                        <Image url="@../Resources/exitGame.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </Group>
+            <ImageView fx:id="endMessage" fitHeight="30.0" fitWidth="126.0" layoutX="148.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Resources/youDied.png" />
+               </image>
+               <effect>
+                  <InnerShadow height="127.5" radius="95.125" width="255.0">
+                     <color>
+                        <Color red="1.0" />
+                     </color>
+                     <input>
+                        <Reflection fraction="1.0" topOpacity="0.12" />
+                     </input>
+                  </InnerShadow>
+               </effect>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
