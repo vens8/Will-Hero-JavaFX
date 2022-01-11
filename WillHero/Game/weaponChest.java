@@ -19,7 +19,7 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
     private Image image4 = new Image("/Resources/wchest4.png", true);
     private Image image5 = new Image("/Resources/wchest5.png", true);
     private Image image6 = new Image("/Resources/wchest6.png", true);
-    private Polygon weaponChestPolygon;
+    private transient Polygon weaponChestPolygon;
     private boolean activated, pushed;
     private AnchorPane gameAnchorPane;
     private double speedX;
@@ -154,7 +154,6 @@ public class weaponChest extends Chest implements Cloneable {  // Clones the cur
         SequentialTransition sequentialTransition = new SequentialTransition (timeline1, timeline2, animation1, timeline3);
         sequentialTransition.setCycleCount(1);
         sequentialTransition.play();
-        // sequentialTransition.setOnFinished(event -> player.increaseCoins(coin.getCoinValue())); Add weapon to player!
     }
 
     public Sword getSword() {

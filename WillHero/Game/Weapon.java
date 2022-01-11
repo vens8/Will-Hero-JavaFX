@@ -1,6 +1,8 @@
 package Game;
 
-public abstract class Weapon extends GameObject implements Collidable, Cloneable {
+import java.io.Serializable;
+
+public abstract class Weapon extends GameObject implements Collidable, Cloneable, Serializable {
     private double damage;
     private int level, weaponType;
 

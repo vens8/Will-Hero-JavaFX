@@ -1,24 +1,31 @@
 package Game;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 
 import java.util.Random;
 
 public class gameData {
     Random random = new Random();
-    private final ImageView princess = new ImageView(new Image("/Resources/princess.png", true));
+
+    public static ImageView getPrincess() {
+        return princess;
+    }
+
+    private static final ImageView princess = new ImageView(new Image("/Resources/princess.png", true));
     private final double sceneChanger = 10495;
 
     public gameData(int mode) {
-        princess.setLayoutX(sceneChanger + 6239);
-        princess.setLayoutY(324);
+//        princess.setLayoutX(sceneChanger + 5900);
+        princess.setLayoutY(328);
         princess.setFitHeight(48);
         princess.setFitWidth(48);
         if (mode == 0 || mode == 1) {  // Easy - 0, Normal - 1 (Difference in gameplay speed)
             GlobalVariables.gameObjects.add(new mediumPlatform(-18, 208));
             GlobalVariables.gameObjects.add(new smallPlatform(287, 252));
-            GlobalVariables.gameObjects.add(new greenOrc(730, 275)); // Add at the end
+            GlobalVariables.gameObjects.add(new greenOrc(730, 275));
             GlobalVariables.gameObjects.add(new Coin(930, 236));
             GlobalVariables.gameObjects.add(new Coin(960, 236));
             GlobalVariables.gameObjects.add(new Coin(990, 236));
@@ -137,6 +144,7 @@ public class gameData {
             GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 3650, 269));
             GlobalVariables.gameObjects.add(new weaponChest(sceneChanger + 4262, 298, random.nextInt(2)));
             GlobalVariables.gameObjects.add(new mediumPlatform(sceneChanger + 4220, 282));
+            GlobalVariables.gameObjects.add(new weaponChest(sceneChanger + 4500, 271, 0));  // test
             GlobalVariables.gameObjects.add(new coinChest(sceneChanger + 4575, 271, random.nextInt(11) + 5));
             GlobalVariables.gameObjects.add(new mediumPlatform(sceneChanger + 4530, 256));
             GlobalVariables.gameObjects.add(new smallPlatform(sceneChanger + 4925, 266));
@@ -144,8 +152,8 @@ public class gameData {
             GlobalVariables.gameObjects.add(new bossOrc(sceneChanger + 5498, 223));
             GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 5231, 275));
             GlobalVariables.gameObjects.add(new mediumPlatform(sceneChanger + 5693, 249));
-            //GlobalVariables.gameObjects.add(new princess(sceneChanger + 6239, 324)); //fits x=50, y=50, height = width = 48  // Add princess image because no class
             GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 5876, 275));
+            GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 6500, 260));
         }
         else {  // Hard - 2 (Difference in game objects on the screen)
             GlobalVariables.gameObjects.add(new mediumPlatform(-18, 208));
@@ -283,9 +291,14 @@ public class gameData {
             GlobalVariables.gameObjects.add(new bossOrc(sceneChanger + 5498, 223));
             GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 5231, 275));
             GlobalVariables.gameObjects.add(new mediumPlatform(sceneChanger + 5693, 249));
-            //GlobalVariables.gameObjects.add(new princess(sceneChanger + 6239, 324)); //fits x=50, y=50, height = width = 48  // Add princess image because no class
             GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 5876, 275));
+            GlobalVariables.gameObjects.add(new bigPlatform(sceneChanger + 6500, 260));
         }
+    }
 
+    public static void addPrincess(AnchorPane gameAnchorPane, double location) {
+        princess.setLayoutX(location);
+        gameAnchorPane.getChildren().add(princess);
+        Animations.translateTransition(princess, 0, -100, 1000, TranslateTransition.INDEFINITE, true).play();
     }
 }

@@ -1,6 +1,8 @@
 package Game;
 
-public class Position {
+import java.io.Serializable;
+
+public class Position implements Serializable {
     private Double x, y;
 
     Position(double x, double y) {

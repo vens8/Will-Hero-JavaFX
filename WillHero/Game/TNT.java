@@ -11,8 +11,8 @@ import javafx.util.Duration;
 public class TNT extends GameObject implements Collidable{
     private transient ImageView tntImage;
     private transient ImageView explosionImage;
-    private Polygon tntPolygon;
-    private Polygon explosionPolygon;
+    private transient Polygon tntPolygon;
+    private transient Polygon explosionPolygon;
     private boolean activated, explosionActivated, pushed;
     private AnchorPane gameAnchorPane;
     private double speedX;
@@ -47,8 +47,6 @@ public class TNT extends GameObject implements Collidable{
         tntImage.setImage(new Image("/Resources/tnt.png", true));
         tntPolygon.setLayoutX(x + 28);
         tntPolygon.setLayoutY(y + 21);
-        tntPolygon.setStrokeWidth(2);
-        tntPolygon.setStroke(Color.BLUE);
         tntPolygon.setFill(Color.TRANSPARENT);
         tntPolygon.getPoints().setAll(
                 -22.91668701171875, 40.82501220703125,
@@ -117,7 +115,6 @@ public class TNT extends GameObject implements Collidable{
         explosionImage.setScaleY(0);
         explosionPolygon.setScaleX(0);
         explosionPolygon.setScaleY(0);
-        //tntImage.setVisible(false);
     }
 
     public void addToScreen(AnchorPane gameAnchorPane) {

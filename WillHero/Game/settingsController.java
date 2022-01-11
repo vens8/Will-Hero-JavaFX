@@ -15,11 +15,11 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -119,14 +119,20 @@ public class settingsController implements Initializable {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("loadGameMenu.fxml"));
         root = loader.load();
         gameState g = new gameState();
-        g.setDate(new Date());
+        String pattern = "HH_mm_ss__MM_dd_yyyy";
+
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = dateFormat.format(today);
+        g.setDate(todayAsString);
         g.setGame(game);
-        // starting index of Super array (go till its end)
+        g.setCurrentLocationX(game.getPlayer().getHero().getHero().getLayoutX());
+        g.setCurrentLocationY(game.getPlayer().getHero().getHero().getLayoutY());
 
         saveGameData(g);
-
-        Controller controller = loader.getController();
-        controller.addSavedGame(g);
+        game.getPlayer().updateCoins();
+        loadGameController controller = loader.getController();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Save Game");
         alert.setHeaderText("Game saved");
@@ -138,17 +144,18 @@ public class settingsController implements Initializable {
         this.game = game;
     }
 
-    public void saveGameData(gameState gameState){  // Change to serialize and the loading part to deserialize
+    public void saveGameData(gameState gameState) throws IOException {  // Change to serialize and the loading part to deserialize
         try {
-            FileOutputStream fileStream = new FileOutputStream("/Resources/savedGames.txt");
+            System.out.println(gameState.getDate());
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/SavedGames/" + gameState.getDate() + ".txt");
             ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
 
             objectStream.writeObject(gameState);
 
             objectStream.close();
             fileStream.close();
-        } catch(Exception e){
-            e.printStackTrace();
+        } catch(FileNotFoundException e){
+            System.out.println("Couldn't create a new file!");
         }
     }
 

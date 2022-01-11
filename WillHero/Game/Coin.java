@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 public class Coin extends GameObject implements Collidable{
     private int coinValue;
     private transient ImageView coinImage;
-    private Polygon coinPolygon;
+    private transient Polygon coinPolygon;
     private boolean collected;
     private AnchorPane gameAnchorPane;
 

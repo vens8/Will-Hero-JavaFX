@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class mediumPlatform extends Platform implements Collidable{
     private final transient ImageView mPlatform;
-    private final Polygon mPlatformPolygon;
+    private transient final Polygon mPlatformPolygon;
     private AnchorPane gameAnchorPane;
     private double speedY;
     private double currentJumpHeight;

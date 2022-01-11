@@ -18,7 +18,7 @@ public class bossOrc extends Orc implements Collidable {
     private final Rectangle rightRectangle;
     private final Rectangle bottomRectangle;
     private double speedY, speedX, health, damage, currentJumpHeight, setX, setY;
-    private static final double jumpHeight = -15;
+    private static final double jumpHeight = -8;
     private static final double jumpSlice = 0.0033333333333333;
     private static double accelerationX = -0.0033333333333333; // smooth acceleration
     private static final double accelerationY = 0.00033333333333333;
@@ -33,7 +33,7 @@ public class bossOrc extends Orc implements Collidable {
         pushed = false;
         killed = false;
         attacked = false;
-        health = 500;
+        health = 800;  // 800
         bossOrc = new ImageView();
         bossOrc.setLayoutX(x);
         bossOrc.setLayoutY(y);
@@ -129,14 +129,14 @@ public class bossOrc extends Orc implements Collidable {
                     new KeyFrame(Duration.millis(500), event -> {})
             );
             timeline.setOnFinished(event -> {
-                player.increaseCoins(50);
+                player.increaseCoins(100);
             });
             timeline.play();
         }
         else if (deathType == 1) {
             Timeline timeline = new Timeline(new KeyFrame(Duration.ZERO, event -> {
                 setSpeedY(-1);
-                setSpeedX(2);  // Motion after death
+                setSpeedX(0.1);  // Motion after death
                 setKilled(true);
                 if (GlobalVariables.sound) {
                     GlobalVariables.bossOrcDeathSound.stop();
@@ -146,7 +146,7 @@ public class bossOrc extends Orc implements Collidable {
                     new KeyFrame(Duration.millis(500), event -> {})
             );
             timeline.setOnFinished(event -> {
-                player.increaseCoins(50);
+                player.increaseCoins(100);
             });
             timeline.play();
         }

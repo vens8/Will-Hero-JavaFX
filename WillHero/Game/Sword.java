@@ -15,7 +15,7 @@ import java.sql.Time;
 
 public class Sword extends Weapon {
     private transient ImageView sword;
-    private Polygon swordPolygon;
+    private transient Polygon swordPolygon;
     private double speedX, speedY;
     private boolean used;  // Check if the sword is used
 
@@ -73,10 +73,16 @@ public class Sword extends Weapon {
             GlobalVariables.swordKillSound.play();
         }
         Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(150), new KeyValue(sword.rotateProperty(), 45)),
-                new KeyFrame(Duration.millis(150), new KeyValue(swordPolygon.rotateProperty(), 0)));
+                new KeyFrame(Duration.millis(150), new KeyValue(swordPolygon.rotateProperty(), 0)),
+                new KeyFrame(Duration.millis(100), event -> {
+                    sword.setLayoutX(sword.getLayoutX() + 30);
+                    swordPolygon.setLayoutX(swordPolygon.getLayoutX() + 30);
+                }));
         Timeline timeline2 = new Timeline(new KeyFrame(Duration.millis(100), event -> {
             sword.setRotate(-180);  // reset to initial rotation position
             swordPolygon.setRotate(-224);
+            sword.setLayoutX(sword.getLayoutX() - 30);
+            swordPolygon.setLayoutX(swordPolygon.getLayoutX() - 30);
             used = false;  // After the sword is used
         }));
         timeline1.setOnFinished(event -> timeline2.play());

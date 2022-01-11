@@ -10,8 +10,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
@@ -90,16 +97,42 @@ public class pauseController implements Initializable {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Main Menu");
-        alert.setHeaderText("You're about to go to the main menu!");
-        alert.setContentText("Do you want to save your progress before exiting?");
+        GlobalVariables.game.getPlayer().updateCoins();
+        if (!GlobalVariables.game.getPlayer().getHero().isKilled()) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Main Menu");
+            alert.setHeaderText("You're about to go to the main menu!");
+            alert.setContentText("Do you want to save your progress before exiting?");
 
-        if(alert.showAndWait().get() == ButtonType.OK) {
-            // Insert code to save game state
+            if (alert.showAndWait().get() == ButtonType.OK) {
+                gameState g = new gameState();
+                String pattern = "HH_mm_ss__MM_dd_yyyy";
 
+                DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+                Date today = Calendar.getInstance().getTime();
+                String todayAsString = dateFormat.format(today);
+                g.setDate(todayAsString);
+                g.setGame(GlobalVariables.game);
+                g.setCurrentLocationX(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutX());
+                g.setCurrentLocationY(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutY());
+
+                saveGameData(g);
+
+                // Close current Pause Menu stage
+                stage = (Stage) (exitButtonBar.getScene().getWindow());
+                stage.close();
+
+                // Open Main Menu stage
+                root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
+                stage = GlobalVariables.mainMenuStage;
+                stage.setScene(new Scene(root));
+                stage.show();
+            }
+        }
+        else {
             // Close current Pause Menu stage
-            stage = (Stage)(exitButtonBar.getScene().getWindow());
+            stage = (Stage) (exitButtonBar.getScene().getWindow());
             stage.close();
 
             // Open Main Menu stage
@@ -176,7 +209,7 @@ public class pauseController implements Initializable {
         game.getPlayer().setHero(new mainHero(50, 290));
         game.getPlayer().setRevived(false);
         gameController.resetFlags();
-        gameData gameData = new gameData(game.getGameMode());
+        GlobalVariables.gameData = new gameData(game.getGameMode());
         gameController.setupScene(game);
         mainGameStage.setScene(GlobalVariables.scene);
         mainGameStage.show();
@@ -224,8 +257,49 @@ public class pauseController implements Initializable {
     }
 
     @FXML
-    void saveGameClicked() {
+    void saveGameClicked() throws IOException {
+        // Save game
+        if (GlobalVariables.sound) {
+            GlobalVariables.buttonClickSound.stop();
+            GlobalVariables.buttonClickSound.play();
+        }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("loadGameMenu.fxml"));
+        root = loader.load();
+        gameState g = new gameState();
+        String pattern = "HH_mm_ss__MM_dd_yyyy";
 
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+        Date today = Calendar.getInstance().getTime();
+        String todayAsString = dateFormat.format(today);
+        g.setDate(todayAsString);
+        g.setGame(game);
+        g.setCurrentLocationX(game.getPlayer().getHero().getHero().getLayoutX());
+        g.setCurrentLocationY(game.getPlayer().getHero().getHero().getLayoutY());
+
+        saveGameData(g);
+        game.getPlayer().updateCoins();
+        loadGameController controller = loader.getController();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Save Game");
+        alert.setHeaderText("Game saved");
+        alert.setContentText("Your game progress has been saved successfully!");
+        alert.showAndWait();
+    }
+
+    public void saveGameData(gameState gameState) throws IOException {  // Change to serialize and the loading part to deserialize
+        try {
+            System.out.println(gameState.getDate());
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/SavedGames/" + gameState.getDate() + ".txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+
+            objectStream.writeObject(gameState);
+
+            objectStream.close();
+            fileStream.close();
+        } catch(FileNotFoundException e){
+            System.out.println("File not found!");
+        }
     }
 
     @FXML

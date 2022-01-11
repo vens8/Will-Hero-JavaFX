@@ -6,13 +6,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class mainHero extends GameObject implements Collidable {
+public class mainHero extends GameObject implements Collidable, Serializable {
     private final transient ImageView hero;
-    private final Polygon heroPolygon;
+    private final transient Polygon heroPolygon;
     private double speedX;
     private double speedY;
+    private double widthX;
+    private double widthY;
     private final double jumpHeight;
     private final double leapLength;
     private double health;
@@ -20,8 +23,8 @@ public class mainHero extends GameObject implements Collidable {
     private double currentLeapLength;
     private double setX;
     private double setY;
-    private static final double HEIGHT = 74.925048828125;
-    private static final double WIDTH = 76.4000015258789;
+    private static final double HEIGHT = 42;
+    private static final double WIDTH = 45;
     private static final double WEIGHT = 30;  // 30 Note: everything is divided by 60 so far
     private static final double jumpSlice = 0.025;
     private static final double leapSlice = 0.06675;
@@ -29,7 +32,9 @@ public class mainHero extends GameObject implements Collidable {
     private static final double accelerationY = 0.00325;  // Final values & can be accessed from anywhere
     private Weapon currentWeapon;
     private boolean leaped;
-    private AnchorPane gameAnchorPane;
+    private boolean killed;
+    private boolean stopMotion;
+    private transient AnchorPane gameAnchorPane;
     private ArrayList<GameObject> unlockedWeapons;  // Stores all the weapons unlocked by the player
     private int shurikens;
 
@@ -42,6 +47,7 @@ public class mainHero extends GameObject implements Collidable {
         jumpHeight = -50;  //-50
         leapLength = 140;  // 140 works best for the locations
         leaped = false;
+        stopMotion = false;
         hero = new ImageView();
         heroPolygon = new Polygon();
         hero.setLayoutX(x);
@@ -117,17 +123,47 @@ public class mainHero extends GameObject implements Collidable {
         return WEIGHT;
     }
 
+    public void setWidthX(double widthX) {
+        this.widthX = widthX;
+    }
+
+    public void setWidthY(double widthY) {
+        this.widthY = widthY;
+    }
+
+    public boolean isKilled() {
+        return killed;
+    }
+
+    public void setKilled(boolean killed) {
+        this.killed = killed;
+    }
+
+    public void setUnlockedWeapons(ArrayList<GameObject> unlockedWeapons) {
+        this.unlockedWeapons = unlockedWeapons;
+    }
+
+
+    public static double getHEIGHT() {
+        return HEIGHT;
+    }
+
+    public static double getWIDTH() {
+        return WIDTH;
+    }
+
     public void jump() {
-        hero.setLayoutY(hero.getLayoutY() + speedY);
-        heroPolygon.setLayoutY(heroPolygon.getLayoutY() + speedY);
-        if (currentWeapon != null) {
-            if (currentWeapon instanceof Shuriken) {  // Shuriken
-                ((Shuriken) currentWeapon).getShuriken().setLayoutY(((Shuriken) currentWeapon).getShuriken().getLayoutY() + speedY);
-                ((Shuriken) currentWeapon).getShurikenPolygon().setLayoutY(((Shuriken) currentWeapon).getShurikenPolygon().getLayoutY() + speedY);
-            }
-            else {  // Sword
-                ((Sword) currentWeapon).getSword().setLayoutY(((Sword) currentWeapon).getSword().getLayoutY() + speedY);
-                ((Sword) currentWeapon).getSwordPolygon().setLayoutY(((Sword) currentWeapon).getSwordPolygon().getLayoutY() + speedY);
+        if (!stopMotion) {
+            hero.setLayoutY(hero.getLayoutY() + speedY);
+            heroPolygon.setLayoutY(heroPolygon.getLayoutY() + speedY);
+            if (currentWeapon != null) {
+                if (currentWeapon instanceof Shuriken) {  // Shuriken
+                    ((Shuriken) currentWeapon).getShuriken().setLayoutY(((Shuriken) currentWeapon).getShuriken().getLayoutY() + speedY);
+                    ((Shuriken) currentWeapon).getShurikenPolygon().setLayoutY(((Shuriken) currentWeapon).getShurikenPolygon().getLayoutY() + speedY);
+                } else {  // Sword
+                    ((Sword) currentWeapon).getSword().setLayoutY(((Sword) currentWeapon).getSword().getLayoutY() + speedY);
+                    ((Sword) currentWeapon).getSwordPolygon().setLayoutY(((Sword) currentWeapon).getSwordPolygon().getLayoutY() + speedY);
+                }
             }
         }
     }
@@ -145,6 +181,14 @@ public class mainHero extends GameObject implements Collidable {
                 ((Sword) currentWeapon).getSwordPolygon().setLayoutX(((Sword) currentWeapon).getSwordPolygon().getLayoutX() + speedX);
             }
         }
+    }
+
+    public void deformX() {
+        hero.setFitWidth(hero.getFitWidth() + widthX);
+    }
+
+    public void deformY() {
+        hero.setFitHeight(hero.getFitHeight() + widthY);
     }
 
     public double getJumpHeight() {
@@ -260,6 +304,15 @@ public class mainHero extends GameObject implements Collidable {
         return currentWeapon;
     }
 
+
+    public boolean isStopMotion() {
+        return stopMotion;
+    }
+
+    public void setStopMotion(boolean stopMotion) {
+        this.stopMotion = stopMotion;
+    }
+
     public void setCurrentWeapon(Weapon currentWeapon) {
         this.currentWeapon = currentWeapon;
     }
@@ -268,34 +321,42 @@ public class mainHero extends GameObject implements Collidable {
         return unlockedWeapons;
     }
 
-    public boolean addWeapon(int weaponType) {
+    public int addWeapon(int weaponType) {  // 0 - ShurikenFound, 1 - SwordFound, 2 - ShurikenNotFound, 3 - SwordNotFound
         if (weaponType == 0) {
-            boolean shurikenFound = false;
             for (GameObject unlockedWeapon : unlockedWeapons) {
                 if (unlockedWeapon instanceof Shuriken) {
-                    shurikenFound = true;
-                    return shurikenFound;
+                    if (((Shuriken) unlockedWeapon).getLevel() == 1)
+                        ((Shuriken) unlockedWeapon).upgrade();
+                    currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY(), 2);
+                    currentWeapon.setWeaponType(0);
+                    ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
+                    return 0;
                 }
             }
             // Add to unlocked weapons only if an instance doesn't already exist.
             currentWeapon = new Shuriken(hero.getLayoutX() - 10, hero.getLayoutY(), 1);
+            currentWeapon.setWeaponType(0);
             ((Shuriken) currentWeapon).addToScreen(gameAnchorPane);
             unlockedWeapons.add(currentWeapon);
-            return shurikenFound;
+            return 2;
         }
         else {
-            boolean swordFound = false;
             for (GameObject unlockedWeapon : unlockedWeapons) {
                 if (unlockedWeapon instanceof Sword) {
-                    swordFound = true;
-                    return swordFound;
+                    if (((Sword) unlockedWeapon).getLevel() == 1)
+                        ((Sword) unlockedWeapon).upgrade();
+                    currentWeapon = new Sword(hero.getLayoutX() - 45, hero.getLayoutY() + 22);
+                    currentWeapon.setWeaponType(1);
+                    ((Sword) currentWeapon).addToScreen(gameAnchorPane);
+                    return 1;
                 }
             }
             // Add to unlocked weapons only if an instance doesn't already exist.
             currentWeapon = new Sword(hero.getLayoutX() - 45, hero.getLayoutY() + 22);
+            currentWeapon.setWeaponType(1);
             ((Sword) currentWeapon).addToScreen(gameAnchorPane);
             unlockedWeapons.add(currentWeapon);
-            return swordFound;
+            return 3;
         }
     }
 

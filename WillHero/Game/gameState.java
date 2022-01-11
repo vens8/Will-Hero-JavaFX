@@ -1,18 +1,23 @@
 package Game;
 
-import java.util.ArrayList;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Date;
 
-public class gameState {
-    private Date date;
+public class gameState implements Serializable {
+    private String date;
     private Main game;
-    private ArrayList<GameObject> gameObjects = new ArrayList<GameObject>();
+    private double currentLocationX, currentLocationY;
 
-    public Date getDate() {
+    // For serialization
+    @Serial
+    private static final long serialVersionUID = 42L;
+
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -24,11 +29,19 @@ public class gameState {
         this.game = game;
     }
 
-    public ArrayList<GameObject> getGameObjects() {
-        return gameObjects;
+    public double getCurrentLocationX() {
+        return currentLocationX;
     }
 
-    public void setGameObjects(ArrayList<GameObject> gameObjects) {
-        this.gameObjects = gameObjects;
+    public void setCurrentLocationX(double currentLocationX) {
+        this.currentLocationX = currentLocationX;
+    }
+
+    public double getCurrentLocationY() {
+        return currentLocationY;
+    }
+
+    public void setCurrentLocationY(double currentLocationY) {
+        this.currentLocationY = currentLocationY;
     }
 }

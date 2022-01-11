@@ -1,7 +1,5 @@
 package Game;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -12,24 +10,17 @@ import javafx.scene.effect.InnerShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class Controller implements Initializable {
     private Stage stage;
-    private Scene scene;
     private Parent root;
     @FXML
     private ImageView newGameButton;
@@ -40,15 +31,11 @@ public class Controller implements Initializable {
     @FXML
     private ImageView settingsButton;
     @FXML
-    private ListView<gameState> loadGameListView;
-    @FXML
     private Label coinsLabel;
     @FXML
     private Label highscoreLabel;
     @FXML
     private AnchorPane mainMenuAnchorPane;
-
-    private Main game;
     private Player player;
 
     javafx.scene.effect.Glow glow = new javafx.scene.effect.Glow();
@@ -56,19 +43,15 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) throws NullPointerException {
-        game = new Main();
-        player = new Player(new mainHero(50, 290)); // starting position (50, 290)
-        game.setPlayer(player);
-        highscoreLabel.setText(String.format("%d", game.getHighScore()));
-        coinsLabel.setText(String.format("%d", game.getPlayer().getCoins()));
-        try {
-            Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
-            loadGameListView.getItems().addAll(GlobalVariables.gameStates);  // Display all the game states in the listView
+        if (GlobalVariables.game == null) {
+            GlobalVariables.game = new Main();
+            player = new Player(new mainHero(50, 290)); // starting position (50, 290)
+            GlobalVariables.game.setPlayer(player);
+            setCoins();
         }
-        catch (NullPointerException e) {
-            System.out.println("Game States is empty!");
-            System.out.println(e);
-        }
+        displayCoins();
+        displayHighscore();
+        Animations.fadeTransition(mainMenuAnchorPane, 0d, 1d, 1500d, 1, false).play();
     }
 
     public void settingsButtonClicked() throws IOException {
@@ -81,7 +64,7 @@ public class Controller implements Initializable {
         root = loader.load();
         stage.setScene(new Scene(root));
         settingsController settingsController = loader.getController();
-        settingsController.getGame(game);
+        settingsController.getGame(GlobalVariables.game);
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         stage.initOwner(settingsButton.getScene().getWindow());
@@ -106,11 +89,13 @@ public class Controller implements Initializable {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
+        player = GlobalVariables.game.getPlayer();
+        GlobalVariables.game.getPlayer().setHero(new mainHero(50, 290)); // starting position (50, 290)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("playGame.fxml"));
         GlobalVariables.root = loader.load();
         stage = (Stage)(newGameButton.getScene().getWindow());
         playController playController = loader.getController();
-        playController.getGame(game);  // Passing the Main object to the playController
+        playController.getGame(GlobalVariables.game);  // Passing the Main object to the playController
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
         GlobalVariables.scene = new Scene(GlobalVariables.root);
         stage.setScene(GlobalVariables.scene);
@@ -118,37 +103,22 @@ public class Controller implements Initializable {
         stage.show();
     }
 
-    public void loadGameClicked() throws IOException, ClassNotFoundException {
+    public void loadGameClicked() throws IOException {
         if (GlobalVariables.sound) {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
 
-        try {
-            FileInputStream fileStream = new FileInputStream("/Resources/savedGames.txt");
-            ObjectInputStream objectStream = new ObjectInputStream(fileStream);
-            gameState savedState = (gameState) objectStream.readObject();
-        }
-        catch (FileNotFoundException f) {
-            System.out.println("not found!");
-        }
-
-        //this is where the magic happens :)
-
-        stage = new Stage();
-        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("loadGameMenu.fxml")));
-        stage.setScene(new Scene(root));
-        stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initOwner(loadGameButton.getScene().getWindow());
-        stage.showAndWait();
-    }
-
-    public void addSavedGame(gameState g) {
-        GlobalVariables.gameStates.add(g);
-        for (int i = 0; i < GlobalVariables.gameStates.size(); i++) {
-            System.out.println(GlobalVariables.gameStates.get(i).getDate());
-        }
+        Stage loadStage = new Stage();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("loadGameMenu.fxml"));
+        root = loader.load();
+        loadStage.setScene(new Scene(root));
+        loadGameController loadGameController = loader.getController();
+        loadGameController.setup(loadStage, stage);
+        loadStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
+        loadStage.initModality(Modality.APPLICATION_MODAL);
+        loadStage.initOwner(loadGameButton.getScene().getWindow());
+        loadStage.showAndWait();
     }
 
     public void exitGameClicked() throws IOException {
@@ -162,12 +132,41 @@ public class Controller implements Initializable {
         alert.setContentText("Do you want to save your progress before exiting?");
 
         if(alert.showAndWait().get() == ButtonType.OK) {
-            // Insert code to save game state
+            gameState g = new gameState();
+            String pattern = "HH_mm_ss__MM_dd_yyyy";
+
+            DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+            Date today = Calendar.getInstance().getTime();
+            String todayAsString = dateFormat.format(today);
+            g.setDate(todayAsString);
+            g.setGame(GlobalVariables.game);
+            g.setCurrentLocationX(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutX());
+            g.setCurrentLocationY(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutY());
+
+            saveGameData(g);
+            GlobalVariables.game.getPlayer().updateCoins();
 
             stage = (Stage)(exitGameButton.getScene().getWindow());
             stage.close();
         }
 
+    }
+
+    private void saveGameData(gameState gameState) {
+        try {
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/SavedGames/" + gameState.getDate() + ".txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+
+            objectStream.writeObject(gameState);
+
+            objectStream.close();
+            fileStream.close();
+        } catch(FileNotFoundException e){
+            System.out.println("File not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void newGameMouseEntered() {
@@ -218,11 +217,36 @@ public class Controller implements Initializable {
         exitGameButton.setEffect(innerShadow);
     }
 
-    public void displayCoins() {
+    public void setCoins() {
+        try {
+            FileInputStream fileStream = new FileInputStream("src/Resources/GameData/coins.txt");
+            ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+            GlobalVariables.game.getPlayer().setCoins((long) objectStream.readObject());
+        }
+        catch (FileNotFoundException f) {
+            System.out.println("coins.txt not found!");
+        }
+        catch (ClassNotFoundException | IOException c) {
+            System.out.println("Class not found!");
+        }
+    }
 
+    public void displayCoins() {
+        coinsLabel.setText(String.format("%d", GlobalVariables.game.getPlayer().getCoins()));
     }
 
     public void displayHighscore() {
-
+        try {
+            FileInputStream fileStream = new FileInputStream("src/Resources/GameData/highscore.txt");
+            ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+            GlobalVariables.highscore = (int) objectStream.readObject();
+            highscoreLabel.setText(String.format("%d", GlobalVariables.highscore));
+        }
+        catch (FileNotFoundException f) {
+            System.out.println("highscore.txt not found!");
+        }
+        catch (ClassNotFoundException | IOException c) {
+            System.out.println("Class not found!");
+        }
     }
 }

@@ -1,8 +1,10 @@
 package Game;
 
-public class Player {
+import java.io.*;
+
+public class Player implements Serializable {
     private int score;
-    private Main game;
+    //private Main game;
     private mainHero hero;
     private long coins;
     private boolean revived;  // Check if the player restarted the game
@@ -13,12 +15,8 @@ public class Player {
         coins = 0;
     }
 
-    public void resurrect() {
-
-    }
-
-    public void useCoins() {
-
+    public void useCoins(long coins) {
+        this.coins -= coins;
     }
 
     public int getScore() {
@@ -32,15 +30,16 @@ public class Player {
     public void increaseScore() {
         this.score += 1;
     }
+
+    public void setCoins(long coins) {
+        this.coins = coins;
+    }
+
     public long getCoins() {
         return coins;
     }
     public void increaseCoins(long coins) {
         this.coins += coins;
-    }
-
-    public void setCoins(long coins) {
-        this.coins = coins;
     }
 
     public mainHero getHero() {
@@ -59,4 +58,17 @@ public class Player {
         this.hero = hero;
     }
 
+    public void updateCoins() {
+        try {
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/GameData/coins.txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+            objectStream.writeObject(coins);
+            objectStream.close();
+            fileStream.close();
+        } catch(FileNotFoundException e){
+            System.out.println("coins.txt not found!");
+        } catch (IOException e) {
+            System.out.println(e);;
+        }
+    }
 }

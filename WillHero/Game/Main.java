@@ -9,43 +9,45 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.io.Serializable;
+
+import java.io.*;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class Main extends Application implements Initializable, Serializable {
-    public static Stage myStage;
     private Player player;
     private int highScore;
     private int gameMode;
 
     @Override
     public void start(Stage primaryStage) {
-            try {
-                highScore = 0;
-                playMusic();
-                System.out.println("Created!");
-                primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
-                GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
-                GlobalVariables.mainMenuStage = primaryStage;
-                primaryStage.setTitle("Will Hero");
-                GlobalVariables.scene = new Scene(GlobalVariables.root);
-                primaryStage.setScene(GlobalVariables.scene);
-                primaryStage.setResizable(false);  //Uncomment at the end!!
-                primaryStage.show();
-                primaryStage.setOnCloseRequest(event -> {
-                    try {
-                        event.consume();
-                        exitGameClicked(primaryStage);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            playMusic();
+            System.out.println("Created!");
+            primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Resources/icon.png"))));
+            GlobalVariables.root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("mainMenu.fxml")));
+            GlobalVariables.mainMenuStage = primaryStage;
+            primaryStage.setTitle("Will Hero");
+            GlobalVariables.scene = new Scene(GlobalVariables.root);
+            primaryStage.setScene(GlobalVariables.scene);
+            primaryStage.setResizable(true);  //Uncomment at the end!!
+            primaryStage.show();
+            primaryStage.setOnCloseRequest(event -> {
+                try {
+                    event.consume();
+                    exitGameClicked(primaryStage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void exitGameClicked(Stage stage) throws IOException {
@@ -55,11 +57,41 @@ public class Main extends Application implements Initializable, Serializable {
         alert.setContentText("Do you want to save your progress before exiting?");
 
         if(alert.showAndWait().get() == ButtonType.OK) {
-            // Insert code to save game state
+            gameState g = new gameState();
+            String pattern = "HH_mm_ss__MM_dd_yyyy";
+
+            DateFormat dateFormat = new SimpleDateFormat(pattern);
+
+            Date today = Calendar.getInstance().getTime();
+            String todayAsString = dateFormat.format(today);
+            g.setDate(todayAsString);
+            g.setGame(GlobalVariables.game);
+            g.setCurrentLocationX(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutX());
+            g.setCurrentLocationY(GlobalVariables.game.getPlayer().getHero().getHero().getLayoutY());
+
+            saveGameData(g);
+            GlobalVariables.game.getPlayer().updateCoins();
             stage.close();
         }
 
     }
+
+    private void saveGameData(gameState gameState) {
+        try {
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/SavedGames/" + gameState.getDate() + ".txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+
+            objectStream.writeObject(gameState);
+
+            objectStream.close();
+            fileStream.close();
+        } catch(FileNotFoundException e){
+            System.out.println("File not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void playMusic() {
         GlobalVariables.mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
         GlobalVariables.mediaPlayer.play();
@@ -79,19 +111,23 @@ public class Main extends Application implements Initializable, Serializable {
         launch(args);
     }
 
-    public static Stage getMyStage() {
-        return myStage;
-    }
-
-    public static void setMyStage(Stage myStage) {
-        Main.myStage = myStage;
-    }
 
     public int getHighScore() {
         return highScore;
     }
 
     public void setHighScore(int highScore) {
+        try {
+            FileOutputStream fileStream = new FileOutputStream("src/Resources/GameData/highscore.txt");
+            ObjectOutputStream objectStream = new ObjectOutputStream(fileStream);
+            objectStream.writeObject(highScore);
+            objectStream.close();
+            fileStream.close();
+        } catch(FileNotFoundException e){
+            System.out.println("File not found!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         this.highScore = highScore;
     }
 

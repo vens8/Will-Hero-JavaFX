@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.URL;
@@ -35,6 +36,10 @@ public class playController implements Initializable {
     private AnchorPane playGameAnchorPane;
     @FXML
     private ComboBox<String> chooseDifficulty;
+    @FXML
+    private Label coinsLabel;
+    @FXML
+    private Label highscoreLabel;
 
     private String[] difficultyList = {"Easy", "Normal", "Hard"};
 
@@ -54,6 +59,8 @@ public class playController implements Initializable {
     public void getGame(Main game) {
         this.game = game;
         this.player = game.getPlayer();
+        displayHighscore();
+        displayCoins();
     }
     
     public void settingsButtonClicked() throws IOException {
@@ -91,19 +98,24 @@ public class playController implements Initializable {
             GlobalVariables.buttonClickSound.stop();
             GlobalVariables.buttonClickSound.play();
         }
+        GlobalVariables.gameObjects.clear();
         if (chooseDifficulty.getValue().equals("Easy")) {
             game.setGameMode(1);
-            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
+            GlobalVariables.eerieMusic.stop();
+            GlobalVariables.sound = true;
+            GlobalVariables.gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 200;
         }
         else if (chooseDifficulty.getValue().equals("Normal")) {
             game.setGameMode(1);
-            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
+            GlobalVariables.eerieMusic.stop();
+            GlobalVariables.sound = true;
+            GlobalVariables.gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 100;
         }
         else {
             game.setGameMode(2);
-            gameData gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
+            GlobalVariables.gameData = new gameData(game.getGameMode());  // All objects created and loaded into GlobalVariables.gameObjects to prevent delay.
             GlobalVariables.difficulty = 50;
         }
         FXMLLoader loader = new FXMLLoader(getClass().getResource("mainGame.fxml"));
@@ -154,5 +166,25 @@ public class playController implements Initializable {
 
     public void homeMouseExited() {
         homeButton.setEffect(null);
+    }
+
+    public void displayCoins() {
+        coinsLabel.setText(String.format("%d", GlobalVariables.game.getPlayer().getCoins()));
+    }
+
+    public void displayHighscore() {
+        try {
+            FileInputStream fileStream = new FileInputStream("src/Resources/GameData/highscore.txt");
+            ObjectInputStream objectStream = new ObjectInputStream(fileStream);
+            GlobalVariables.highscore = (int) objectStream.readObject();
+            System.out.println("Is null high: " + highscoreLabel);
+            highscoreLabel.setText(String.format("%d", GlobalVariables.highscore));
+        }
+        catch (FileNotFoundException f) {
+            System.out.println("highscore.txt not found!");
+        }
+        catch (ClassNotFoundException | IOException c) {
+            System.out.println("Class not found!");
+        }
     }
 }

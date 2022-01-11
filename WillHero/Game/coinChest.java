@@ -19,7 +19,7 @@ public class coinChest extends Chest implements Collidable{
     private final Image image4 = new Image("/Resources/cchest4.png", true);
     private final Image image5 = new Image("/Resources/cchest5.png", true);
     private final Image image6 = new Image("/Resources/cchest6.png", true);
-    private Polygon coinChestPolygon;
+    private transient Polygon coinChestPolygon;
     private boolean activated, pushed;
     private AnchorPane gameAnchorPane;
     private double speedX;

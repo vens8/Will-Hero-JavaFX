@@ -68,7 +68,7 @@
                               <Image url="@../Resources/coin.png" />
                           </image>
                       </ImageView>
-                      <Label fx:id="coinsLabel" alignment="CENTER" layoutX="76.0" layoutY="7.0" prefHeight="58.0" prefWidth="95.0" text="9999" textAlignment="CENTER" textFill="WHITE">
+                      <Label fx:id="coinsLabel" alignment="CENTER" layoutX="76.0" layoutY="7.0" prefHeight="58.0" prefWidth="95.0" text="0" textAlignment="CENTER" textFill="WHITE">
                           <font>
                               <Font name="Dubai Medium" size="30.0" />
                           </font>

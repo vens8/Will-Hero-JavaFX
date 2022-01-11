@@ -8,7 +8,7 @@ import javafx.scene.shape.Polygon;
 
 public class Shuriken extends Weapon implements Collidable, Cloneable {
     private final transient ImageView shuriken;
-    private final Polygon shurikenPolygon;
+    private transient final Polygon shurikenPolygon;
     private double speedX, totalDistance;  // Distance across X axis
     private static final double throwSlice = 0.6;
     private static final double accelerationX = 0.01;  // Hero's acceleration is 0.00825

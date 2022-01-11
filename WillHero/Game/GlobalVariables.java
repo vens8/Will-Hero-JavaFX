@@ -53,6 +53,11 @@ public class GlobalVariables {
     public static MediaPlayer bossOrcDeathSound = new MediaPlayer(bossOrcDeath);
     public static Media eerie = new Media(new File("src/Resources/eerieMusic.mp3").toURI().toString());
     public static MediaPlayer eerieMusic = new MediaPlayer(eerie);
+    public static Media victory = new Media(new File("src/Resources/victory.m4a").toURI().toString());
+    public static MediaPlayer victorySound = new MediaPlayer(victory);
+    public static Media victoryMusic = new Media(new File("src/Resources/victoryMusic.m4a").toURI().toString());
+    public static MediaPlayer victoryMusicPlay = new MediaPlayer(victoryMusic);
+
 
     // Visuals
     public static Media background = new Media(new File("src/Resources/hardMode.mp4").toURI().toString());
@@ -64,8 +69,10 @@ public class GlobalVariables {
     // Sound
     public static boolean sound = true;
 
-    // Game States
-    public static ObservableList<gameState> gameStates = FXCollections.observableArrayList();
+    // Game Data
+    public static gameData gameData;
+    public static Main game;
+    public static int highscore;
 
     // Dimensions
     public static float SCREEN_WIDTH = 676, SCREEN_HEIGHT = 1000;
@@ -83,4 +90,8 @@ public class GlobalVariables {
     public static Parent root;
     public static Scene scene;
     public static Stage stage;
+
+    // Revive
+    public static double lastJumpLocationX;  // Used to revive
+    public static double lastJumpLocationY;
 }
