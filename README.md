@@ -5,7 +5,7 @@ Made by Group 76 (Vyshnav Vijay and Rahul Maddula).
 Gameplay: https://www.youtube.com/watch?v=A0IqK7WENfA
 
 ## Installation
-- Install the WillHero.zip ZIP file from https://github.com/vens8/Will-Hero-JavaFX/releases/tag/1.0.0
+- Install the `WillHero.zip` ZIP file from https://github.com/vens8/Will-Hero-JavaFX/releases/tag/1.0.0
 - Extract the ZIP file and click on `run.bat`. 
 - This will load the game in a window and you're all set to play!
 
