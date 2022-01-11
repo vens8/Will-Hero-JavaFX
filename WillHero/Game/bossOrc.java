@@ -49,8 +49,6 @@ public class bossOrc extends Orc implements Collidable {
         leftRectangle.setArcWidth(5);
         leftRectangle.setLayoutX(x + 10);
         leftRectangle.setLayoutY(y + 14);
-        leftRectangle.setStrokeWidth(2);
-        leftRectangle.setStroke(Color.BLUE);
         leftRectangle.setFill(Color.TRANSPARENT);
 
         topRectangle = new Rectangle();
