@@ -1,2 +1,5 @@
-# Will_Hero_Group_76
-Group Project
+# Will Hero
+JavaFX Group Project for CSE201 (AP course).
+
+## Installation
+
