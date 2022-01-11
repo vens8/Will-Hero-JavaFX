@@ -10,6 +10,7 @@ Gameplay: https://www.youtube.com/watch?v=A0IqK7WENfA
 - This will load the game in a window and you're all set to play!
 
 ## Features
+- 3 Difficulty modes
 - Smooth elastic collisions
 - Fancy animations and transitions
 - Save/load game states
