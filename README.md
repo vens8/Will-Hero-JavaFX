@@ -11,7 +11,7 @@ Gameplay: https://www.youtube.com/watch?v=A0IqK7WENfA
 
 ## Prerequisites
 - Recent version of Java ([JDK download](https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.exe))
-- Setup env variable with the help of this [tutorial](https://www.youtube.com/watch?v=zzfHPGyjoWw)
+- Set up environment variables with the help of this [tutorial](https://www.youtube.com/watch?v=zzfHPGyjoWw)
 
 ## Features
 - 3 Difficulty modes
