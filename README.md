@@ -2,7 +2,7 @@
 JavaFX Group Project for CSE201 (AP course).
 Made by Group 76 (Vyshnav Vijay and Rahul Maddula).
 
-Gameplay: https://www.youtube.com/watch?v=A0IqK7WENfA
+[Gameplay](https://www.youtube.com/watch?v=A0IqK7WENfA)
 
 ## Installation
 - Install the `WillHero.zip` ZIP file from https://github.com/vens8/Will-Hero-JavaFX/releases/tag/1.0.0
