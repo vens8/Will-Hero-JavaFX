@@ -2,7 +2,7 @@
 JavaFX Group Project for CSE201 (AP course).
 Made by Group 76 (Vyshnav Vijay and Rahul Maddula).
 
-Project listed and mentioned on [course site](https://hipec.github.io/courses/cse201.html)
+Project listed and mentioned on [course site](https://hipec.github.io/courses/cse201.html) by Instructor.
 
 [Click here for watching the complete gameplay!](https://www.youtube.com/watch?v=A0IqK7WENfA)
 
