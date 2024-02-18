@@ -35,6 +35,9 @@ Will Hero Game screen
 Will Hero Death screen
 ![Will Hero Death screen](https://github.com/vens8/Will-Hero-JavaFX/blob/main/Game%20Screenshots/WillHero3.png?raw=true)
 
+Will Hero Hard Mode
+![Will Hero Death screen](https://github.com/vens8/Will-Hero-JavaFX/blob/main/Game%20Screenshots/willhero.png?raw=true)
+
 ## Disclaimer/Note
 I do not own the rights to the images/videos used in the making of this project. It was made purely for the purpose of learning JavaFX. This repository is made for the same reason.
 Do not make changes to the files in the target folder after installation as that may cause abnormal behaviour. 
