@@ -1,4 +1,4 @@
-# Will Hero
+# Will Hero (Advanced Programming Project)
 JavaFX Group Project for CSE201 (AP course).
 Made by Group 76 (Vyshnav Vijay and Rahul Maddula).
 
